@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Melsya Teknik Center</title>
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="print.css" media="print">
+  <style>
+    .auth-container { max-width: 420px; margin: 3rem auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    .auth-title { text-align: center; margin-bottom: 1.5rem; color: var(--primary); }
+    .dashboard-section { display: none; }
+    .dashboard-section.active { display: block; }
+    .login-only { display: block; }
+    .logged-in { display: none; }
+    body.is-logged-in .login-only { display: none; }
+    body.is-logged-in .logged-in { display: block; }
+    .stat-card { background: #fff; padding: 1.2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; }
+    .stat-card h3 { font-size: 1.8rem; margin: 0.3rem 0; color: var(--primary); }
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { padding: 0.7rem; text-align: left; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+    th { background: #f8f9fa; font-weight: 600; }
+    .status-badge { padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+    .status-baru { background: #e3f2fd; color: #0d47a1; }
+    .status-diproses { background: #fff3e0; color: #e65100; }
+    .status-selesai { background: #e8f5e9; color: #2e7d32; }
+    .status-dibatalkan { background: #ffebee; color: #c62828; }
+    .tab-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+    .tab-btn { padding: 0.6rem 1rem; border: none; background: none; cursor: pointer; border-radius: 6px; font-weight: 500; }
+    .tab-btn.active { background: var(--primary); color: white; }
+    .logout-btn { background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+    .empty-state { text-align: center; padding: 3rem; color: #888; }
+  </style>
+</head>
+<body>
+  <!-- HALAMAN LOGIN -->
+  <div id="loginPage" class="login-only">
+    <div class="auth-container">
+      <h2 class="auth-title">🔐 Admin Login</h2>
+      <p style="text-align:center; color:#666; margin-bottom:1.5rem;">Melsya Teknik Center — Dashboard</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="emailAdmin" required placeholder="admin@email.com">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="passwordAdmin" required placeholder="••••••••">
+        </div>
+        <div id="loginError" style="color:red; margin:1rem 0; display:none;"></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">🔑 Masuk</button>
+        <p style="text-align:center; margin-top:1.5rem; font-size:0.9rem; color:#666;">
+          Lupa password? <a href="#" onclick="resetPassword()">Klik di sini</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- DASHBOARD ADMIN (HANYA TERLIHAT SETELAH LOGIN) -->
+  <div id="dashboardPage" class="logged-in" style="display:none;">
+    <header class="header">
+      <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="margin:0; color:white;">🔧 Melsya Teknik — Admin</h2>
+        <button class="logout-btn" onclick="logout()">🚪 Keluar</button>
+      </div>
+    </header>
+
+    <main class="container" style="padding: 2rem 1rem;">
+      <!-- NAVIGASI TAB -->
+      <div class="tab-nav">
+        <button class="tab-btn active" data-tab="ringkasan">📊 Ringkasan</button>
+        <button class="tab-btn" data-tab="pesanan">📋 Pesanan Servis</button>
+        <button class="tab-btn" data-tab="tambah">➕ Tambah Manual</button>
+        <button class="tab-btn" data-tab="laporan">📈 Laporan</button>
+      </div>
+
+      <!-- TAB RINGKASAN -->
+      <section id="tab-ringkasan" class="dashboard-section active">
+        <h3>📊 Ringkasan Hari Ini</h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:1rem; margin:1.5rem 0;">
+          <div class="stat-card"><p>Pesanan Baru</p><h3 id="statBaru">0</h3></div>
+          <div class="stat-card"><p>Diproses</p><h3 id="statProses">0</h3></div>
+          <div class="stat-card"><p>Selesai</p><h3 id="statSelesai">0</h3></div>
+          <div class="stat-card"><p>Total Hari Ini</p><h3 id="statTotal">0</h3></div>
+        </div>
+      </section>
+
+      <!-- TAB PESANAN -->
+      <section id="tab-pesanan" class="dashboard-section">
+        <h3>📋 Daftar Semua Pesanan</h3>
+        <div style="margin:1rem 0;">
+          <input type="text" id="cariTiket" placeholder="🔍 Cari nomor tiket / nama..." class="form-control" style="max-width:400px; display:inline-block; margin-right:0.5rem;">
+          <select id="filterStatus" class="form-control" style="max-width:150px; display:inline-block;">
+            <option value="semua">Semua Status</option>
+            <option value="baru">Baru</option>
+            <option value="diproses">Diproses</option>
+            <option value="selesai">Selesai</option>
+          </select>
+        </div>
+        <div class="table-container">
+          <table id="tabelPesanan">
+            <thead>
+              <tr>
+                <th>Tiket</th>
+                <th>Nama</th>
+                <th>Layanan</th>
+                <th>Status</th>
+                <th>Biaya</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="isiTabelPesanan">
+              <tr><td colspan="6" class="empty-state">Memuat data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB TAMBAH MANUAL -->
+      <section id="tab-tambah" class="dashboard-section">
+        <h3>➕ Tambah Pesanan Manual</h3>
+        <form id="formManual" class="form-card" style="max-width:700px;">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nama Pelanggan *</label>
+              <input type="text" id="m_nama" required>
+            </div>
+            <div class="form-group">
+              <label>WhatsApp *</label>
+              <input type="tel" id="m_wa" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Alamat *</label>
+            <textarea id="m_alamat" required></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Jenis Layanan</label>
+              <input type="text" id="m_layanan" placeholder="Elektronik, Komputer, dll">
+            </div>
+            <div class="form-group">
+              <label>Penanganan</label>
+              <select id="m_penanganan">
+                <option>Teknisi Datang</option>
+                <option>Antar-Jemput</option>
+                <option>Bawa ke Bengkel</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Estimasi Biaya (Rp)</label>
+              <input type="number" id="m_biaya" value="0">
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select id="m_status">
+                <option value="baru">Baru</option>
+                <option value="diproses">Diproses</option>
+                <option value="selesai">Selesai</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Catatan</label>
+            <textarea id="m_catatan"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">💾 Simpan Pesanan</button>
+        </form>
+      </section>
+
+      <!-- TAB LAPORAN -->
+      <section id="tab-laporan" class="dashboard-section">
+        <h3>📈 Laporan Pendapatan</h3>
+        <div style="margin:1rem 0;">
+          <select id="filterBulan" class="form-control" style="max-width:200px;">
+            <option value="semua">Semua Waktu</option>
+            <option value="2026-08">Agustus 2026</option>
+          </select>
+        </div>
+        <div class="stat-card" style="max-width:400px; margin:1.5rem 0;">
+          <p>Total Pendapatan Periode</p>
+          <h3 id="totalPendapatan">Rp 0</h3>
+          <p style="font-size:0.9rem; color:#666;">Jumlah transaksi: <span id="jumlahTransaksi">0</span></p>
+        </div>
+        <button class="btn btn-secondary" onclick="window.print()">🖨️ Cetak Laporan</button>
+      </section>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

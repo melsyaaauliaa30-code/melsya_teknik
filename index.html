@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Melsya Teknik Center | Servis Elektronik, Komputer, HP & Listrik — Sawahlunto</title>
+  <meta name="description" content="Jasa servis elektronik, komputer, HP, listrik dan jaringan terpercaya di Sawahlunto. Teknisi berpengalaman, antar-jemput, garansi servis.">
+  <meta name="keywords" content="servis elektronik Sawahlunto, teknisi Sawahlunto, servis TV Sawahlunto, servis komputer Sawahlunto, servis listrik Sawahlunto, PLTS, Panel Surya, Biogas">
+  <meta name="author" content="Melsya Teknik Center">
+  <link rel="canonical" href="https://yourdomain.com/">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Melsya Teknik Center">
+  <meta property="og:description" content="Servis Elektronik, Komputer, HP, Listrik & Jaringan — Sawahlunto | Panduan PLTS & Biogas">
+  <meta property="og:type" content="website">
+  
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Melsya Teknik Center",
+    "image": "",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Dusun Karang Anyar, Desa Santur, Kecamatan Barangin",
+      "addressLocality": "Sawahlunto",
+      "addressRegion": "Sumatera Barat"
+    },
+    "telephone": "+62-853-5643-4003",
+    "url": "",
+    "priceRange": "$$"
+  }
+  </script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+
+  <!-- External Libraries -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="print.css" media="print">
+</head>
+<body>
+  <!-- HEADER & NAVIGASI -->
+  <header class="header">
+    <div class="container">
+      <div class="nav-wrapper">
+        <a href="#" class="logo">
+          <strong>MELSYA</strong>
+          <span>Teknik Center</span>
+        </a>
+        
+        <button class="menu-toggle" id="menuToggle" aria-label="Buka menu">☰</button>
+        
+        <nav class="nav-menu" id="navMenu">
+          <ul>
+            <li><a href="#beranda" class="nav-link active">Beranda</a></li>
+            <li><a href="#layanan" class="nav-link">Layanan</a></li>
+            <li><a href="#pesan" class="nav-link">Pesan Servis</a></li>
+            <li><a href="#artikel" class="nav-link">Artikel</a></li>
+            <li><a href="#cek-status" class="nav-link">Cek Status</a></li>
+            <li><a href="#tentang" class="nav-link">Tentang</a></li>
+            <li><a href="#faq" class="nav-link">FAQ</a></li>
+            <li><a href="#kontak" class="nav-link">Kontak</a></li>
+            <li><a href="admin.html" class="nav-link btn-admin" id="btnAdmin">Dashboard</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section id="beranda" class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <span class="hero-badge">✅ Teknisi Berpengalaman & Terpercaya</span>
+            <h1>Solusi Servis Teknisi Terpercaya di Sawahlunto</h1>
+            <p class="hero-sub">Servis Elektronik • Komputer & HP • Listrik & Jaringan<br>Juga Melayani Konsultasi & Pemasangan PLTS — Panel Surya & Biogas</p>
+            <div class="hero-cta">
+              <a href="#pesan" class="btn btn-primary btn-lg">📅 Pesan Servis Sekarang</a>
+              <a href="https://wa.me/6285356434003" target="_blank" class="btn btn-whatsapp btn-lg">💬 Hubungi WhatsApp</a>
+            </div>
+            <div class="hero-stats">
+              <div class="stat-item"><span class="stat-num" id="statTotalServis">0</span><span class="stat-label">Servis Selesai</span></div>
+              <div class="stat-item"><span class="stat-num">98%</span><span class="stat-label">Puasi Pelanggan</span></div>
+              <div class="stat-item"><span class="stat-num">12+</span><span class="stat-label">Tahun Pengalaman</span></div>
+            </div>
+          </div>
+          <div class="hero-map">
+            <div id="miniMap" title="Klik untuk buka di Google Maps"></div>
+            <div style="text-align:center; margin-top:0.5rem; font-size:0.85rem; color:var(--gray-500);">
+              📍 Klik peta untuk buka Google Maps
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LAYANAN UTAMA -->
+    <section id="layanan" class="section bg-light">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-badge">Layanan Kami</span>
+          <h2>Jenis Jasa Servis</h2>
+          <p>Berbagai jenis perangkat yang dapat kami tangani dengan profesional</p>
+        </div>
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-icon">📺</div>
+            <h3>Elektronik Rumah Tangga</h3>
+            <p>TV, Kulkas, Mesin Cuci, AC, Rice Cooker, Microwave & peralatan elektronik lainnya</p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">💻</div>
+            <h3>Komputer & Laptop</h3>
+            <p>Perbaikan hardware, instalasi sistem, upgrade, perawatan, pemulihan data & jaringan</p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">📱</div>
+            <h3>HP & Gadget</h3>
+            <p>Ganti layar, baterai, perbaikan air, software, & kerusakan lainnya</p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">⚡</div>
+            <h3>Listrik Rumah & Usaha</h3>
+            <p>Instalasi baru, perbaikan kerusakan, penambahan titik listrik, & pemeliharaan</p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">☀️</div>
+            <h3>PLTS & Energi Surya</h3>
+            <p>Konsultasi, perencanaan, pemasangan, dan perawatan Panel Surya / PLTS rumah tangga</p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">🔋</div>
+            <h3>Biogas & Sistem Hybrid</h3>
+            <p>Perencanaan dan instalasi biogas, penggabungan PLTS + Biogas untuk energi mandiri</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARA KERJA -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-badge">Mekanisme</span>
+          <h2>Cara Kerja</h2>
+          <p>Proses servis yang mudah, transparan, dan terpercaya</p>
+        </div>
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <h3>Pesan Servis</h3>
+            <p>Isi formulir atau hubungi WhatsApp kami kapan saja</p>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <h3>Konfirmasi & Jadwal</h3>
+            <p>Kami konfirmasi segera dan tentukan waktu kedatangan yang tepat</p>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <h3>Diagnosa & Estimasi</h3>
+            <p>Pemeriksaan menyeluruh + rincian biaya jelas sebelum pengerjaan</p>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <h3>Perbaikan & Selesai</h3>
+            <p>Perbaikan, pengujian ketat, pembayaran mudah & garansi resmi</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORM PEMESANAN SERVIS -->
+    <section id="pesan" class="section bg-light">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-badge">Pemesanan</span>
+          <h2>Formulir Servis</h2>
+          <p>Isi data berikut untuk memesan jasa servis — cepat & mudah</p>
+        </div>
+
+        <!-- Tiket & Status Info -->
+        <div class="ticket-info" id="ticketInfo" style="display: none;">
+          <div class="ticket-box">
+            <p><strong>Nomor Tiket:</strong> <span id="nomorTiket"></span></p>
+            <p><strong>Status:</strong> <span class="status-badge status-baru">Pesanan Baru — Tersimpan</span></p>
+            <button type="button" class="btn btn-sm" onclick="salinTiket()">📋 Salin Tiket</button>
+          </div>
+        </div>
+
+        <form id="formPesanan" class="form-card">
+          <!-- Data Pelanggan -->
+          <div class="form-section">
+            <h3>1. Data Pelanggan</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nama Lengkap <span class="wajib">*</span></label>
+                <input type="text" id="namaPelanggan" required placeholder="Contoh: Budi Santoso">
+              </div>
+              <div class="form-group">
+                <label>Nomor WhatsApp <span class="wajib">*</span></label>
+                <input type="tel" id="waPelanggan" required placeholder="08xx-xxxx-xxxx">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Alamat Lengkap <span class="wajib">*</span></label>
+              <textarea id="alamatPelanggan" required rows="2" placeholder="Alamat lengkap tempat perangkat berada"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Lokasi GPS</label>
+              <div class="gps-row">
+                <button type="button" class="btn btn-secondary btn-sm" id="btnDeteksiLokasi">📍 Deteksi Lokasi Saya</button>
+                <span id="statusLokasi">Belum terdeteksi</span>
+              </div>
+              <div class="coord-row">
+                <input type="text" id="latPelanggan" placeholder="Latitude" readonly>
+                <input type="text" id="lngPelanggan" placeholder="Longitude" readonly>
+              </div>
+              <div id="petaLokasi" class="map-small"></div>
+              <p class="keterangan">Jika lokasi tidak tepat, geser penanda pada peta</p>
+            </div>
+          </div>
+
+          <!-- Jenis Layanan -->
+          <div class="form-section">
+            <h3>2. Jenis Layanan <span class="wajib">*</span></h3>
+            <div class="radio-grid">
+              <label class="radio-card">
+                <input type="checkbox" name="layanan" value="Elektronik">
+                <span>📺 Elektronik</span>
+              </label>
+              <label class="radio-card">
+                <input type="checkbox" name="layanan" value="Komputer">
+                <span>💻 Komputer</span>
+              </label>
+              <label class="radio-card">
+                <input type="checkbox" name="layanan" value="HP">
+                <span>📱 HP</span>
+              </label>
+              <label class="radio-card">
+                <input type="checkbox" name="layanan" value="Listrik">
+                <span>⚡ Listrik</span>
+              </label>
+              <label class="radio-card">
+                <input type="checkbox" name="layanan" value="PLTS">
+                <span>☀️ PLTS</span>
+              </label>
+              <label class="radio-card">
+                <input type="checkbox" name="layanan" value="Jaringan">
+                <span>🌐 Jaringan</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Cara Penanganan -->
+          <div class="form-section">
+            <h3>3. Cara Penanganan <span class="wajib">*</span></h3>
+            <div class="radio-list">
+              <label class="radio-option">
+                <input type="radio" name="penanganan" value="Teknisi Datang" required>
+                <span>🏠 Teknisi datang ke lokasi saya</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="penanganan" value="Antar-Jemput">
+                <span>🚚 Antar-jemput perangkat</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="penanganan" value="Bawa ke Bengkel">
+                <span>🏭 Saya bawa ke bengkel</span>
+              </label>
+            </div>
+            <div class="estimasi-ongkir" id="estimasiOngkir" style="display: none;">
+              <p><strong>Perkiraan biaya transportasi:</strong> <span id="biayaOngkir">Rp 0</span></p>
+              <p class="keterangan">Biaya final dikonfirmasi teknisi setelah pemeriksaan lokasi</p>
+            </div>
+          </div>
+
+          <!-- Perangkat -->
+          <div class="form-section">
+            <h3>4. Data Perangkat</h3>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnTambahPerangkat">➕ Tambah Perangkat</button>
+            <div id="daftarPerangkat"></div>
+          </div>
+
+          <!-- Catatan & Estimasi -->
+          <div class="form-section">
+            <h3>5. Keluhan & Catatan Tambahan</h3>
+            <textarea id="catatanPelanggan" rows="3" placeholder="Jelaskan keluhan atau masalah yang dialami secara rinci. Jika PLTS, sebutkan kebutuhan daya atau tagihan listrik bulanan."></textarea>
+            
+            <div class="estimasi-box" id="kotakEstimasi">
+              <h4>Perkiraan Biaya Awal</h4>
+              <p class="keterangan">* Harga perkiraan — harga final ditentukan setelah diagnosa teknisi</p>
+              <div class="estimasi-row">
+                <span>Perkiraan Jasa:</span>
+                <span id="estJasa">Rp 0</span>
+              </div>
+              <div class="estimasi-row">
+                <span>Transportasi:</span>
+                <span id="estTransport">Rp 0</span>
+              </div>
+              <div class="estimasi-row estimasi-total">
+                <span>Perkiraan Total:</span>
+                <span id="estTotal">Rp 0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tombol Aksi -->
+          <div class="form-actions">
+            <button type="reset" class="btn btn-secondary" id="btnReset">🔄 Reset Formulir</button>
+            <button type="submit" class="btn btn-primary">📤 Simpan & Kirim via WhatsApp</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ARTIKEL & TIPS -->
+    <section id="artikel" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-badge">Artikel & Panduan</span>
+          <h2>⚡ Seri Panduan PLTS & Biogas</h2>
+          <p>Panduan lengkap membangun sistem listrik mandiri dari energi matahari dan biogas — disusun bertahap dari perencanaan hingga instalasi</p>
+        </div>
+        <div class="artikel-grid">
+          <article class="artikel-card">
+            <div class="artikel-img">☀️</div>
+            <div class="artikel-body">
+              <span class="artikel-tag">PLTS</span>
+              <h3>Panduan Lengkap Membangun Sistem Listrik Mandiri</h3>
+              <p>Seri panduan lengkap dari perencanaan, perhitungan kebutuhan, pemilihan komponen, hingga instalasi Panel Surya (PLTS) dan Biogas untuk rumah tangga...</p>
+              <a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" class="artikel-link">Baca Selengkapnya →</a>
+            </div>
+          </article>
+          <article class="artikel-card">
+            <div class="artikel-img">📊</div>
+            <div class="artikel-body">
+              <span class="artikel-tag">Perencanaan</span>
+              <h3>Tahap 1 — Perencanaan & Perhitungan</h3>
+              <p>Cara menghitung kebutuhan listrik berdasarkan tagihan bulanan, menentukan jumlah panel surya, kapasitas baterai, dan pemilihan inverter yang tepat...</p>
+              <a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" class="artikel-link">Baca Selengkapnya →</a>
+            </div>
+          </article>
+          <article class="artikel-card">
+            <div class="artikel-img">🔋</div>
+            <div class="artikel-body">
+              <span class="artikel-tag">Biogas</span>
+              <h3>Tahap 3 — Sistem Biogas & Energi Hybrid</h3>
+              <p>Prinsip kerja reaktor biogas, pemurnian gas, modifikasi genset, dan cara menggabungkan PLTS + Biogas menjadi sistem energi lengkap...</p>
+              <a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" class="artikel-link">Baca Selengkapnya →</a>
+            </div>
+          </article>
+        </div>
+        <div style="text-align: center; margin-top: 2rem;">
+          <a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" class="btn btn-primary">📖 Baca Semua Artikel di Blog</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CEK STATUS -->
+    <section id="cek-status" class="section bg-light">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-badge">Pelacakan</span>
+          <h2>Cek Status Servis</h2>
+          <p>Masukkan nomor tiket untuk melihat perkembangan servis Anda</p>
+        </div>
+        <div class="cek-status-box">
+          <input type="text" id="inputTiketCek" placeholder="Contoh: TKT-20260820-001" class="form-control">
+          <button type="button" class="btn btn-primary" onclick="cekStatusServis()">🔍 Cek Status</button>
+          <div id="hasilCekStatus" class="hasil-cek"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TENTANG KAMI -->
+    <section id="tentang" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-badge">Profil Usaha</span>
+          <h2>Tentang Melsya Teknik Center</h2>
+        </div>
+        <div class="tentang-grid">
+          <div class="tentang-img">🔧</div>
+          <div class="tentang-content">
+            <p><strong>Melsya Teknik Center</strong> adalah penyedia jasa servis elektronik, komputer, HP, listrik, dan jaringan yang berpusat di Sawahlunto — Sumatera Barat. Dikelola oleh <strong>Tri Iwan Afandi</strong>, teknisi berpengalaman yang berkomitmen memberikan pelayanan jujur, transparan, dan berkualitas.</p>
+            <p>Selain servis elektronik, kami juga melayani <strong>konsultasi dan pemasangan PLTS (Panel Surya) serta sistem Biogas</strong> untuk rumah tangga yang ingin mandiri energi. Panduan lengkap kami tersedia di blog:</p>
+            <p style="margin: 1rem 0;"><a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" style="color:var(--primary); font-weight:600;">📖 Sumber Energi Mandiri — Blog Panduan PLTS & Biogas</a></p>
+            <ul class="keunggulan-list">
+              <li>✅ Diagnosa jujur — tidak melebih-lebihkan kerusakan</li>
+              <li>✅ Estimasi biaya diketahui sebelum pengerjaan</li>
+              <li>✅ Garansi servis untuk setiap perbaikan</li>
+              <li>✅ Layanan antar-jemput & kunjungan ke lokasi</li>
+              <li>✅ Konsultasi PLTS & energi terbarukan</li>
+              <li>✅ Data pesanan tersimpan aman di sistem</li>
+              <li>✅ Harga wajar & terperinci</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section bg-light">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-badge">Pertanyaan Umum</span>
+          <h2>Frequently Asked Questions</h2>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question">
+              Apakah data pesanan saya aman dan tersimpan?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              Ya! Data pesanan tersimpan di sistem database aman (Firebase), sehingga tidak hilang meskipun ganti HP atau perangkat lain. Cukup simpan nomor tiket untuk mengecek status kapan saja.
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question">
+              Apakah saya harus membawa perangkat ke bengkel?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              Tidak harus! Kami menyediakan opsi teknisi datang ke lokasi, layanan antar-jemput perangkat, atau Anda bisa langsung membawa ke bengkel sesuai kenyamanan Anda.
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question">
+              Apakah melayani pemasangan Panel Surya / PLTS?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              Ya! Kami melayani konsultasi, perencanaan, dan pemasangan PLTS rumah tangga. Silakan baca panduan lengkap di blog kami untuk mempelajari tahapannya, lalu hubungi kami untuk diskusi dan penawaran.
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question">
+              Bagaimana cara mengetahui estimasi biayanya?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              Setelah pemeriksaan/diagnosa, kami akan memberikan rincian biaya yang jelas. Pengerjaan baru dimulai setelah Anda menyetujui estimasi tersebut.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KONTAK -->
+    <section id="kontak" class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-badge">Hubungi Kami</span>
+          <h2>Kontak & Lokasi</h2>
+        </div>
+        <div class="kontak-grid">
+          <div class="kontak-info">
+            <p><strong>📍 Alamat Bengkel:</strong><br>Dusun Karang Anyar, Desa Santur, Kecamatan Barangin, Kota Sawahlunto<br>
+            <a href="https://www.google.com/maps/search/?api=1&query=-0.643261,100.755268" target="_blank" style="color:var(--primary);">Buka di Google Maps →</a></p>
+            <p><strong>📍 Koordinat:</strong><br>-0.643261, 100.755268</p>
+            <p><strong>💬 WhatsApp:</strong><br><a href="https://wa.me/6285356434003" target="_blank">0853-5643-4003</a></p>
+            <p><strong>🕐 Jam Operasional:</strong><br>Senin – Sabtu: 08.00 – 17.00 WIB<br>Minggu: Dengan perjanjian</p>
+            <p><strong>📖 Blog Panduan PLTS & Biogas:</strong><br>
+            <a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" style="color:var(--primary);">Sumber Energi Mandiri →</a></p>
+          </div>
+          <div class="kontak-map">
+            <div id="kontakMap" title="Klik untuk buka di Google Maps"></div>
+            <div style="text-align:center; margin-top:0.5rem; font-size:0.85rem; color:var(--gray-500);">
+              📍 Klik peta untuk buka Google Maps
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h3>Melsya Teknik Center</h3>
+          <p>Solusi servis teknisi terpercaya di Sawahlunto — Elektronik, Komputer, HP, Listrik, Jaringan & Konsultasi PLTS. Jujur, Transparan, Terpercaya.</p>
+        </div>
+        <div>
+          <h4>Tautan Cepat</h4>
+          <ul>
+            <li><a href="#beranda">Beranda</a></li>
+            <li><a href="#layanan">Layanan</a></li>
+            <li><a href="#pesan">Pesan Servis</a></li>
+            <li><a href="#artikel">Artikel</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank">Blog PLTS & Biogas</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Kontak</h4>
+          <p>📞 <a href="https://wa.me/6285356434003" target="_blank">0853-5643-4003</a></p>
+          <p>📍 <a href="https://www.google.com/maps/search/?api=1&query=-0.643261,100.755268" target="_blank">Dusun Karang Anyar, Desa Santur, Barangin, Sawahlunto</a></p>
+          <p>📍 Koordinat: -0.643261, 100.755268</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Melsya Teknik Center. Semua Hak Dilindungi. | Data tersimpan aman di sistem — Garansi servis untuk setiap perbaikan.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

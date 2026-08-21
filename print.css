@@ -1,0 +1,80 @@
+/* ==========================================
+   print.css — Gaya Khusus Cetak
+========================================== */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+    font-family: "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #555;
+  }
+
+  .no-print,
+  header,
+  footer,
+  nav,
+  button,
+  input,
+  textarea,
+  select,
+  .form-actions,
+  .menu-toggle,
+  .btn,
+  .hero-cta,
+  .artikel-link,
+  #btnAdmin {
+    display: none !important;
+  }
+
+  .section {
+    page-break-inside: avoid;
+    padding: 0.5rem 0 !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  img, table, figure {
+    page-break-inside: avoid;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+  }
+
+  .ticket-box {
+    border: 2px solid #333;
+    padding: 1.5rem;
+    border-radius: 0;
+  }
+}

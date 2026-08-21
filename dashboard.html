@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛠️ Dashboard Teknisi — Melsya Teknik Center</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root { --ungu: #7c3aed; }
+        body { background: #f8fafc; }
+        .dash-container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+        .dash-header { background: linear-gradient(135deg, #1e1b4b, #4c1d95); color: white; padding: 24px; border-radius: 16px; margin-bottom: 24px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .kartu-stat { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+        .nilai-stat { font-size: 28px; font-weight: 800; color: #1e40af; }
+        .tabel-wadah { overflow-x: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+        th { background: #f9fafb; font-weight: 600; color: #374151; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; color: white; display: inline-block; }
+        .badge-MENUNGGU { background: #f59e0b; }
+        .badge-DIKONFIRMASI { background: #3b82f6; }
+        .badge-DALAM_PERBAIKAN { background: #ef4444; }
+        .badge-LUNAS { background: #10b981; }
+        .badge-SELESAI { background: #16a34a; }
+        .badge-DIBATALKAN { background: #6b7280; }
+        .btn-sm { padding: 6px 12px; font-size: 13px; border-radius: 6px; border: none; cursor: pointer; font-weight: 500; }
+        .btn-ubah { background: #dbeafe; color: #1d4ed8; }
+        .btn-cetak { background: #dcfce7; color: #166534; }
+        .btn-hapus { background: #fee2e2; color: #dc2626; }
+        .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+        select, input { padding: 10px 14px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; }
+        .form-edit { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 9999; }
+        .form-edit.tampil { display: flex; }
+        .form-edit-inner { background: white; padding: 24px; border-radius: 16px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .btn-tutup { float: right; background: none; border: none; font-size: 20px; cursor: pointer; color: #6b7280; }
+        .nav-kembali { display: inline-flex; align-items: center; gap: 6px; color: #2563eb; font-weight: 600; margin-bottom: 20px; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="dash-container">
+        <a href="index.html" class="nav-kembali">← Kembali ke Website</a>
+        
+        <div class="dash-header">
+            <h1 style="font-size:24px;margin-bottom:8px;">🛠️ Dashboard Teknisi</h1>
+            <p style="opacity:0.8;">Melsya Teknik Center — Manajemen Servis</p>
+        </div>
+
+        <!-- STATISTIK -->
+        <div class="stat-grid">
+            <div class="kartu-stat">
+                <div style="color:#6b7280;font-size:14px;margin-bottom:4px;">Total Servis</div>
+                <div class="nilai-stat" id="statTotal">0</div>
+            </div>
+            <div class="kartu-stat">
+                <div style="color:#6b7280;font-size:14px;margin-bottom:4px;">Menunggu</div>
+                <div class="nilai-stat" id="statMenunggu" style="color:#f59e0b;">0</div>
+            </div>
+            <div class="kartu-stat">
+                <div style="color:#6b7280;font-size:14px;margin-bottom:4px;">Selesai</div>
+                <div class="nilai-stat" id="statSelesai" style="color:#22c55e;">0</div>
+            </div>
+            <div class="kartu-stat">
+                <div style="color:#6b7280;font-size:14px;margin-bottom:4px;">Pendapatan</div>
+                <div class="nilai-stat" id="statPendapatan" style="color:#8b5cf6;">Rp 0</div>
+            </div>
+        </div>
+
+        <!-- FILTER & PENCARIAN -->
+        <div class="filter-bar">
+            <input type="text" id="cariTiket" placeholder="🔍 Cari Tiket / Nama..." oninput="renderTabel()">
+            <select id="filterStatus" onchange="renderTabel()">
+                <option value="">Semua Status</option>
+                <option value="MENUNGGU">Menunggu</option>
+                <option value="DIKONFIRMASI">Dikonfirmasi</option>
+                <option value="DALAM_PERBAIKAN">Dalam Perbaikan</option>
+                <option value="LUNAS">Lunas</option>
+                <option value="SELESAI">Selesai</option>
+                <option value="DIBATALKAN">Dibatalkan</option>
+            </select>
+            <button class="btn btn-utama" onclick="eksporData()">📤 Ekspor Data</button>
+            <button class="btn btn-tolak" onclick="if(confirm('Reset semua data?')){localStorage.clear();location.reload();}">🗑️ Reset Data</button>
+        </div>
+
+        <!-- TABEL SERVIS -->
+        <div class="tabel-wadah">
+            <table>
+                <thead>
+                    <tr>
+                        <th>🎟️ Tiket</th>
+                        <th>👤 Nama</th>
+                        <th>🛠️ Layanan</th>
+                        <th>💰 Total</th>
+                        <th>📊 Status</th>
+                        <th>📅 Tanggal</th>
+                        <th>⚙️ Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelServis"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FORM EDIT STATUS -->
+    <div class="form-edit" id="formEdit">
+        <div class="form-edit-inner">
+            <button class="btn-tutup" onclick="tutupFormEdit()">✕</button>
+            <h2 style="margin-bottom:20px;">📝 Ubah Status Servis</h2>
+            <div id="detailServis"></div>
+            <div style="margin-top:16px;">
+                <label>Ubah Status</label>
+                <select id="ubahStatus">
+                    <option value="MENUNGGU">Menunggu Konfirmasi</option>
+                    <option value="DIKONFIRMASI">Dikonfirmasi</option>
+                    <option value="DALAM_ANTRIAN">Dalam Antrian</option>
+                    <option value="DALAM_DIAGNOSA">Sedang Diagnosa</option>
+                    <option value="MENUNGGU_PERSETUJUAN">Menunggu Persetujuan</option>
+                    <option value="DALAM_PERBAIKAN">Sedang Diperbaiki</option>
+                    <option value="SELESAI_PERBAIKAN">Perbaikan Selesai</option>
+                    <option value="MENUNGGU_PEMBAYARAN">Menunggu Pembayaran</option>
+                    <option value="LUNAS">Lunas</option>
+                    <option value="DIANTAR">Sedang Diantar</option>
+                    <option value="SELESAI">✅ Selesai</option>
+                    <option value="DIBATALKAN">❌ Dibatalkan</option>
+                </select>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:20px;">
+                <button class="btn btn-utama" onclick="simpanPerubahan()">✅ Simpan Perubahan</button>
+                <button class="btn btn-tolak" onclick="tutupFormEdit()">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

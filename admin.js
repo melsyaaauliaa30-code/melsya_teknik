@@ -1,76 +1,65 @@
-// admin.js — Panel Admin Firebase
-import { auth, db } from './app.js';
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } 
-  from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import { collection, getDocs, addDoc, deleteDoc, doc } 
-  from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+// admin.js — Panel Admin Melsya Teknik Center
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-// ELEMEN HTML
-const loginForm = document.getElementById('loginForm');
-const adminPanel = document.getElementById('adminPanel');
-const btnLogout = document.getElementById('btnLogout');
-const statusUser = document.getElementById('statusUser');
+const firebaseConfig = {
+  apiKey: "AIzaSyC2_DvJZ469gEAxukqyKeT4BaE-_c1x_Oc",
+  authDomain: "melsya-teknik.firebaseapp.com",
+  projectId: "melsya-teknik",
+  storageBucket: "melsya-teknik.firebasestorage.app",
+  messagingSenderId: "704099609611",
+  appId: "1:704099609611:web:7a5f8b7c9d6e5f4a3b2c1d"
+};
 
-// CEK STATUS LOGIN
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    loginForm.style.display = 'none';
-    adminPanel.style.display = 'block';
-    statusUser.textContent = `Login sebagai: ${user.email}`;
-    muatData();
-  } else {
-    loginForm.style.display = 'block';
-    adminPanel.style.display = 'none';
-  }
-});
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-// LOGIN
-document.getElementById('btnLogin').addEventListener('click', async () => {
-  const email = document.getElementById('emailAdmin').value;
-  const password = document.getElementById('passAdmin').value;
-  
+console.log("✅ Admin Panel Terhubung");
+
+// Fungsi Login
+export async function loginAdmin(email, password) {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
-    alert('✅ Login berhasil!');
-  } catch (err) {
-    alert('❌ Gagal login: ' + err.message);
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    console.log("✅ Login berhasil:", userCredential.user.email);
+    return { success: true, user: userCredential.user };
+  } catch (error) {
+    console.error("❌ Login gagal:", error.message);
+    return { success: false, error: error.message };
   }
-});
-
-// LOGOUT
-btnLogout.addEventListener('click', async () => {
-  await signOut(auth);
-  alert('✅ Berhasil logout');
-});
-
-// MUAT DATA DARI FIRESTORE
-async function muatData() {
-  const ref = collection(db, 'pesanan');
-  const snapshot = await getDocs(ref);
-  let html = '';
-  snapshot.forEach(doc => {
-    const data = doc.data();
-    html += `<tr>
-      <td>${data.nama || '-'}</td>
-      <td>${data.telepon || '-'}</td>
-      <td>${data.layanan || '-'}</td>
-      <td><button data-id="${doc.id}" class="btn-hapus">Hapus</button></td>
-    </tr>`;
-  });
-  document.getElementById('tabelData').innerHTML = html;
 }
 
-// TAMBAH DATA (contoh)
-document.getElementById('formTambah')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const nama = document.getElementById('inputNama').value;
-  const telepon = document.getElementById('inputTelepon').value;
-  const layanan = document.getElementById('inputLayanan').value;
-  
-  await addDoc(collection(db, 'pesanan'), { nama, telepon, layanan, tanggal: new Date() });
-  alert('✅ Data tersimpan!');
-  e.target.reset();
-  muatData();
-});
+// Fungsi Logout
+export async function logoutAdmin() {
+  await signOut(auth);
+  console.log("✅ Berhasil logout");
+}
 
-console.log("✅ Admin.js dimuat");
+// Cek Status Login
+export function checkAuth(callback) {
+  onAuthStateChanged(auth, (user) => callback(user));
+}
+
+// Tambah Data Pesanan
+export async function tambahPesanan(data) {
+  try {
+    const docRef = await addDoc(collection(db, "pesanan"), {
+      ...data,
+      createdAt: new Date()
+    });
+    console.log("✅ Pesanan tersimpan:", docRef.id);
+    return { success: true, id: docRef.id };
+  } catch (e) {
+    console.error("❌ Gagal simpan:", e);
+    return { success: false };
+  }
+}
+
+// Ambil Semua Pesanan
+export async function ambilPesanan() {
+  const snapshot = await getDocs(collection(db, "pesanan"));
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+export { auth, db };

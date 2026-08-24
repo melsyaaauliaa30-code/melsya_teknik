@@ -82,7 +82,6 @@
         <div class="flex flex-col gap-4">
           <a href="#beranda" class="font-medium hover:text-primary py-2">Beranda</a>
           <a href="#layanan" class="font-medium hover:text-primary py-2">Layanan</a>
-          <a href="#tentang" class="font-medium hover:text-primary py-2">Tentang</a>
           <a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" class="font-medium hover:text-primary py-2">Artikel</a>
           <a href="#pesan" class="font-medium hover:text-primary py-2">Pesan Servis</a>
           <a href="admin.html" class="bg-gray-100 px-3 py-2 rounded-lg text-center">
@@ -121,9 +120,7 @@
       </div>
     </section>
 
-    <!-- ============================================== -->
-    <!-- LAYANAN KAMI — DIPERBAIKI & BERFUNGSI -->
-    <!-- ============================================== -->
+    <!-- LAYANAN KAMI -->
     <section id="layanan" class="py-20 bg-white">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
@@ -191,9 +188,7 @@
       </div>
     </section>
 
-    <!-- ============================================== -->
-    <!-- FORM PESAN SERVIS — HAPUS NO WA & ALAMAT MANUAL -->
-    <!-- ============================================== -->
+    <!-- FORM PESAN SERVIS -->
     <section id="pesan" class="py-20 bg-white">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
@@ -203,13 +198,13 @@
 
         <div class="max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-soft p-6 md:p-8">
           <form id="orderForm" class="space-y-6">
-            <!-- Data Pelanggan — HANYA NAMA -->
+            <!-- Nama Pelanggan -->
             <div>
               <label class="block text-sm font-medium mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
               <input type="text" id="nama" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="Nama Anda">
             </div>
 
-            <!-- 📍 LOKASI GPS — HANYA DETEKSI OTOMATIS + PETA SATELIT -->
+            <!-- 📍 LOKASI GPS + PETA + RUTE -->
             <div class="border border-gray-200 rounded-xl p-4 bg-white">
               <label class="block text-sm font-medium mb-2">📍 Lokasi Anda & Rute ke Bengkel</label>
               <div class="flex gap-2 mb-3">
@@ -220,21 +215,29 @@
               </div>
               <p id="statusLokasi" class="text-xs text-gray-500 mb-3">Klik tombol untuk mendeteksi lokasi & menampilkan rute ke bengkel</p>
               
-              <!-- Peta Satelit -->
+              <!-- Peta Satelit + Rute -->
               <div id="mapContainer" class="hidden">
                 <div id="map" class="w-full h-80 rounded-lg border border-gray-200 mb-3"></div>
+                
+                <!-- ✅ TOMBOL LANGSUNG GOOGLE MAPS — Solusi jika rute lama -->
+                <div class="mb-4 text-center">
+                  <a id="linkLangsungGMaps" href="#" target="_blank" class="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
+                    <i class="fas fa-directions"></i> 🚀 Buka Rute di Google Maps (Lebih Cepat)
+                  </a>
+                </div>
+                
                 <div class="grid grid-cols-2 gap-3 text-sm">
                   <div class="bg-blue-50 p-3 rounded-lg">
                     <span class="text-gray-500">📍 Koordinat Anda:</span>
                     <span id="koordinatPelanggan" class="font-bold text-primary block mt-1">—</span>
                   </div>
-                  <div class="bg-green-50 p-3 rounded-lg">
+                  <div class="bg-amber-50 p-3 rounded-lg">
                     <span class="text-gray-500">🛣️ Jarak Rute:</span>
-                    <span id="jarakRute" class="font-bold text-success block mt-1">—</span>
+                    <span id="jarakRute" class="font-bold text-amber-600 block mt-1">⏳ Menghitung...</span>
                   </div>
-                  <div class="bg-amber-50 p-3 rounded-lg col-span-2">
+                  <div class="bg-green-50 p-3 rounded-lg col-span-2">
                     <span class="text-gray-500">⏱️ Estimasi Waktu Perjalanan:</span>
-                    <span id="estimasiWaktu" class="font-bold text-amber-600 block mt-1">—</span>
+                    <span id="estimasiWaktu" class="font-bold text-success block mt-1">⏳ Menghitung...</span>
                   </div>
                 </div>
               </div>
@@ -347,12 +350,13 @@
   </footer>
 
   <script>
-    // Lokasi Bengkel — diambil dari Firebase atau default
+    // Lokasi Bengkel — default, bisa diubah dari Firebase
     let BENGKEL_LAT = -0.6432566;
     let BENGKEL_LNG = 100.7552686;
     let map = null;
     let routingControl = null;
     let perangkatCounter = 1;
+    let pelangganLat, pelangganLng;
 
     // Menu Mobile
     document.getElementById('menuBtn').addEventListener('click', () => {
@@ -524,9 +528,7 @@
       perangkatCounter = document.querySelectorAll('.perangkat-item').length;
     }
 
-    // 📍 Deteksi Lokasi + Peta Satelit + Rute
-    let pelangganLat, pelangganLng;
-    
+    // 📍 Deteksi Lokasi + Peta + RUTE DENGAN OPTIMASI KECEPATAN
     document.getElementById('btnLokasi').addEventListener('click', () => {
       const btn = document.getElementById('btnLokasi');
       const status = document.getElementById('statusLokasi');
@@ -549,8 +551,14 @@
         (pos) => {
           pelangganLat = pos.coords.latitude;
           pelangganLng = pos.coords.longitude;
+          
           document.getElementById('lokasiGps').value = `${pelangganLat.toFixed(6)}, ${pelangganLng.toFixed(6)}`;
           document.getElementById('koordinatPelanggan').textContent = `${pelangganLat.toFixed(6)}, ${pelangganLng.toFixed(6)}`;
+          
+          // ✅ Isi link langsung Google Maps
+          document.getElementById('linkLangsungGMaps').href = 
+            `https://www.google.com/maps/dir/${pelangganLat},${pelangganLng}/${BENGKEL_LAT},${BENGKEL_LNG}`;
+          
           status.textContent = `✅ Lokasi terdeteksi (Akurasi: ${Math.round(pos.coords.accuracy)}m)`;
           status.classList.add('text-green-600');
           
@@ -573,44 +581,55 @@
       );
     });
 
+    // ✅ FUNGSI PETA DENGAN OPTIMASI KECEPATAN RUTE
     function initMap(lat, lng) {
       if (map) map.remove();
       
-      map = L.map('map').setView([lat, lng], 13);
+      // Inisialisasi Peta
+      map = L.map('map', { zoomControl: true }).setView([lat, lng], 13);
       
-      // 🗺️ Peta Satelit (Google Satellite)
-      L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-        maxZoom: 20,
+      // 🗺️ Peta Satelit (Google)
+      const satelitLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 18,
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
         attribution: '© Google Satellite'
-      }).addTo(map);
-      
-      // Tambah peta jalan sebagai pilihan
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap',
-        maxNativeZoom: 19,
-        maxZoom: 20
       });
       
-      // Marker pelanggan
+      // 🛣️ Peta Jalan (sebagai alternatif lebih ringan)
+      const jalanLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap',
+        maxZoom: 18
+      });
+      
+      // Default tampilkan satelit
+      satelitLayer.addTo(map);
+      
+      // Pilihan peta untuk pengguna
+      L.control.layers(
+        { "🗺️ Satelit": satelitLayer, "🛣️ Peta Jalan": jalanLayer },
+        null, { position: 'topright' }
+      ).addTo(map);
+      
+      // Marker Pelanggan
       L.marker([lat, lng]).addTo(map)
         .bindPopup('📍 Lokasi Anda')
         .openPopup();
       
-      // Marker bengkel
-      L.marker([BENGKEL_LAT, BENGKEL_LNG], { 
-        icon: L.divIcon({ 
-          html: '<i class="fas fa-tools text-red-500 text-3xl"></i>', 
-          className: '', 
-          iconSize: [30, 30],
-          iconAnchor: [15, 15]
-        }) 
-      })
-        .addTo(map)
-        .bindPopup('🏠 Bengkel Melsya Teknik Center');
+      // Marker Bengkel
+      L.marker([BENGKEL_LAT, BENGKEL_LNG], {
+        icon: L.divIcon({
+          html: '<div style="background:#EF4444;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);"><i class="fas fa-tools" style="font-size:14px;"></i></div>',
+          className: '', iconSize: [28,28], iconAnchor: [14,14]
+        })
+      }).addTo(map).bindPopup('🏠 Bengkel Melsya Teknik Center');
       
-      // Rute & jarak
+      // ===== ⚡ HITUNG RUTE DENGAN BATAS WAKTU =====
       if (routingControl) map.removeControl(routingControl);
+      
+      // Tampilkan loading dulu
+      document.getElementById('jarakRute').textContent = '⏳ Menghitung...';
+      document.getElementById('estimasiWaktu').textContent = '⏳ Menghitung...';
+      
       routingControl = L.Routing.control({
         waypoints: [
           L.latLng(lat, lng),
@@ -623,17 +642,37 @@
         },
         addWaypoints: false,
         draggableWaypoints: false,
-        routeWhileDragging: false
+        routeWhileDragging: false,
+        // ⚡ OPTIMASI: Batasi waktu tunggu 10 detik
+        router: L.Routing.osrmv1({
+          profile: 'driving',
+          serviceUrl: 'https://router.project-osrm.org/route/v1',
+          timeout: 10000 // 10 detik — kalau lambat, berikan link GMaps
+        })
       }).addTo(map);
       
+      // ✅ Rute Berhasil Ditemukan
       routingControl.on('routesfound', (e) => {
         const rute = e.routes[0];
         const jarakKm = (rute.summary.totalDistance / 1000).toFixed(1);
         const waktuMenit = Math.round(rute.summary.totalTime / 60);
+        
         document.getElementById('jarakRute').textContent = `${jarakKm} km`;
         document.getElementById('estimasiWaktu').textContent = `${waktuMenit} menit`;
+        
+        // Peta menyesuaikan kedua titik
+        map.fitBounds([[lat, lng], [BENGKEL_LAT, BENGKEL_LNG]], { padding: [50,50] });
       });
       
+      // ⚠️ RUTE LAMBAT / GAGAL — Tampilkan Link Google Maps
+      routingControl.on('routingerror', () => {
+        document.getElementById('jarakRute').innerHTML = 
+          `<a href="https://www.google.com/maps/dir/${lat},${lng}/${BENGKEL_LAT},${BENGKEL_LNG}" target="_blank" style="color:#0F4C81;font-weight:bold">🔗 Buka di GMaps</a>`;
+        document.getElementById('estimasiWaktu').innerHTML = 
+          `<a href="https://www.google.com/maps/dir/${lat},${lng}/${BENGKEL_LAT},${BENGKEL_LNG}" target="_blank" style="color:#0F4C81;font-weight:bold">Klik untuk lihat rute</a>`;
+      });
+      
+      // Perbaiki ukuran peta
       setTimeout(() => map.invalidateSize(), 300);
     }
 

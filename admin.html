@@ -4,56 +4,186 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin — Melsya Teknik Center</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script type="module" src="admin.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0F4C81',
+            secondary: '#F59E0B',
+            success: '#10B981',
+            danger: '#EF4444',
+            dark: '#1E293B'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @media print {
+      body * { visibility: hidden; }
+      #nota-cetak, #nota-cetak * { visibility: visible; }
+      #nota-cetak { position: absolute; left: 0; top: 0; width: 100%; }
+      .no-print { display: none !important; }
+    }
+  </style>
 </head>
-<body style="background:#f1f5f9; padding-top:40px;">
-  <div class="container" style="max-width: 800px;">
-    <h1 style="text-align:center; color:#0f4c81; margin-bottom:2rem;"><i class="fas fa-user-shield"></i> Panel Admin</h1>
-    
-    <!-- FORM LOGIN -->
-    <div id="loginForm" style="background:#fff; padding:2rem; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,.08); max-width:400px; margin:0 auto;">
-      <h3 style="margin-bottom:1.5rem; text-align:center;">Silakan Login</h3>
-      <div style="margin-bottom:1rem;">
-        <label>Email</label>
-        <input type="email" id="emailAdmin" placeholder="email@domain.com" style="width:100%; padding:.75rem; border:1px solid #cbd5e1; border-radius:6px; margin-top:.3rem;">
+<body class="bg-gray-100 min-h-screen">
+  <!-- Halaman Login -->
+  <div id="loginPage" class="flex items-center justify-center min-h-screen">
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+      <div class="text-center mb-8">
+        <i class="fas fa-tools text-primary text-4xl mb-2"></i>
+        <h2 class="text-2xl font-bold text-dark">Admin Login</h2>
+        <p class="text-gray-500">Melsya Teknik Center</p>
       </div>
-      <div style="margin-bottom:1.5rem;">
-        <label>Password</label>
-        <input type="password" id="passAdmin" placeholder="••••••••" style="width:100%; padding:.75rem; border:1px solid #cbd5e1; border-radius:6px; margin-top:.3rem;">
-      </div>
-      <button id="btnLogin" class="btn btn-primary" style="width:100%;">Login</button>
-    </div>
-
-    <!-- PANEL SETELAH LOGIN -->
-    <div id="adminPanel" style="display:none;">
-      <div style="background:#fff; padding:1.5rem; border-radius:12px; margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:center;">
-        <span id="statusUser"></span>
-        <button id="btnLogout" class="btn" style="background:#ef4444; color:#fff;">Logout</button>
-      </div>
-      
-      <div style="background:#fff; padding:1.5rem; border-radius:12px; margin-bottom:1.5rem;">
-        <h3>Tambah Data Servis</h3>
-        <form id="formTambah" style="margin-top:1rem;">
-          <input type="text" id="inputNama" placeholder="Nama Pelanggan" required style="width:100%; padding:.75rem; margin:.5rem 0; border:1px solid #cbd5e1; border-radius:6px;">
-          <input type="tel" id="inputTelepon" placeholder="No. Telepon" required style="width:100%; padding:.75rem; margin:.5rem 0; border:1px solid #cbd5e1; border-radius:6px;">
-          <input type="text" id="inputLayanan" placeholder="Jenis Layanan" required style="width:100%; padding:.75rem; margin:.5rem 0; border:1px solid #cbd5e1; border-radius:6px;">
-          <button type="submit" class="btn btn-primary">Simpan Data</button>
-        </form>
-      </div>
-      
-      <div style="background:#fff; padding:1.5rem; border-radius:12px;">
-        <h3>Data Pesanan / Servis</h3>
-        <table border="1" cellpadding="10" style="width:100%; border-collapse:collapse; margin-top:1rem;">
-          <thead style="background:#f1f5f9;">
-            <tr><th>Nama</th><th>Telepon</th><th>Layanan</th><th>Aksi</th></tr>
-          </thead>
-          <tbody id="tabelData"></tbody>
-        </table>
-      </div>
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Email Admin</label>
+          <input type="email" id="email" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="admin@email.com">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Kata Sandi</label>
+          <input type="password" id="password" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="••••••••">
+        </div>
+        <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-lg font-semibold">
+          <i class="fas fa-sign-in-alt mr-2"></i> Masuk
+        </button>
+      </form>
+      <p class="text-center mt-4 text-sm text-gray-500">
+        <a href="index.html" class="text-primary hover:underline">← Kembali ke Beranda</a>
+      </p>
     </div>
   </div>
-  
-  <script type="module" src="admin.js"></script>
+
+  <!-- Halaman Dashboard -->
+  <div id="dashboardPage" class="hidden">
+    <header class="bg-white shadow-md px-6 py-4 flex justify-between items-center no-print">
+      <h1 class="text-xl font-bold text-primary">
+        <i class="fas fa-cog mr-2"></i>Panel Admin — Melsya Teknik Center
+      </h1>
+      <div class="flex items-center gap-4">
+        <span id="adminEmail" class="text-sm text-gray-600"></span>
+        <button id="btnLogout" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg text-sm font-medium">
+          <i class="fas fa-sign-out-alt mr-1"></i> Keluar
+        </button>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6">
+      <!-- 📍 PENGATURAN LOKASI BENGKEL -->
+      <div class="bg-white rounded-xl shadow-sm p-6 mb-8 no-print">
+        <h2 class="text-xl font-bold mb-4"><i class="fas fa-map-marker-alt text-primary mr-2"></i>Pengaturan Lokasi Bengkel</h2>
+        <form id="formLokasiBengkel" class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Latitude</label>
+            <input type="number" step="0.000001" id="bengkelLat" required class="w-full px-3 py-2 border rounded-lg">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Longitude</label>
+            <input type="number" step="0.000001" id="bengkelLng" required class="w-full px-3 py-2 border rounded-lg">
+          </div>
+          <div class="md:col-span-2 flex gap-3">
+            <button type="button" id="btnDeteksiLokasi" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg font-medium">
+              <i class="fas fa-location-dot mr-1"></i> Gunakan Lokasi Saat Ini
+            </button>
+            <button type="submit" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium">
+              <i class="fas fa-save mr-1"></i> Simpan Lokasi
+            </button>
+            <a id="bukaMaps" href="#" target="_blank" class="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-medium">
+              <i class="fas fa-map-marked-alt mr-1"></i> Lihat di Maps
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Statistik -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 no-print">
+        <div class="bg-white rounded-xl p-4 shadow-sm">
+          <p class="text-gray-500 text-sm">Total Pesanan</p>
+          <p id="totalPesanan" class="text-2xl font-bold text-primary">0</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm">
+          <p class="text-gray-500 text-sm">Baru Masuk</p>
+          <p id="pesananBaru" class="text-2xl font-bold text-secondary">0</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm">
+          <p class="text-gray-500 text-sm">Sedang Dikerjakan</p>
+          <p id="pesananProses" class="text-2xl font-bold text-blue-600">0</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm">
+          <p class="text-gray-500 text-sm">Selesai</p>
+          <p id="pesananSelesai" class="text-2xl font-bold text-success">0</p>
+        </div>
+      </div>
+
+      <!-- Daftar Pesanan -->
+      <div class="bg-white rounded-xl shadow-sm p-6 mb-8 no-print">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-bold">📋 Daftar Pesanan Servis</h2>
+          <button id="btnRefresh" class="text-primary hover:text-primary/80">
+            <i class="fas fa-sync-alt mr-1"></i> Refresh
+          </button>
+        </div>
+        <div id="daftarPesanan" class="space-y-4">
+          <p class="text-gray-500 text-center py-8">Memuat data pesanan...</p>
+        </div>
+      </div>
+
+      <!-- Area Nota Cetak -->
+      <div id="areaNota" class="hidden">
+        <div class="flex justify-between items-center mb-4 no-print">
+          <h2 class="text-xl font-bold">🧾 Nota Servis</h2>
+          <div class="gap-2 flex">
+            <button id="btnCetakNota" class="bg-success hover:bg-success/90 text-white px-4 py-2 rounded-lg font-medium">
+              <i class="fas fa-print mr-1"></i> Cetak
+            </button>
+            <button id="btnTutupNota" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg font-medium">
+              Tutup
+            </button>
+          </div>
+        </div>
+        <div id="nota-cetak" class="bg-white p-8 rounded-xl shadow-sm border-2 border-gray-200 max-w-2xl mx-auto"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Edit -->
+  <div id="modalEdit" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 no-print">
+    <div class="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <h3 class="text-xl font-bold mb-4">✏️ Edit Pesanan</h3>
+      <form id="formEdit" class="space-y-4">
+        <input type="hidden" id="editId">
+        <div>
+          <label class="block text-sm font-medium mb-1">Nama Pelanggan</label>
+          <input type="text" id="editNama" class="w-full px-3 py-2 border rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Lokasi GPS</label>
+          <input type="text" id="editLokasi" class="w-full px-3 py-2 border rounded-lg" readonly>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Status Pesanan</label>
+          <select id="editStatus" class="w-full px-3 py-2 border rounded-lg">
+            <option value="baru">🆕 Baru Masuk</option>
+            <option value="proses">🔧 Sedang Dikerjakan</option>
+            <option value="selesai">✅ Selesai</option>
+            <option value="batal">❌ Dibatalkan</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Keterangan / Catatan Teknisi</label>
+          <textarea id="editCatatanTeknisi" rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea>
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button type="button" id="btnBatalEdit" class="flex-1 bg-gray-200 py-2 rounded-lg hover:bg-gray-300">Batal</button>
+          <button type="submit" class="flex-1 bg-primary text-white py-2 rounded-lg hover:bg-primary/90">Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </body>
 </html>

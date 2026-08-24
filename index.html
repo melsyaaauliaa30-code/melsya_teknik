@@ -9,12 +9,20 @@
   <meta name="author" content="Melsya Teknik Center">
   <link rel="canonical" href="https://melsya-teknik.github.io/">
   
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <!-- Leaflet Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Leaflet Routing -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css">
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
   
-  <!-- Konfigurasi Warna -->
+  <!-- Firebase -->
+  <script type="module" src="app.js"></script>
+  
   <script>
     tailwind.config = {
       theme: {
@@ -22,6 +30,8 @@
           colors: {
             primary: '#0F4C81',
             secondary: '#F59E0B',
+            danger: '#EF4444',
+            success: '#10B981',
             dark: '#1E293B',
             light: '#F8FAFC'
           },
@@ -36,13 +46,11 @@
   
   <style type="text/tailwindcss">
     @layer utilities {
-      .content-auto { content-visibility: auto; }
       .shadow-soft { box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
-      .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+      .card-hover { @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1; }
     }
   </style>
   
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -56,29 +64,29 @@
           <span class="text-primary text-2xl"><i class="fas fa-bolt"></i></span>
           <span class="font-heading font-bold text-lg md:text-xl text-primary">Melsya Teknik Center</span>
         </a>
-        <nav class="hidden md:flex items-center gap-8">
+        <nav class="hidden md:flex items-center gap-6">
           <a href="#beranda" class="font-medium hover:text-primary transition-colors">Beranda</a>
           <a href="#layanan" class="font-medium hover:text-primary transition-colors">Layanan</a>
           <a href="#tentang" class="font-medium hover:text-primary transition-colors">Tentang</a>
           <a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" class="font-medium hover:text-primary transition-colors">Artikel</a>
-          <a href="#kontak" class="font-medium hover:text-primary transition-colors">Kontak</a>
-          <a href="https://wa.me/6285356434003" target="_blank" class="bg-secondary hover:bg-secondary/90 text-white px-5 py-2 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg">
-            <i class="fas fa-phone-alt mr-1"></i> Hubungi
+          <a href="#pesan" class="font-medium hover:text-primary transition-colors">Pesan Servis</a>
+          <a href="admin.html" class="bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg text-sm font-medium">
+            <i class="fas fa-user-cog mr-1"></i> Admin
           </a>
         </nav>
-        <button id="menuBtn" class="md:hidden text-2xl text-dark hover:text-primary transition-colors">
+        <button id="menuBtn" class="md:hidden text-2xl text-dark hover:text-primary">
           <i class="fas fa-bars"></i>
         </button>
       </div>
       <div id="mobileMenu" class="md:hidden hidden bg-white absolute left-0 right-0 top-full border-t px-4 py-4 shadow-lg">
         <div class="flex flex-col gap-4">
-          <a href="#beranda" class="font-medium hover:text-primary transition-colors py-2">Beranda</a>
-          <a href="#layanan" class="font-medium hover:text-primary transition-colors py-2">Layanan</a>
-          <a href="#tentang" class="font-medium hover:text-primary transition-colors py-2">Tentang</a>
-          <a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" class="font-medium hover:text-primary transition-colors py-2">Artikel</a>
-          <a href="#kontak" class="font-medium hover:text-primary transition-colors py-2">Kontak</a>
-          <a href="https://wa.me/6285356434003" target="_blank" class="bg-secondary hover:bg-secondary/90 text-white px-5 py-3 rounded-lg font-semibold transition-all text-center">
-            <i class="fas fa-phone-alt mr-1"></i> Hubungi via WA
+          <a href="#beranda" class="font-medium hover:text-primary py-2">Beranda</a>
+          <a href="#layanan" class="font-medium hover:text-primary py-2">Layanan</a>
+          <a href="#tentang" class="font-medium hover:text-primary py-2">Tentang</a>
+          <a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" class="font-medium hover:text-primary py-2">Artikel</a>
+          <a href="#pesan" class="font-medium hover:text-primary py-2">Pesan Servis</a>
+          <a href="admin.html" class="bg-gray-100 px-3 py-2 rounded-lg text-center">
+            <i class="fas fa-user-cog mr-1"></i> Admin
           </a>
         </div>
       </div>
@@ -86,41 +94,26 @@
   </header>
 
   <main>
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section id="beranda" class="pt-28 pb-20 md:pt-36 md:pb-28 bg-gradient-to-br from-primary/5 to-primary/10">
       <div class="container mx-auto px-4">
         <div class="grid md:grid-cols-2 gap-12 items-center">
-          <div class="order-2 md:order-1">
-            <h1 class="font-heading font-extrabold text-[clamp(2rem,5vw,3.5rem)] leading-tight text-dark mb-6">
+          <div>
+            <h1 class="font-heading font-extrabold text-[clamp(2rem,5vw,3.5rem)] leading-tight mb-6">
               Solusi Servis <span class="text-primary">Elektronik & Listrik</span> Terpercaya
             </h1>
-            <p class="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
-              Melsya Teknik Center — Servis Komputer, HP, TV, Elektronik, Listrik & Jaringan di Sawahlunto. Teknisi berpengalaman, garansi servis, antar-jemput tersedia.
-            </p>
-            <div class="flex flex-wrap gap-4 mb-10">
-              <a href="#kontak" class="bg-secondary hover:bg-secondary/90 text-white px-8 py-3 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl">
-                <i class="fas fa-tools mr-2"></i> Pesan Servis
-              </a>
-              <a href="#layanan" class="bg-white hover:bg-gray-50 text-primary border-2 border-primary px-8 py-3 rounded-lg font-semibold transition-all shadow-md">
-                Lihat Layanan
-              </a>
-            </div>
-            <div class="flex flex-wrap gap-6 text-gray-600">
-              <div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary text-xl"></i> Garansi Servis</div>
-              <div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary text-xl"></i> Teknisi Berpengalaman</div>
-              <div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary text-xl"></i> Antar-Jemput</div>
-            </div>
+            <p class="text-lg text-gray-700 mb-8">Melsya Teknik Center — Servis Komputer, HP, TV, Elektronik, Listrik di Sawahlunto. Analisa kerusakan awal, antar-jemput, garansi servis.</p>
+            <a href="#pesan" class="bg-secondary hover:bg-secondary/90 text-white px-8 py-3 rounded-lg font-semibold shadow-lg inline-block">
+              <i class="fas fa-tools mr-2"></i> Pesan Servis Sekarang
+            </a>
           </div>
-          <div class="order-1 md:order-2 flex justify-center">
+          <div class="flex justify-center">
             <div class="relative w-full max-w-md">
               <div class="absolute -inset-4 bg-primary/20 rounded-2xl blur-xl"></div>
-              <div class="relative bg-white rounded-2xl shadow-soft p-6 overflow-hidden">
-                <i class="fas fa-tools text-primary text-[120px] opacity-10 absolute -right-6 -bottom-6"></i>
-                <div class="relative z-10 py-8 text-center">
-                  <i class="fas fa-bolt text-primary text-6xl mb-4"></i>
-                  <h3 class="font-heading font-bold text-2xl text-primary mb-2">Melsya Teknik Center</h3>
-                  <p class="text-gray-600">Solusi Teknis & Listrik Terpercaya</p>
-                </div>
+              <div class="relative bg-white rounded-2xl shadow-soft p-8 text-center">
+                <i class="fas fa-bolt text-primary text-6xl mb-4"></i>
+                <h3 class="font-heading font-bold text-2xl text-primary">Melsya Teknik Center</h3>
+                <p class="text-gray-600 mt-2">Sawahlunto, Sumatera Barat</p>
               </div>
             </div>
           </div>
@@ -128,56 +121,46 @@
       </div>
     </section>
 
-    <!-- Layanan -->
+    <!-- ============================================== -->
+    <!-- LAYANAN KAMI — DIPERBAIKI & BERFUNGSI -->
+    <!-- ============================================== -->
     <section id="layanan" class="py-20 bg-white">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
-          <h2 class="font-heading font-bold text-[clamp(1.8rem,3vw,2.5rem)] text-dark mb-4">Layanan Kami</h2>
-          <p class="text-lg text-gray-600 max-w-2xl mx-auto">Berbagai jasa servis dan perbaikan untuk kebutuhan elektronik, listrik, dan perangkat Anda</p>
+          <h2 class="font-heading font-bold text-3xl mb-4">Layanan Kami</h2>
+          <p class="text-lg text-gray-600">Berbagai jasa servis untuk kebutuhan Anda</p>
         </div>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div class="bg-gray-50 rounded-xl p-6 shadow-soft hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
-            <div class="w-14 h-14 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-2xl mb-5 group-hover:bg-primary group-hover:text-white transition-all">
-              <i class="fas fa-tv"></i>
-            </div>
-            <h3 class="font-heading font-bold text-xl mb-3">Servis Elektronik</h3>
-            <p class="text-gray-600 leading-relaxed">TV, Kulkas, Mesin Cuci, Audio & peralatan elektronik rumah tangga</p>
-          </div>
-          <div class="bg-gray-50 rounded-xl p-6 shadow-soft hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
-            <div class="w-14 h-14 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-2xl mb-5 group-hover:bg-primary group-hover:text-white transition-all">
-              <i class="fas fa-laptop"></i>
-            </div>
-            <h3 class="font-heading font-bold text-xl mb-3">Servis Komputer & Laptop</h3>
-            <p class="text-gray-600 leading-relaxed">Perbaikan, instalasi ulang, upgrade, pembersihan virus & perawatan</p>
-          </div>
-          <div class="bg-gray-50 rounded-xl p-6 shadow-soft hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
-            <div class="w-14 h-14 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-2xl mb-5 group-hover:bg-primary group-hover:text-white transition-all">
-              <i class="fas fa-mobile-alt"></i>
-            </div>
-            <h3 class="font-heading font-bold text-xl mb-3">Servis HP & Gadget</h3>
-            <p class="text-gray-600 leading-relaxed">Ganti LCD, baterai, konektor cas, perbaikan mati total & software</p>
-          </div>
-          <div class="bg-gray-50 rounded-xl p-6 shadow-soft hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
-            <div class="w-14 h-14 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-2xl mb-5 group-hover:bg-primary group-hover:text-white transition-all">
-              <i class="fas fa-bolt"></i>
-            </div>
-            <h3 class="font-heading font-bold text-xl mb-3">Jasa Listrik</h3>
-            <p class="text-gray-600 leading-relaxed">Instalasi baru, perbaikan kerusakan, pasang lampu, & pengecekan instalasi</p>
-          </div>
-          <div class="bg-gray-50 rounded-xl p-6 shadow-soft hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
-            <div class="w-14 h-14 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-2xl mb-5 group-hover:bg-primary group-hover:text-white transition-all">
-              <i class="fas fa-wifi"></i>
-            </div>
-            <h3 class="font-heading font-bold text-xl mb-3">Jaringan & Internet</h3>
-            <p class="text-gray-600 leading-relaxed">Pemasangan WiFi, kabel LAN, setting router & perluasan jaringan</p>
-          </div>
-          <div class="bg-gray-50 rounded-xl p-6 shadow-soft hover:shadow-lg transition-all duration-300 group hover:-translate-y-1">
-            <div class="w-14 h-14 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-2xl mb-5 group-hover:bg-primary group-hover:text-white transition-all">
-              <i class="fas fa-solar-panel"></i>
-            </div>
-            <h3 class="font-heading font-bold text-xl mb-3">Konsultasi & Instalasi PLTS</h3>
-            <p class="text-gray-600 leading-relaxed">Perencanaan, perhitungan, hingga pemasangan Panel Surya</p>
-          </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <a href="#pesan" class="bg-gray-50 rounded-xl p-6 shadow-soft card-hover">
+            <i class="fas fa-tv text-primary text-3xl mb-4"></i>
+            <h3 class="font-bold text-xl mb-2">Servis Elektronik</h3>
+            <p class="text-gray-600">TV, Kulkas, Mesin Cuci, Audio</p>
+          </a>
+          <a href="#pesan" class="bg-gray-50 rounded-xl p-6 shadow-soft card-hover">
+            <i class="fas fa-laptop text-primary text-3xl mb-4"></i>
+            <h3 class="font-bold text-xl mb-2">Servis Komputer</h3>
+            <p class="text-gray-600">Perbaikan, Instalasi, Upgrade</p>
+          </a>
+          <a href="#pesan" class="bg-gray-50 rounded-xl p-6 shadow-soft card-hover">
+            <i class="fas fa-mobile-alt text-primary text-3xl mb-4"></i>
+            <h3 class="font-bold text-xl mb-2">Servis HP & Gadget</h3>
+            <p class="text-gray-600">LCD, Baterai, Software</p>
+          </a>
+          <a href="#pesan" class="bg-gray-50 rounded-xl p-6 shadow-soft card-hover">
+            <i class="fas fa-bolt text-primary text-3xl mb-4"></i>
+            <h3 class="font-bold text-xl mb-2">Jasa Listrik</h3>
+            <p class="text-gray-600">Instalasi, Perbaikan, Pemasangan</p>
+          </a>
+          <a href="#pesan" class="bg-gray-50 rounded-xl p-6 shadow-soft card-hover">
+            <i class="fas fa-wifi text-primary text-3xl mb-4"></i>
+            <h3 class="font-bold text-xl mb-2">Jaringan & WiFi</h3>
+            <p class="text-gray-600">Pemasangan & Konfigurasi</p>
+          </a>
+          <a href="#pesan" class="bg-gray-50 rounded-xl p-6 shadow-soft card-hover">
+            <i class="fas fa-solar-panel text-primary text-3xl mb-4"></i>
+            <h3 class="font-bold text-xl mb-2">Konsultasi PLTS</h3>
+            <p class="text-gray-600">Panel Surya & Energi Mandiri</p>
+          </a>
         </div>
       </div>
     </section>
@@ -187,143 +170,146 @@
       <div class="container mx-auto px-4">
         <div class="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <span class="text-primary font-semibold">Tentang Kami</span>
-            <h2 class="font-heading font-bold text-[clamp(1.8rem,3vw,2.5rem)] text-dark mt-2 mb-6">Melsya Teknik Center</h2>
-            <p class="text-gray-700 mb-4 leading-relaxed">
-              Berdiri di Sawahlunto, kami hadir untuk memberikan solusi perbaikan elektronik, komputer, HP, instalasi listrik, hingga konsultasi dan pemasangan Pembangkit Listrik Tenaga Surya (PLTS).
-            </p>
-            <p class="text-gray-700 mb-6 leading-relaxed">
-              Didukung teknisi yang berpengalaman dan terpercaya, kami berkomitmen memberikan hasil terbaik dengan harga transparan, garansi servis, serta pelayanan antar-jemput untuk kenyamanan Anda.
-            </p>
-            <div class="grid grid-cols-2 gap-4 mb-8">
-              <div class="flex items-center gap-2"><i class="fas fa-check text-primary"></i> Garansi Servis</div>
-              <div class="flex items-center gap-2"><i class="fas fa-check text-primary"></i> Harga Terjangkau</div>
-              <div class="flex items-center gap-2"><i class="fas fa-check text-primary"></i> Pengerjaan Cepat</div>
-              <div class="flex items-center gap-2"><i class="fas fa-check text-primary"></i> Antar-Jemput</div>
+            <h2 class="font-heading font-bold text-3xl mb-6">Tentang Kami</h2>
+            <p class="text-gray-700 mb-4">Melsya Teknik Center hadir di Sawahlunto untuk memberikan solusi perbaikan elektronik, komputer, HP, dan instalasi listrik.</p>
+            <div class="flex flex-wrap gap-4 mb-6">
+              <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm"><i class="fas fa-check mr-1"></i> Garansi Servis</span>
+              <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm"><i class="fas fa-check mr-1"></i> Antar-Jemput</span>
             </div>
-            <a href="https://www.google.com/maps/search/?api=1&query=-0.6432566,100.7552686" target="_blank" class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-semibold transition-all">
-              <i class="fas fa-map-marker-alt"></i> Lihat Lokasi di Google Maps
+            <a id="linkLokasiBengkel" href="https://www.google.com/maps/search/?api=1&query=-0.6432566,100.7552686" target="_blank" class="inline-flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-lg hover:bg-primary/90">
+              <i class="fas fa-map-marker-alt"></i> Lihat Lokasi Bengkel
             </a>
-            <p class="mt-3 text-sm text-gray-500">
-              Koordinat: <a href="https://www.google.com/maps/search/?api=1&query=-0.6432566,100.7552686" target="_blank" class="text-primary hover:underline">-0.6432566, 100.7552686</a> — Sawahlunto, Sumatera Barat
-            </p>
+            <p id="koordinatBengkel" class="mt-2 text-sm text-gray-500">-0.6432566, 100.7552686 — Sawahlunto, Sumatera Barat</p>
           </div>
-          <div class="flex justify-center">
-            <div class="relative">
-              <div class="absolute -inset-4 bg-secondary/20 rounded-2xl blur-xl"></div>
-              <div class="relative bg-white rounded-2xl shadow-soft p-8 text-center">
-                <i class="fas fa-building text-primary text-5xl mb-4"></i>
-                <h3 class="font-heading font-bold text-xl mb-2">Melsya Teknik Center</h3>
-                <p class="text-gray-600 mb-4">Sawahlunto, Sumatera Barat</p>
-                <div class="text-left space-y-3 mt-4">
-                  <p class="flex items-start gap-2 text-sm"><i class="fas fa-map-marker-alt text-primary mt-1"></i>
-                    <a href="https://www.google.com/maps/search/?api=1&query=-0.6432566,100.7552686" target="_blank" class="hover:text-primary transition-colors">-0.6432566, 100.7552686</a>
-                  </p>
-                  <p class="flex items-start gap-2 text-sm"><i class="fas fa-phone text-primary mt-1"></i>
-                    <a href="tel:+6285356434003" class="hover:text-primary transition-colors">0853-5643-4003</a>
-                  </p>
-                  <p class="flex items-start gap-2 text-sm"><i class="fas fa-clock text-primary mt-1"></i>
-                    Senin–Sabtu: 08.00 – 18.00 WIB
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div class="bg-white rounded-2xl shadow-soft p-6">
+            <h4 class="font-bold text-lg mb-4">📞 Kontak Bengkel</h4>
+            <p class="mb-2"><i class="fab fa-whatsapp text-primary mr-2"></i> <a href="https://wa.me/6285356434003" target="_blank" class="text-primary">0853-5643-4003</a></p>
+            <p class="mb-2"><i class="fas fa-clock text-primary mr-2"></i> Senin–Sabtu: 08.00–18.00 WIB</p>
+            <p><i class="fas fa-map-marker-alt text-primary mr-2"></i> Sawahlunto, Sumatera Barat</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Kontak — Form Pesan Servis + Lokasi Otomatis -->
-    <section id="kontak" class="py-20 bg-white">
+    <!-- ============================================== -->
+    <!-- FORM PESAN SERVIS — HAPUS NO WA & ALAMAT MANUAL -->
+    <!-- ============================================== -->
+    <section id="pesan" class="py-20 bg-white">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
-          <h2 class="font-heading font-bold text-[clamp(1.8rem,3vw,2.5rem)] text-dark mb-4">Pesan Servis & Hubungi Kami</h2>
-          <p class="text-lg text-gray-600 max-w-2xl mx-auto">Isi formulir di bawah ini — lokasi Anda otomatis terdeteksi, lalu kirim langsung ke WhatsApp kami</p>
+          <h2 class="font-heading font-bold text-3xl mb-4">📋 Form Pemesanan Servis</h2>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">Deteksi lokasi otomatis, pilih perangkat, dapatkan analisa awal, dan kirim pesanan</p>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-10">
-          <!-- Info Kontak -->
-          <div class="space-y-6">
-            <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-xl hover:shadow-md transition-shadow">
-              <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl shrink-0">
-                <i class="fab fa-whatsapp"></i>
-              </div>
-              <div>
-                <h4 class="font-bold text-lg mb-1">WhatsApp / Telepon</h4>
-                <a href="https://wa.me/6285356434003" target="_blank" class="text-primary hover:underline">+62 853-5643-4003</a>
-              </div>
+        <div class="max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-soft p-6 md:p-8">
+          <form id="orderForm" class="space-y-6">
+            <!-- Data Pelanggan — HANYA NAMA -->
+            <div>
+              <label class="block text-sm font-medium mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
+              <input type="text" id="nama" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="Nama Anda">
             </div>
 
-            <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-xl hover:shadow-md transition-shadow">
-              <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl shrink-0">
-                <i class="fas fa-map-marker-alt"></i>
+            <!-- 📍 LOKASI GPS — HANYA DETEKSI OTOMATIS + PETA SATELIT -->
+            <div class="border border-gray-200 rounded-xl p-4 bg-white">
+              <label class="block text-sm font-medium mb-2">📍 Lokasi Anda & Rute ke Bengkel</label>
+              <div class="flex gap-2 mb-3">
+                <input type="text" id="lokasiGps" readonly class="flex-1 px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 text-sm" placeholder="Klik tombol di bawah untuk deteksi lokasi">
+                <button type="button" id="btnLokasi" class="bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-lg font-semibold whitespace-nowrap">
+                  <i class="fas fa-location-dot mr-1"></i> Deteksi Lokasi
+                </button>
               </div>
-              <div>
-                <h4 class="font-bold text-lg mb-1">Lokasi Bengkel</h4>
-                <a href="https://www.google.com/maps/search/?api=1&query=-0.6432566,100.7552686" target="_blank" class="text-primary hover:underline">
-                  -0.6432566, 100.7552686, Sawahlunto, Sumatera Barat
-                </a>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-xl hover:shadow-md transition-shadow">
-              <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl shrink-0">
-                <i class="fas fa-clock"></i>
-              </div>
-              <div>
-                <h4 class="font-bold text-lg mb-1">Jam Operasional</h4>
-                <p>Senin – Sabtu: 08.00 – 18.00 WIB<br>Minggu: Libur / By Appointment</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Form Pesan Servis — DENGAN FITUR LOKASI OTOMATIS -->
-          <div class="bg-gray-50 rounded-xl p-6 shadow-soft">
-            <h4 class="font-bold text-xl mb-5">📋 Form Pesan Servis</h4>
-            
-            <form id="orderForm" class="space-y-4">
-              <!-- Nama -->
-              <div>
-                <label class="block text-sm font-medium mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
-                <input type="text" id="nama" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="Contoh: Budi Santoso">
-              </div>
+              <p id="statusLokasi" class="text-xs text-gray-500 mb-3">Klik tombol untuk mendeteksi lokasi & menampilkan rute ke bengkel</p>
               
-              <!-- No WhatsApp -->
-              <div>
-                <label class="block text-sm font-medium mb-1">No. WhatsApp <span class="text-red-500">*</span></label>
-                <input type="tel" id="whatsapp" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="Contoh: 081234567890">
-              </div>
-              
-              <!-- Alamat Lengkap -->
-              <div>
-                <label class="block text-sm font-medium mb-1">Alamat Lengkap <span class="text-red-500">*</span></label>
-                <textarea id="alamat" rows="2" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all resize-none" placeholder="Alamat rumah / lokasi perbaikan"></textarea>
-              </div>
-              
-              <!-- Lokasi GPS Pelanggan -->
-              <div>
-                <label class="block text-sm font-medium mb-1">📍 Lokasi GPS Anda</label>
-                <div class="flex gap-2">
-                  <input type="text" id="lokasiGps" readonly class="flex-1 px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 text-sm" placeholder="Klik tombol di bawah untuk ambil lokasi">
-                  <button type="button" id="btnAmbilLokasi" class="bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-lg font-semibold transition-all whitespace-nowrap">
-                    <i class="fas fa-location-dot mr-1"></i> Ambil Lokasi
-                  </button>
+              <!-- Peta Satelit -->
+              <div id="mapContainer" class="hidden">
+                <div id="map" class="w-full h-80 rounded-lg border border-gray-200 mb-3"></div>
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                  <div class="bg-blue-50 p-3 rounded-lg">
+                    <span class="text-gray-500">📍 Koordinat Anda:</span>
+                    <span id="koordinatPelanggan" class="font-bold text-primary block mt-1">—</span>
+                  </div>
+                  <div class="bg-green-50 p-3 rounded-lg">
+                    <span class="text-gray-500">🛣️ Jarak Rute:</span>
+                    <span id="jarakRute" class="font-bold text-success block mt-1">—</span>
+                  </div>
+                  <div class="bg-amber-50 p-3 rounded-lg col-span-2">
+                    <span class="text-gray-500">⏱️ Estimasi Waktu Perjalanan:</span>
+                    <span id="estimasiWaktu" class="font-bold text-amber-600 block mt-1">—</span>
+                  </div>
                 </div>
-                <p id="statusLokasi" class="text-xs text-gray-500 mt-1">Klik tombol untuk mendeteksi koordinat lokasi Anda secara otomatis</p>
+              </div>
+            </div>
+
+            <!-- 🔧 DAFTAR PERANGKAT + ANALISA AI -->
+            <div class="space-y-4">
+              <div class="flex justify-between items-center">
+                <label class="text-sm font-medium">🔧 Perangkat yang Diservis</label>
+                <button type="button" id="btnTambahPerangkat" class="text-primary hover:text-primary/80 text-sm font-semibold">
+                  <i class="fas fa-plus-circle mr-1"></i> Tambah Perangkat
+                </button>
               </div>
               
-              <!-- Keluhan / Jenis Servis -->
-              <div>
-                <label class="block text-sm font-medium mb-1">Jenis Servis & Keluhan <span class="text-red-500">*</span></label>
-                <textarea id="keluhan" rows="4" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all resize-none" placeholder="Contoh: TV mati total, perlu servis..."></textarea>
+              <div id="daftarPerangkat" class="space-y-4">
+                <div class="perangkat-item border border-gray-200 rounded-xl p-4 bg-white">
+                  <div class="flex justify-between items-start mb-3">
+                    <span class="font-semibold text-primary">Perangkat #1</span>
+                    <button type="button" class="btn-hapus-perangkat text-gray-400 hover:text-red-500 text-sm hidden">
+                      <i class="fas fa-times"></i> Hapus
+                    </button>
+                  </div>
+                  
+                  <div class="grid md:grid-cols-2 gap-3 mb-3">
+                    <div>
+                      <label class="text-xs text-gray-500 mb-1 block">Jenis Perangkat</label>
+                      <select class="jenis-perangkat w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary">
+                        <option value="">Pilih...</option>
+                        <option value="TV">TV / Monitor</option>
+                        <option value="Kulkas">Kulkas</option>
+                        <option value="Mesin Cuci">Mesin Cuci</option>
+                        <option value="Komputer">Komputer / PC</option>
+                        <option value="Laptop">Laptop</option>
+                        <option value="HP">HP / Smartphone</option>
+                        <option value="Listrik">Instalasi Listrik</option>
+                        <option value="Lainnya">Lainnya</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="text-xs text-gray-500 mb-1 block">Merek / Tipe</label>
+                      <input type="text" class="merek-perangkat w-full px-3 py-2 rounded-lg border border-gray-300" placeholder="Contoh: Samsung, iPhone, dll">
+                    </div>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label class="text-xs text-gray-500 mb-1 block">Jenis Kerusakan</label>
+                    <select class="jenis-kerusakan w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-primary">
+                      <option value="">Pilih jenis kerusakan...</option>
+                    </select>
+                  </div>
+                  
+                  <div class="analisa-ai bg-blue-50 rounded-lg p-3 hidden">
+                    <p class="text-sm font-semibold text-primary mb-1"><i class="fas fa-robot mr-1"></i> Analisa Awal:</p>
+                    <p class="text-sm text-gray-700 saran-kerusakan"></p>
+                  </div>
+                  
+                  <div class="mt-3">
+                    <label class="text-xs text-gray-500 mb-1 block">Keterangan Tambahan</label>
+                    <textarea class="keterangan-perangkat w-full px-3 py-2 rounded-lg border border-gray-300 resize-none" rows="2" placeholder="Jelaskan keluhan secara detail"></textarea>
+                  </div>
+                </div>
               </div>
-              
-              <!-- Tombol Kirim ke WhatsApp -->
-              <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition-all text-lg">
-                <i class="fab fa-whatsapp mr-2"></i> Kirim Pesan via WhatsApp
-              </button>
-            </form>
-          </div>
+            </div>
+
+            <!-- Catatan Tambahan -->
+            <div>
+              <label class="block text-sm font-medium mb-1">Catatan Tambahan</label>
+              <textarea id="catatan" rows="2" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary resize-none" placeholder="Waktu yang diinginkan, hal khusus, dll"></textarea>
+            </div>
+
+            <!-- Tombol Kirim -->
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold text-lg transition-all">
+              <i class="fas fa-paper-plane mr-2"></i> Kirim Pesanan Servis
+            </button>
+          </form>
         </div>
       </div>
     </section>
@@ -334,178 +320,331 @@
     <div class="container mx-auto px-4">
       <div class="grid md:grid-cols-3 gap-10 mb-10">
         <div>
-          <h3 class="font-heading font-bold text-2xl mb-4">Melsya Teknik Center</h3>
-          <p class="text-gray-400 leading-relaxed">
-            Solusi servis elektronik, komputer, HP, listrik, dan jaringan terpercaya di Sawahlunto.
-          </p>
+          <h3 class="font-bold text-2xl mb-4">Melsya Teknik Center</h3>
+          <p class="text-gray-400">Solusi servis elektronik, komputer, HP, listrik, dan jaringan terpercaya di Sawahlunto.</p>
         </div>
         <div>
           <h4 class="font-bold text-lg mb-4">Tautan Cepat</h4>
           <ul class="space-y-2 text-gray-400">
-            <li><a href="#beranda" class="hover:text-white transition-colors">Beranda</a></li>
-            <li><a href="#layanan" class="hover:text-white transition-colors">Layanan</a></li>
-            <li><a href="#tentang" class="hover:text-white transition-colors">Tentang Kami</a></li>
-            <li><a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" class="hover:text-white transition-colors">Artikel</a></li>
+            <li><a href="#beranda" class="hover:text-white">Beranda</a></li>
+            <li><a href="#layanan" class="hover:text-white">Layanan</a></li>
+            <li><a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" class="hover:text-white">Artikel</a></li>
+            <li><a href="admin.html" class="hover:text-white">Admin</a></li>
           </ul>
         </div>
         <div>
           <h4 class="font-bold text-lg mb-4">Kontak</h4>
           <ul class="space-y-2 text-gray-400">
-            <li class="flex items-center gap-2"><i class="fab fa-whatsapp"></i> <a href="https://wa.me/6285356434003" target="_blank" class="hover:text-white">0853-5643-4003</a></li>
-            <li class="flex items-start gap-2">
-              <i class="fas fa-map-marker-alt mt-1"></i>
-              <a href="https://www.google.com/maps/search/?api=1&query=-0.6432566,100.7552686" target="_blank" class="hover:text-white">-0.6432566, 100.7552686, Sawahlunto</a>
-            </li>
+            <li><i class="fab fa-whatsapp mr-2"></i> <a href="https://wa.me/6285356434003" target="_blank" class="hover:text-white">0853-5643-4003</a></li>
+            <li><i class="fas fa-map-marker-alt mr-2"></i> <a id="footerLokasiBengkel" href="https://www.google.com/maps/search/?api=1&query=-0.6432566,100.7552686" target="_blank" class="hover:text-white">-0.6432566, 100.7552686</a></li>
           </ul>
         </div>
       </div>
       <div class="border-t border-gray-700 pt-6 text-center text-gray-500 text-sm">
-        <p>&copy; 2025-2026 Melsya Teknik Center. Semua Hak Dilindungi.</p>
+        <p>&copy; 2026 Melsya Teknik Center. Semua Hak Dilindungi.</p>
       </div>
     </div>
   </footer>
 
-  <!-- JavaScript -->
   <script>
-    // ===== MENU MOBILE =====
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    menuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-      menuBtn.innerHTML = mobileMenu.classList.contains('hidden') 
-        ? '<i class="fas fa-bars"></i>' 
-        : '<i class="fas fa-times"></i>';
+    // Lokasi Bengkel — diambil dari Firebase atau default
+    let BENGKEL_LAT = -0.6432566;
+    let BENGKEL_LNG = 100.7552686;
+    let map = null;
+    let routingControl = null;
+    let perangkatCounter = 1;
+
+    // Menu Mobile
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
     });
 
-    // ===== NAVBAR SCROLL =====
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 50) {
-        navbar.classList.add('shadow-md', 'py-2');
-        navbar.classList.remove('py-3');
-      } else {
-        navbar.classList.remove('shadow-md', 'py-2');
-        navbar.classList.add('py-3');
+    // Pilihan kerusakan & analisa AI
+    const dataKerusakan = {
+      TV: {
+        options: ['Mati total', 'Gambar tidak ada', 'Suara tidak ada', 'Layar bergaris', 'Tidak bisa nyala', 'Remote tidak berfungsi', 'Lainnya'],
+        saran: {
+          'Mati total': 'Kemungkinan kerusakan pada: Bagian power supply, sekring putus, atau kerusakan pada regulator tegangan. Perlu pengecekan sumber arus listrik terlebih dahulu.',
+          'Gambar tidak ada': 'Kemungkinan kerusakan pada: Panel layar, kabel fleksibel, atau modul pemrosesan gambar. Untuk TV LED/LCD kemungkinan inverter atau lampu latar bermasalah.',
+          'Suara tidak ada': 'Kemungkinan kerusakan pada: Speaker rusak, jalur audio, atau pengaturan volume. Coba periksa pengaturan suara terlebih dahulu.',
+          'Layar bergaris': 'Kemungkinan kerusakan pada: Panel layar rusak, kabel fleksibel longgar/rusak, atau kerusakan pada T-Con board. Biaya perbaikan bisa bervariasi tergantung komponen yang rusak.',
+          'Tidak bisa nyala': 'Kemungkinan kerusakan pada: Tombol power, penerima sinyal remote, atau sistem kontrol utama. Coba ganti baterai remote dan tekan tombol manual.',
+          'Remote tidak berfungsi': 'Kemungkinan kerusakan pada: Baterai habis, sensor penerima di TV, atau tombol remote aus. Coba ganti baterai terlebih dahulu.',
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
+        }
+      },
+      Kulkas: {
+        options: ['Tidak dingin', 'Bunyi berisik', 'Mati total', 'Es berlebih', 'Air menetes', 'Kompresor nyala mati', 'Lainnya'],
+        saran: {
+          'Tidak dingin': 'Kemungkinan: Kebocoran freon, kipas evaporator mati, termostat rusak, atau kondensor kotor. Bersihkan bagian belakang bawah terlebih dahulu.',
+          'Bunyi berisik': 'Kemungkinan: Posisi tidak rata, benda menyentuh kompresor, dudukan kompresor rusak, atau kipas bermasalah. Cek keseimbangan kulkas dulu.',
+          'Mati total': 'Kemungkinan: Listrik tidak masuk, kabel putus, relay/overload protector rusak, atau kompresor jebol. Coba colokkan alat lain ke stopkontak.',
+          'Es berlebih': 'Kemungkinan: Pintu tidak rapat, karet pintu rusak, sistem defrost mati, atau termostat tidak berfungsi. Cek segel pintu terlebih dahulu.',
+          'Air menetes': 'Kemungkinan: Saluran pembuangan tersumbat, nampan kotor, atau posisi miring. Bersihkan saluran pembuangan di bagian belakang.',
+          'Kompresor nyala mati': 'Kemungkinan: Relay/overload rusak, kapasitor lemah, atau suhu lingkungan terlalu panas. Perlu pengecekan komponen kelistrikan.',
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
+        }
+      },
+      'Mesin Cuci': {
+        options: ['Tidak berputar', 'Tidak membuang air', 'Tidak masuk air', 'Bocor air', 'Bergetar keras', 'Program berhenti', 'Lainnya'],
+        saran: {
+          'Tidak berputar': 'Kemungkinan: Motor penggerak rusak, sabuk putus, atau papan kontrol bermasalah. Periksa apakah ada suara dengung saat dinyalakan.',
+          'Tidak membuang air': 'Kemungkinan: Selang tersumbat, pompa pembuangan rusak, atau filter kotor. Bersihkan filter pembuangan air terlebih dahulu.',
+          'Tidak masuk air': 'Kemungkinan: Keran tertutup, selang masuk bengkok, atau katup air rusak. Pastikan tekanan air cukup.',
+          'Bocor air': 'Kemungkinan: Selang longgar, paking/segel rusak, atau tabung bocor. Periksa semua sambungan selang.',
+          'Bergetar keras': 'Kemungkinan: Mesin tidak rata, beban tidak seimbang, atau peredam rusak. Ratakan posisi mesin dan kurangi beban cucian.',
+          'Program berhenti': 'Kemungkinan: Sensor rusak, papan kontrol bermasalah, atau aliran air terhenti. Catat kode error jika ada.',
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
+        }
+      },
+      Komputer: {
+        options: ['Mati total', 'Layar biru/hang', 'Lambat berat', 'Tidak ada tampilan', 'Sering restart', 'Terkena virus', 'Lainnya'],
+        saran: {
+          'Mati total': 'Kemungkinan: PSU rusak, kabel power longgar, atau motherboard bermasalah. Cek kabel dan stopkontak dulu.',
+          'Layar biru/hang': 'Kemungkinan: RAM rusak/longgar, harddisk bermasalah, driver error, atau sistem operasi korup. Perlu cek kesehatan penyimpanan.',
+          'Lambat berat': 'Kemungkinan: Penyimpanan hampir penuh, terlalu banyak program startup, RAM kurang, atau sistem terinfeksi. Bersihkan file sampah dulu.',
+          'Tidak ada tampilan': 'Kemungkinan: Kabel monitor longgar, VGA/onboard video rusak, atau RAM bermasalah. Cek kabel dan bersihkan RAM.',
+          'Sering restart': 'Kemungkinan: Overheat, PSU tidak stabil, atau driver bermasalah. Cek suhu processor dan kipas.',
+          'Terkena virus': 'Perlu instal ulang sistem dan pembersihan menyeluruh. Data penting sebaiknya dicadangkan dulu.',
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
+        }
+      },
+      Laptop: {
+        options: ['Layar mati tapi nyala', 'Keyboard rusak', 'Baterai tidak mengisi', 'Lambat', 'Layar pecah', 'Tidak nyala', 'Lainnya'],
+        saran: {
+          'Layar mati tapi nyala': 'Kemungkinan: Kabel fleksibel layar putus, inverter rusak, atau lampu latar mati. Hubungkan ke monitor eksternal untuk cek.',
+          'Keyboard rusak': 'Kemungkinan: Tumpahan cairan, tombol aus, atau kabel keyboard longgar. Bisa diganti satuan atau keseluruhan.',
+          'Baterai tidak mengisi': 'Kemungkinan: Baterai habis masa pakai, adaptor rusak, atau konektor bermasalah. Coba adaptor lain dulu.',
+          'Lambat': 'Kemungkinan: Penyimpanan hampir penuh, RAM kurang, atau butuh instal ulang. Upgrade SSD sangat disarankan.',
+          'Layar pecah': 'Panel layar perlu diganti. Siapkan nomor model laptop untuk estimasi biaya.',
+          'Tidak nyala': 'Kemungkinan: Adaptor rusak, konektor cas lepas, motherboard bermasalah. Cek lampu indikator saat dicolok.',
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
+        }
+      },
+      HP: {
+        options: ['Layar pecah', 'Tidak mengisi daya', 'Mati total', 'Sering restart', 'Kamera buram', 'Tombol rusak', 'Lainnya'],
+        saran: {
+          'Layar pecah': 'Panel layar perlu diganti. Tergantung tipe — bisa ganti kaca saja atau satu set dengan layar.',
+          'Tidak mengisi daya': 'Kemungkinan: Konektor kotor/rusak, baterai rusak, atau kabel data bermasalah. Bersihkan lubang cas dulu dengan hati-hati.',
+          'Mati total': 'Kemungkinan: Baterai habis/rusak, IC power rusak, atau tombol power rusak. Coba cas lebih dari 30 menit dulu.',
+          'Sering restart': 'Kemungkinan: Baterai lemah, sistem bermasalah, atau tombol power tertekan. Cadangkan data dulu sebelum servis.',
+          'Kamera buram': 'Kemungkinan: Lensa kotor, pelindung retak, atau modul kamera rusak. Bersihkan lensa dengan kain lembut dulu.',
+          'Tombol rusak': 'Tombol power/volume tidak berfungsi — perlu pengganti fleksibel tombol.',
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
+        }
+      },
+      Listrik: {
+        options: ['Listrik mati', 'Sering jeglek', 'Tegangan rendah', 'Kabel panas', 'Stopkontak rusak', 'Instalasi baru', 'Lainnya'],
+        saran: {
+          'Listrik mati': 'Cek kWh meter dulu — apakah token habis atau MCB turun. Jika MCB tidak turun tapi tetap mati, kemungkinan kabel putus atau sekring utama putus.',
+          'Sering jeglek': 'Kemungkinan: Beban berlebih, korsleting, atau MCB ukuran terlalu kecil. Kurangi beban dan cek apakah ada bau terbakar.',
+          'Tegangan rendah': 'Kemungkinan: Kabel terlalu kecil/terlalu panjang, sambungan kendor, atau masalah dari PLN. Bahaya untuk alat elektronik sensitif.',
+          'Kabel panas': 'Kemungkinan: Ukuran kabel terlalu kecil untuk beban, sambungan longgar, atau korsleting. Segera matikan dan periksa — risiko kebakaran!',
+          'Stopkontak rusak': 'Kemungkinan: Beban berlebih, kendor, atau terbakar bagian dalam. Ganti dengan yang berkualitas dan sesuai beban.',
+          'Instalasi baru': 'Perlu perencanaan jalur, hitungan beban, dan pemilihan ukuran kabel yang tepat agar aman dan sesuai standar PLN.',
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
+        }
+      },
+      Lainnya: {
+        options: ['Kerusakan fisik', 'Tidak nyala', 'Perlu perawatan', 'Modifikasi', 'Pemasangan baru', 'Lainnya'],
+        saran: {
+          'Kerusakan fisik': 'Perlu pengecekan kondisi fisik dan komponen dalam untuk menentukan solusi perbaikan.',
+          'Tidak nyala': 'Perlu pengecekan kelistrikan dan komponen utama untuk menemukan sumber masalah.',
+          'Perlu perawatan': 'Pembersihan, pelumasan, dan pengecekan menyeluruh untuk menjaga kinerja dan umur perangkat.',
+          'Modifikasi': 'Silakan jelaskan detail modifikasi yang diinginkan agar kami dapat memberikan saran dan estimasi biaya.',
+          'Pemasangan baru': 'Kami bantu mulai dari perencanaan, pemilihan komponen, hingga pemasangan dan uji coba.',
+          'Lainnya': 'Silakan jelaskan secara detail di kolom keterangan agar teknisi siap dengan peralatan yang tepat.'
+        }
       }
-    });
+    };
 
-    // ===== 📍 AMBIL LOKASI GPS PELANGGAN =====
-    const btnAmbilLokasi = document.getElementById('btnAmbilLokasi');
-    const inputLokasiGps = document.getElementById('lokasiGps');
-    const statusLokasi = document.getElementById('statusLokasi');
-    let pelangganLat = '';
-    let pelangganLng = '';
+    // Inisialisasi kerusakan pertama
+    initKerusakan(document.querySelector('.perangkat-item'));
 
-    btnAmbilLokasi.addEventListener('click', () => {
-      btnAmbilLokasi.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Mencari...';
-      btnAmbilLokasi.disabled = true;
+    function initKerusakan(container) {
+      const jenis = container.querySelector('.jenis-perangkat');
+      const rusak = container.querySelector('.jenis-kerusakan');
+      const analisa = container.querySelector('.analisa-ai');
+      const saranTeks = container.querySelector('.saran-kerusakan');
+
+      jenis.addEventListener('change', () => {
+        const val = jenis.value;
+        rusak.innerHTML = '<option value="">Pilih jenis kerusakan...</option>';
+        analisa.classList.add('hidden');
+        
+        if (val && dataKerusakan[val]) {
+          dataKerusakan[val].options.forEach(opt => {
+            const el = document.createElement('option');
+            el.value = opt;
+            el.textContent = opt;
+            rusak.appendChild(el);
+          });
+        }
+      });
+
+      rusak.addEventListener('change', () => {
+        const valJenis = jenis.value;
+        const valRusak = rusak.value;
+        
+        if (valJenis && valRusak && dataKerusakan[valJenis]?.saran?.[valRusak]) {
+          saranTeks.textContent = dataKerusakan[valJenis].saran[valRusak];
+          analisa.classList.remove('hidden');
+        } else {
+          analisa.classList.add('hidden');
+        }
+      });
+    }
+
+    // Tambah perangkat
+    document.getElementById('btnTambahPerangkat').addEventListener('click', tambahPerangkat);
+
+    function tambahPerangkat() {
+      perangkatCounter++;
+      const container = document.getElementById('daftarPerangkat');
+      const item = container.querySelector('.perangkat-item').cloneNode(true);
+      
+      item.querySelector('.font-semibold').textContent = `Perangkat #${perangkatCounter}`;
+      item.querySelectorAll('input, select, textarea').forEach(el => el.value = '');
+      item.querySelector('.analisa-ai').classList.add('hidden');
+      item.querySelector('.btn-hapus-perangkat').classList.remove('hidden');
+      
+      item.querySelector('.btn-hapus-perangkat').addEventListener('click', () => {
+        item.remove();
+        renomorPerangkat();
+      });
+      
+      container.appendChild(item);
+      initKerusakan(item);
+    }
+
+    function renomorPerangkat() {
+      document.querySelectorAll('.perangkat-item').forEach((el, idx) => {
+        el.querySelector('.font-semibold').textContent = `Perangkat #${idx + 1}`;
+      });
+      perangkatCounter = document.querySelectorAll('.perangkat-item').length;
+    }
+
+    // 📍 Deteksi Lokasi + Peta Satelit + Rute
+    let pelangganLat, pelangganLng;
+    
+    document.getElementById('btnLokasi').addEventListener('click', () => {
+      const btn = document.getElementById('btnLokasi');
+      const status = document.getElementById('statusLokasi');
+      const mapContainer = document.getElementById('mapContainer');
+      
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Mencari';
+      btn.disabled = true;
+      status.textContent = 'Mendeteksi lokasi...';
+      status.classList.remove('text-red-500', 'text-green-600');
       
       if (!navigator.geolocation) {
-        statusLokasi.textContent = '❌ Browser tidak mendukung lokasi GPS';
-        statusLokasi.classList.add('text-red-500');
-        btnAmbilLokasi.innerHTML = '<i class="fas fa-location-dot mr-1"></i> Ambil Lokasi';
-        btnAmbilLokasi.disabled = false;
+        status.textContent = '❌ Browser tidak mendukung GPS';
+        status.classList.add('text-red-500');
+        btn.innerHTML = '<i class="fas fa-location-dot mr-1"></i> Deteksi Lokasi';
+        btn.disabled = false;
         return;
       }
-
+      
       navigator.geolocation.getCurrentPosition(
-        // ✅ BERHASIL MENDAPATKAN LOKASI
-        (position) => {
-          pelangganLat = position.coords.latitude;
-          pelangganLng = position.coords.longitude;
-          inputLokasiGps.value = `${pelangganLat}, ${pelangganLng}`;
-          statusLokasi.textContent = `✅ Lokasi terdeteksi (Akurasi: ${Math.round(position.coords.accuracy)} meter)`;
-          statusLokasi.classList.remove('text-red-500');
-          statusLokasi.classList.add('text-green-600');
-          btnAmbilLokasi.innerHTML = '<i class="fas fa-check mr-1"></i> Tersimpan';
-          btnAmbilLokasi.classList.remove('bg-primary', 'hover:bg-primary/90');
-          btnAmbilLokasi.classList.add('bg-green-600', 'hover:bg-green-700');
+        (pos) => {
+          pelangganLat = pos.coords.latitude;
+          pelangganLng = pos.coords.longitude;
+          document.getElementById('lokasiGps').value = `${pelangganLat.toFixed(6)}, ${pelangganLng.toFixed(6)}`;
+          document.getElementById('koordinatPelanggan').textContent = `${pelangganLat.toFixed(6)}, ${pelangganLng.toFixed(6)}`;
+          status.textContent = `✅ Lokasi terdeteksi (Akurasi: ${Math.round(pos.coords.accuracy)}m)`;
+          status.classList.add('text-green-600');
+          
+          mapContainer.classList.remove('hidden');
+          initMap(pelangganLat, pelangganLng);
+          
+          btn.innerHTML = '<i class="fas fa-check mr-1"></i> Terdeteksi';
+          btn.classList.add('bg-green-600', 'hover:bg-green-700');
+          btn.disabled = false;
         },
-        // ❌ GAGAL MENDAPATKAN LOKASI
-        (error) => {
-          btnAmbilLokasi.innerHTML = '<i class="fas fa-location-dot mr-1"></i> Ambil Lokasi';
-          btnAmbilLokasi.disabled = false;
-          switch(error.code) {
-            case error.PERMISSION_DENIED:
-              statusLokasi.textContent = '❌ Izin lokasi ditolak. Aktifkan izin lokasi di pengaturan browser.';
-              break;
-            case error.POSITION_UNAVAILABLE:
-              statusLokasi.textContent = '❌ Informasi lokasi tidak tersedia. Coba lagi.';
-              break;
-            case error.TIMEOUT:
-              statusLokasi.textContent = '❌ Waktu habis. Pastikan GPS aktif dan sinyal baik.';
-              break;
-            default:
-              statusLokasi.textContent = '❌ Tidak dapat mengambil lokasi. Isi alamat secara manual.';
-          }
-          statusLokasi.classList.add('text-red-500');
+        (err) => {
+          btn.innerHTML = '<i class="fas fa-location-dot mr-1"></i> Deteksi Lokasi';
+          btn.disabled = false;
+          if (err.code === 1) status.textContent = '❌ Izin lokasi ditolak! Aktifkan izin lokasi.';
+          else if (err.code === 2) status.textContent = '❌ Lokasi tidak tersedia. Coba lagi.';
+          else status.textContent = '❌ Gagal deteksi lokasi. Aktifkan GPS dan coba lagi.';
+          status.classList.add('text-red-500');
         },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        { enableHighAccuracy: true, timeout: 15000 }
       );
     });
 
-    // ===== ✅ KIRIM PESAN KE WHATSAPP =====
-    const orderForm = document.getElementById('orderForm');
-    const NOMOR_WA_TUJUAN = '6285356434003'; // Ganti jika perlu
-
-    orderForm.addEventListener('submit', (e) => {
-      e.preventDefault();
+    function initMap(lat, lng) {
+      if (map) map.remove();
       
-      const nama = document.getElementById('nama').value.trim();
-      const whatsapp = document.getElementById('whatsapp').value.trim();
-      const alamat = document.getElementById('alamat').value.trim();
-      const keluhan = document.getElementById('keluhan').value.trim();
-      const lokasiGps = document.getElementById('lokasiGps').value.trim();
-
-      // Susun pesan
-      let pesan = `🔔 *PESAN SERVIS BARU*
-
-👤 *Nama:* ${nama}
-📱 *No. WhatsApp:* ${whatsapp}
-🏠 *Alamat:* ${alamat}`;
-
-      if (lokasiGps) {
-        pesan += `
-📍 *Lokasi GPS:* ${lokasiGps}
-🗺️ *Buka di Maps:* https://www.google.com/maps/search/?api=1&query=${pelangganLat},${pelangganLng}`;
-      }
-
-      pesan += `
-
-🔧 *Jenis Servis & Keluhan:*
-${keluhan}
-
----
-*Dikirim dari Website Melsya Teknik Center*`;
-
-      // Encode & buka WhatsApp
-      const pesanEncoded = encodeURIComponent(pesan);
-      const waUrl = `https://wa.me/${NOMOR_WA_TUJUAN}?text=${pesanEncoded}`;
-      window.open(waUrl, '_blank');
+      map = L.map('map').setView([lat, lng], 13);
       
-      // Reset form
-      orderForm.reset();
-      statusLokasi.textContent = 'Klik tombol untuk mendeteksi koordinat lokasi Anda secara otomatis';
-      statusLokasi.classList.remove('text-green-600', 'text-red-500');
-      btnAmbilLokasi.innerHTML = '<i class="fas fa-location-dot mr-1"></i> Ambil Lokasi';
-      btnAmbilLokasi.classList.remove('bg-green-600', 'hover:bg-green-700');
-      btnAmbilLokasi.classList.add('bg-primary', 'hover:bg-primary/90');
-      pelangganLat = '';
-      pelangganLng = '';
-    });
+      // 🗺️ Peta Satelit (Google Satellite)
+      L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        attribution: '© Google Satellite'
+      }).addTo(map);
+      
+      // Tambah peta jalan sebagai pilihan
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap',
+        maxNativeZoom: 19,
+        maxZoom: 20
+      });
+      
+      // Marker pelanggan
+      L.marker([lat, lng]).addTo(map)
+        .bindPopup('📍 Lokasi Anda')
+        .openPopup();
+      
+      // Marker bengkel
+      L.marker([BENGKEL_LAT, BENGKEL_LNG], { 
+        icon: L.divIcon({ 
+          html: '<i class="fas fa-tools text-red-500 text-3xl"></i>', 
+          className: '', 
+          iconSize: [30, 30],
+          iconAnchor: [15, 15]
+        }) 
+      })
+        .addTo(map)
+        .bindPopup('🏠 Bengkel Melsya Teknik Center');
+      
+      // Rute & jarak
+      if (routingControl) map.removeControl(routingControl);
+      routingControl = L.Routing.control({
+        waypoints: [
+          L.latLng(lat, lng),
+          L.latLng(BENGKEL_LAT, BENGKEL_LNG)
+        ],
+        language: 'id',
+        showAlternatives: false,
+        lineOptions: { 
+          styles: [{ color: '#F59E0B', opacity: 0.9, weight: 6 }] 
+        },
+        addWaypoints: false,
+        draggableWaypoints: false,
+        routeWhileDragging: false
+      }).addTo(map);
+      
+      routingControl.on('routesfound', (e) => {
+        const rute = e.routes[0];
+        const jarakKm = (rute.summary.totalDistance / 1000).toFixed(1);
+        const waktuMenit = Math.round(rute.summary.totalTime / 60);
+        document.getElementById('jarakRute').textContent = `${jarakKm} km`;
+        document.getElementById('estimasiWaktu').textContent = `${waktuMenit} menit`;
+      });
+      
+      setTimeout(() => map.invalidateSize(), 300);
+    }
 
-    // ===== SMOOTH SCROLL =====
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const href = a.getAttribute('href');
         if (href === '#') return;
         e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) {
-          window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
-          mobileMenu.classList.add('hidden');
-          menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-        }
+        document.querySelector(href)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById('mobileMenu').classList.add('hidden');
       });
     });
   </script>

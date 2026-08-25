@@ -13,11 +13,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  
-  <!-- 🗺️ LEAFLET 1.9.4 — RESMI & STABIL -->
+  <!-- Leaflet Maps -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <!-- Leaflet Routing Machine -->
+  <!-- Leaflet Routing -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css">
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
   
@@ -155,7 +154,7 @@
             <h3 class="font-bold text-xl mb-2">Jaringan & WiFi</h3>
             <p class="text-gray-600">Pemasangan & Konfigurasi</p>
           </a>
-          <a href="#pesan" class="bg-gray-50 rounded-xl p-6 shadow-soft card-hover">
+          <a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" class="bg-gray-50 rounded-xl p-6 shadow-soft card-hover">
             <i class="fas fa-solar-panel text-primary text-3xl mb-4"></i>
             <h3 class="font-bold text-xl mb-2">Konsultasi PLTS</h3>
             <p class="text-gray-600">Panel Surya & Energi Mandiri</p>
@@ -200,13 +199,13 @@
 
         <div class="max-w-4xl mx-auto bg-gray-50 rounded-2xl shadow-soft p-6 md:p-8">
           <form id="orderForm" class="space-y-6">
-            <!-- Nama Pelanggan -->
+            <!-- Data Pelanggan -->
             <div>
               <label class="block text-sm font-medium mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
               <input type="text" id="nama" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="Nama Anda">
             </div>
 
-            <!-- 📍 LOKASI GPS + PETA LEAFLET -->
+            <!-- LOKASI GPS -->
             <div class="border border-gray-200 rounded-xl p-4 bg-white">
               <label class="block text-sm font-medium mb-2">📍 Lokasi Anda & Rute ke Bengkel</label>
               <div class="flex gap-2 mb-3">
@@ -217,17 +216,16 @@
               </div>
               <p id="statusLokasi" class="text-xs text-gray-500 mb-3">Klik tombol untuk mendeteksi lokasi & menampilkan rute ke bengkel</p>
               
-              <!-- Peta Leaflet -->
+              <!-- Peta Satelit + Peta Jalan -->
               <div id="mapContainer" class="hidden">
-                <div id="map" class="w-full h-80 rounded-lg border border-gray-200 mb-3"></div>
-                
-                <!-- ⚡ TOMBOL ALTERNATIF GOOGLE MAPS -->
-                <div class="text-center mb-4">
-                  <a id="linkGMapsDirect" href="#" target="_blank" class="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700">
-                    <i class="fas fa-directions"></i> Buka Rute di Google Maps (Lebih Cepat)
+                <div class="flex gap-2 mb-3">
+                  <button type="button" id="btnPetaJalan" class="px-3 py-1 rounded bg-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-300">🗺️ Peta Jalan</button>
+                  <button type="button" id="btnPetaSatelit" class="px-3 py-1 rounded bg-primary text-white text-sm font-medium">🛰️ Satelit</button>
+                  <a id="linkGMaps" href="#" target="_blank" class="ml-auto px-3 py-1 rounded bg-green-100 text-green-700 text-sm font-medium hover:bg-green-200">
+                    <i class="fas fa-external-link-alt mr-1"></i> Buka di GMaps
                   </a>
                 </div>
-                
+                <div id="map" class="w-full h-80 rounded-lg border border-gray-200 mb-3"></div>
                 <div class="grid grid-cols-2 gap-3 text-sm">
                   <div class="bg-blue-50 p-3 rounded-lg">
                     <span class="text-gray-500">📍 Koordinat Anda:</span>
@@ -235,17 +233,17 @@
                   </div>
                   <div class="bg-green-50 p-3 rounded-lg">
                     <span class="text-gray-500">🛣️ Jarak Rute:</span>
-                    <span id="jarakRute" class="font-bold text-success block mt-1">⏳ Menghitung...</span>
+                    <span id="jarakRute" class="font-bold text-success block mt-1">—</span>
                   </div>
                   <div class="bg-amber-50 p-3 rounded-lg col-span-2">
                     <span class="text-gray-500">⏱️ Estimasi Waktu Perjalanan:</span>
-                    <span id="estimasiWaktu" class="font-bold text-amber-600 block mt-1">⏳ Menghitung...</span>
+                    <span id="estimasiWaktu" class="font-bold text-amber-600 block mt-1">—</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- 🔧 DAFTAR PERANGKAT + ANALISA AI -->
+            <!-- DAFTAR PERANGKAT + ANALISA AI -->
             <div class="space-y-4">
               <div class="flex justify-between items-center">
                 <label class="text-sm font-medium">🔧 Perangkat yang Diservis</label>
@@ -352,20 +350,28 @@
   </footer>
 
   <script>
-    // ===== KONFIGURASI LOKASI BENGKEL =====
-    let BENGKEL_LAT = -0.6432566;
-    let BENGKEL_LNG = 100.7552686;
+    // ==============================================
+    // 📍 KONFIGURASI LOKASI BENKEL — SUDAH SESUAI
+    // ==============================================
+    const BENGKEL_LAT = -0.6432566;
+    const BENGKEL_LNG = 100.7552686;
+    const NOMOR_WA = "6285356434003";
+    const LINK_ARTIKEL = "https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1";
+    
     let map = null;
     let routingControl = null;
     let perangkatCounter = 1;
-    let pelangganLat, pelangganLng;
+    let pelangganLat = null, pelangganLng = null;
+    let layerJalan = null, layerSatelit = null;
 
     // Menu Mobile
     document.getElementById('menuBtn').addEventListener('click', () => {
       document.getElementById('mobileMenu').classList.toggle('hidden');
     });
 
-    // ===== DATA KERUSAKAN & ANALISA AI =====
+    // ==============================================
+    // 🔧 ANALISA KERUSAKAN AI — LENGKAP
+    // ==============================================
     const dataKerusakan = {
       TV: {
         options: ['Mati total', 'Gambar tidak ada', 'Suara tidak ada', 'Layar bergaris', 'Tidak bisa nyala', 'Remote tidak berfungsi', 'Lainnya'],
@@ -373,82 +379,82 @@
           'Mati total': 'Kemungkinan kerusakan pada: Bagian power supply, sekring putus, atau kerusakan pada regulator tegangan. Perlu pengecekan sumber arus listrik terlebih dahulu.',
           'Gambar tidak ada': 'Kemungkinan kerusakan pada: Panel layar, kabel fleksibel, atau modul pemrosesan gambar. Untuk TV LED/LCD kemungkinan inverter atau lampu latar bermasalah.',
           'Suara tidak ada': 'Kemungkinan kerusakan pada: Speaker rusak, jalur audio, atau pengaturan volume. Coba periksa pengaturan suara terlebih dahulu.',
-          'Layar bergaris': 'Kemungkinan kerusakan pada: Panel layar rusak, kabel fleksibel longgar/rusak, atau kerusakan pada T-Con board.',
-          'Tidak bisa nyala': 'Kemungkinan kerusakan pada: Tombol power, penerima sinyal remote, atau sistem kontrol utama.',
-          'Remote tidak berfungsi': 'Kemungkinan kerusakan pada: Baterai habis, sensor penerima di TV, atau tombol remote aus.',
-          'Lainnya': 'Perlu pengecekan langsung oleh teknisi.'
+          'Layar bergaris': 'Kemungkinan kerusakan pada: Panel layar rusak, kabel fleksibel longgar/rusak, atau kerusakan pada T-Con board. Biaya perbaikan bisa bervariasi tergantung komponen yang rusak.',
+          'Tidak bisa nyala': 'Kemungkinan kerusakan pada: Tombol power, penerima sinyal remote, atau sistem kontrol utama. Coba ganti baterai remote dan tekan tombol manual.',
+          'Remote tidak berfungsi': 'Kemungkinan kerusakan pada: Baterai habis, sensor penerima di TV, atau tombol remote aus. Coba ganti baterai terlebih dahulu.',
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
         }
       },
       Kulkas: {
         options: ['Tidak dingin', 'Bunyi berisik', 'Mati total', 'Es berlebih', 'Air menetes', 'Kompresor nyala mati', 'Lainnya'],
         saran: {
-          'Tidak dingin': 'Kemungkinan: Kebocoran freon, kipas evaporator mati, termostat rusak, atau kondensor kotor.',
-          'Bunyi berisik': 'Kemungkinan: Posisi tidak rata, benda menyentuh kompresor, dudukan rusak, atau kipas bermasalah.',
-          'Mati total': 'Kemungkinan: Listrik tidak masuk, kabel putus, relay/overload protector rusak, atau kompresor jebol.',
-          'Es berlebih': 'Kemungkinan: Pintu tidak rapat, karet pintu rusak, sistem defrost mati, atau termostat tidak berfungsi.',
-          'Air menetes': 'Kemungkinan: Saluran pembuangan tersumbat, nampan kotor, atau posisi miring.',
-          'Kompresor nyala mati': 'Kemungkinan: Relay/overload rusak, kapasitor lemah, atau suhu lingkungan terlalu panas.',
-          'Lainnya': 'Perlu pengecekan langsung oleh teknisi.'
+          'Tidak dingin': 'Kemungkinan: Kebocoran freon, kipas evaporator mati, termostat rusak, atau kondensor kotor. Bersihkan bagian belakang bawah terlebih dahulu.',
+          'Bunyi berisik': 'Kemungkinan: Posisi tidak rata, benda menyentuh kompresor, dudukan kompresor rusak, atau kipas bermasalah. Cek keseimbangan kulkas dulu.',
+          'Mati total': 'Kemungkinan: Listrik tidak masuk, kabel putus, relay/overload protector rusak, atau kompresor jebol. Coba colokkan alat lain ke stopkontak.',
+          'Es berlebih': 'Kemungkinan: Pintu tidak rapat, karet pintu rusak, sistem defrost mati, atau termostat tidak berfungsi. Cek segel pintu terlebih dahulu.',
+          'Air menetes': 'Kemungkinan: Saluran pembuangan tersumbat, nampan kotor, atau posisi miring. Bersihkan saluran pembuangan di bagian belakang.',
+          'Kompresor nyala mati': 'Kemungkinan: Relay/overload rusak, kapasitor lemah, atau suhu lingkungan terlalu panas. Perlu pengecekan komponen kelistrikan.',
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
         }
       },
       'Mesin Cuci': {
         options: ['Tidak berputar', 'Tidak membuang air', 'Tidak masuk air', 'Bocor air', 'Bergetar keras', 'Program berhenti', 'Lainnya'],
         saran: {
-          'Tidak berputar': 'Kemungkinan: Motor penggerak rusak, sabuk putus, atau papan kontrol bermasalah.',
-          'Tidak membuang air': 'Kemungkinan: Selang tersumbat, pompa pembuangan rusak, atau filter kotor.',
-          'Tidak masuk air': 'Kemungkinan: Keran tertutup, selang masuk bengkok, atau katup air rusak.',
-          'Bocor air': 'Kemungkinan: Selang longgar, paking/segel rusak, atau tabung bocor.',
-          'Bergetar keras': 'Kemungkinan: Mesin tidak rata, beban tidak seimbang, atau peredam rusak.',
-          'Program berhenti': 'Kemungkinan: Sensor rusak, papan kontrol bermasalah, atau aliran air terhenti.',
-          'Lainnya': 'Perlu pengecekan langsung oleh teknisi.'
+          'Tidak berputar': 'Kemungkinan: Motor penggerak rusak, sabuk putus, atau papan kontrol bermasalah. Periksa apakah ada suara dengung saat dinyalakan.',
+          'Tidak membuang air': 'Kemungkinan: Selang tersumbat, pompa pembuangan rusak, atau filter kotor. Bersihkan filter pembuangan air terlebih dahulu.',
+          'Tidak masuk air': 'Kemungkinan: Keran tertutup, selang masuk bengkok, atau katup air rusak. Pastikan tekanan air cukup.',
+          'Bocor air': 'Kemungkinan: Selang longgar, paking/segel rusak, atau tabung bocor. Periksa semua sambungan selang.',
+          'Bergetar keras': 'Kemungkinan: Mesin tidak rata, beban tidak seimbang, atau peredam rusak. Ratakan posisi mesin dan kurangi beban cucian.',
+          'Program berhenti': 'Kemungkinan: Sensor rusak, papan kontrol bermasalah, atau aliran air terhenti. Catat kode error jika ada.',
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
         }
       },
       Komputer: {
         options: ['Mati total', 'Layar biru/hang', 'Lambat berat', 'Tidak ada tampilan', 'Sering restart', 'Terkena virus', 'Lainnya'],
         saran: {
-          'Mati total': 'Kemungkinan: PSU rusak, kabel power longgar, atau motherboard bermasalah.',
-          'Layar biru/hang': 'Kemungkinan: RAM rusak/longgar, harddisk bermasalah, driver error, atau sistem operasi korup.',
-          'Lambat berat': 'Kemungkinan: Penyimpanan hampir penuh, terlalu banyak program startup, RAM kurang, atau sistem terinfeksi.',
-          'Tidak ada tampilan': 'Kemungkinan: Kabel monitor longgar, VGA/onboard video rusak, atau RAM bermasalah.',
-          'Sering restart': 'Kemungkinan: Overheat, PSU tidak stabil, atau driver bermasalah.',
+          'Mati total': 'Kemungkinan: PSU rusak, kabel power longgar, atau motherboard bermasalah. Cek kabel dan stopkontak dulu.',
+          'Layar biru/hang': 'Kemungkinan: RAM rusak/longgar, harddisk bermasalah, driver error, atau sistem operasi korup. Perlu cek kesehatan penyimpanan.',
+          'Lambat berat': 'Kemungkinan: Penyimpanan hampir penuh, terlalu banyak program startup, RAM kurang, atau sistem terinfeksi. Bersihkan file sampah dulu.',
+          'Tidak ada tampilan': 'Kemungkinan: Kabel monitor longgar, VGA/onboard video rusak, atau RAM bermasalah. Cek kabel dan bersihkan RAM.',
+          'Sering restart': 'Kemungkinan: Overheat, PSU tidak stabil, atau driver bermasalah. Cek suhu processor dan kipas.',
           'Terkena virus': 'Perlu instal ulang sistem dan pembersihan menyeluruh. Data penting sebaiknya dicadangkan dulu.',
-          'Lainnya': 'Perlu pengecekan langsung oleh teknisi.'
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
         }
       },
       Laptop: {
         options: ['Layar mati tapi nyala', 'Keyboard rusak', 'Baterai tidak mengisi', 'Lambat', 'Layar pecah', 'Tidak nyala', 'Lainnya'],
         saran: {
-          'Layar mati tapi nyala': 'Kemungkinan: Kabel fleksibel layar putus, inverter rusak, atau lampu latar mati.',
-          'Keyboard rusak': 'Kemungkinan: Tumpahan cairan, tombol aus, atau kabel keyboard longgar.',
-          'Baterai tidak mengisi': 'Kemungkinan: Baterai habis masa pakai, adaptor rusak, atau konektor bermasalah.',
-          'Lambat': 'Kemungkinan: Penyimpanan hampir penuh, RAM kurang, atau butuh instal ulang.',
+          'Layar mati tapi nyala': 'Kemungkinan: Kabel fleksibel layar putus, inverter rusak, atau lampu latar mati. Hubungkan ke monitor eksternal untuk cek.',
+          'Keyboard rusak': 'Kemungkinan: Tumpahan cairan, tombol aus, atau kabel keyboard longgar. Bisa diganti satuan atau keseluruhan.',
+          'Baterai tidak mengisi': 'Kemungkinan: Baterai habis masa pakai, adaptor rusak, atau konektor bermasalah. Coba adaptor lain dulu.',
+          'Lambat': 'Kemungkinan: Penyimpanan hampir penuh, RAM kurang, atau butuh instal ulang. Upgrade SSD sangat disarankan.',
           'Layar pecah': 'Panel layar perlu diganti. Siapkan nomor model laptop untuk estimasi biaya.',
-          'Tidak nyala': 'Kemungkinan: Adaptor rusak, konektor cas lepas, motherboard bermasalah.',
-          'Lainnya': 'Perlu pengecekan langsung oleh teknisi.'
+          'Tidak nyala': 'Kemungkinan: Adaptor rusak, konektor cas lepas, motherboard bermasalah. Cek lampu indikator saat dicolok.',
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
         }
       },
       HP: {
         options: ['Layar pecah', 'Tidak mengisi daya', 'Mati total', 'Sering restart', 'Kamera buram', 'Tombol rusak', 'Lainnya'],
         saran: {
           'Layar pecah': 'Panel layar perlu diganti. Tergantung tipe — bisa ganti kaca saja atau satu set dengan layar.',
-          'Tidak mengisi daya': 'Kemungkinan: Konektor kotor/rusak, baterai rusak, atau kabel data bermasalah.',
-          'Mati total': 'Kemungkinan: Baterai habis/rusak, IC power rusak, atau tombol power rusak.',
-          'Sering restart': 'Kemungkinan: Baterai lemah, sistem bermasalah, atau tombol power tertekan.',
-          'Kamera buram': 'Kemungkinan: Lensa kotor, pelindung retak, atau modul kamera rusak.',
+          'Tidak mengisi daya': 'Kemungkinan: Konektor kotor/rusak, baterai rusak, atau kabel data bermasalah. Bersihkan lubang cas dulu dengan hati-hati.',
+          'Mati total': 'Kemungkinan: Baterai habis/rusak, IC power rusak, atau tombol power rusak. Coba cas lebih dari 30 menit dulu.',
+          'Sering restart': 'Kemungkinan: Baterai lemah, sistem bermasalah, atau tombol power tertekan. Cadangkan data dulu sebelum servis.',
+          'Kamera buram': 'Kemungkinan: Lensa kotor, pelindung retak, atau modul kamera rusak. Bersihkan lensa dengan kain lembut dulu.',
           'Tombol rusak': 'Tombol power/volume tidak berfungsi — perlu pengganti fleksibel tombol.',
-          'Lainnya': 'Perlu pengecekan langsung oleh teknisi.'
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
         }
       },
       Listrik: {
         options: ['Listrik mati', 'Sering jeglek', 'Tegangan rendah', 'Kabel panas', 'Stopkontak rusak', 'Instalasi baru', 'Lainnya'],
         saran: {
           'Listrik mati': 'Cek kWh meter dulu — apakah token habis atau MCB turun. Jika MCB tidak turun tapi tetap mati, kemungkinan kabel putus atau sekring utama putus.',
-          'Sering jeglek': 'Kemungkinan: Beban berlebih, korsleting, atau MCB ukuran terlalu kecil.',
-          'Tegangan rendah': 'Kemungkinan: Kabel terlalu kecil/terlalu panjang, sambungan kendor, atau masalah dari PLN.',
-          'Kabel panas': 'Kemungkinan: Ukuran kabel terlalu kecil untuk beban, sambungan longgar, atau korsleting. ⚠️ Segera matikan!',
-          'Stopkontak rusak': 'Kemungkinan: Beban berlebih, kendor, atau terbakar bagian dalam. Ganti dengan yang berkualitas.',
-          'Instalasi baru': 'Perlu perencanaan jalur, hitungan beban, dan pemilihan ukuran kabel yang tepat.',
-          'Lainnya': 'Perlu pengecekan langsung oleh teknisi.'
+          'Sering jeglek': 'Kemungkinan: Beban berlebih, korsleting, atau MCB ukuran terlalu kecil. Kurangi beban dan cek apakah ada bau terbakar.',
+          'Tegangan rendah': 'Kemungkinan: Kabel terlalu kecil/terlalu panjang, sambungan kendor, atau masalah dari PLN. Bahaya untuk alat elektronik sensitif.',
+          'Kabel panas': 'Kemungkinan: Ukuran kabel terlalu kecil untuk beban, sambungan longgar, atau korsleting. Segera matikan dan periksa — risiko kebakaran!',
+          'Stopkontak rusak': 'Kemungkinan: Beban berlebih, kendor, atau terbakar bagian dalam. Ganti dengan yang berkualitas dan sesuai beban.',
+          'Instalasi baru': 'Perlu perencanaan jalur, hitungan beban, dan pemilihan ukuran kabel yang tepat agar aman dan sesuai standar PLN.',
+          'Lainnya': 'Perlu pengecekan langsung oleh teknisi untuk menentukan kerusakan yang tepat.'
         }
       },
       Lainnya: {
@@ -530,7 +536,9 @@
       perangkatCounter = document.querySelectorAll('.perangkat-item').length;
     }
 
-    // ===== 📍 DETEKSI LOKASI + PETA LEAFLET + ESRI SATELIT =====
+    // ==============================================
+    // 📍 DETEKSI LOKASI + PETA SATELIT + RUTE
+    // ==============================================
     document.getElementById('btnLokasi').addEventListener('click', () => {
       const btn = document.getElementById('btnLokasi');
       const status = document.getElementById('statusLokasi');
@@ -556,10 +564,7 @@
           
           document.getElementById('lokasiGps').value = `${pelangganLat.toFixed(6)}, ${pelangganLng.toFixed(6)}`;
           document.getElementById('koordinatPelanggan').textContent = `${pelangganLat.toFixed(6)}, ${pelangganLng.toFixed(6)}`;
-          
-          // ⚡ Isi link langsung ke Google Maps
-          document.getElementById('linkGMapsDirect').href = 
-            `https://www.google.com/maps/dir/${pelangganLat},${pelangganLng}/${BENGKEL_LAT},${BENGKEL_LNG}`;
+          document.getElementById('linkGMaps').href = `https://www.google.com/maps/dir/${pelangganLat},${pelangganLng}/${BENGKEL_LAT},${BENGKEL_LNG}`;
           
           status.textContent = `✅ Lokasi terdeteksi (Akurasi: ${Math.round(pos.coords.accuracy)}m)`;
           status.classList.add('text-green-600');
@@ -583,69 +588,70 @@
       );
     });
 
-    // ===== 🗺️ INISIALISASI PETA LEAFLET — ESRI SATELIT + OSM =====
     function initMap(lat, lng) {
       if (map) map.remove();
       
-      // Buat peta
-      map = L.map('map', { zoomControl: true }).setView([lat, lng], 13);
-      
-      // 🛰️ Peta Satelit — Esri World Imagery (Lebih Stabil & Cepat)
-      const satelitEsri = L.tileLayer(
-        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', 
-        {
-          maxZoom: 18,
-          attribution: 'Tiles &copy; Esri — World Imagery'
-        }
-      );
+      map = L.map('map').setView([lat, lng], 13);
       
       // 🗺️ Peta Jalan — OpenStreetMap
-      const jalanOSM = L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', 
-        {
-          maxZoom: 19,
-          attribution: '&copy; OpenStreetMap contributors'
-        }
-      );
+      layerJalan = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap',
+        maxNativeZoom: 19,
+        maxZoom: 20
+      });
       
-      // Default tampilkan Satelit Esri
-      satelitEsri.addTo(map);
+      // 🛰️ Peta Satelit — Google Satellite
+      layerSatelit = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        attribution: '© Google Satellite'
+      });
       
-      // Pilihan peta (bisa ganti kapan saja)
-      L.control.layers(
-        { 
-          "🛰️ Satelit (Esri)": satelitEsri, 
-          "🗺️ Peta Jalan (OSM)": jalanOSM 
-        }, 
-        null, 
-        { position: 'topright' }
-      ).addTo(map);
+      // Default tampilkan Satelit
+      layerSatelit.addTo(map);
       
-      // ===== MARKER =====
-      // Marker Pelanggan
-      L.marker([lat, lng])
-        .addTo(map)
+      // Tombol ganti peta
+      document.getElementById('btnPetaJalan').addEventListener('click', () => {
+        if (map.hasLayer(layerSatelit)) map.removeLayer(layerSatelit);
+        layerJalan.addTo(map);
+        document.getElementById('btnPetaJalan').classList.add('bg-primary', 'text-white');
+        document.getElementById('btnPetaJalan').classList.remove('bg-gray-200', 'text-gray-700');
+        document.getElementById('btnPetaSatelit').classList.remove('bg-primary', 'text-white');
+        document.getElementById('btnPetaSatelit').classList.add('bg-gray-200', 'text-gray-700');
+      });
+      
+      document.getElementById('btnPetaSatelit').addEventListener('click', () => {
+        if (map.hasLayer(layerJalan)) map.removeLayer(layerJalan);
+        layerSatelit.addTo(map);
+        document.getElementById('btnPetaSatelit').classList.add('bg-primary', 'text-white');
+        document.getElementById('btnPetaSatelit').classList.remove('bg-gray-200', 'text-gray-700');
+        document.getElementById('btnPetaJalan').classList.remove('bg-primary', 'text-white');
+        document.getElementById('btnPetaJalan').classList.add('bg-gray-200', 'text-gray-700');
+      });
+      
+      // Marker pelanggan
+      L.marker([lat, lng]).addTo(map)
         .bindPopup('📍 Lokasi Anda')
         .openPopup();
       
-      // Marker Bengkel
-      L.marker([BENGKEL_LAT, BENGKEL_LNG], {
-        icon: L.divIcon({
-          html: '<div style="background:#EF4444;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);"><i class="fas fa-tools" style="font-size:14px;"></i></div>',
-          className: '',
-          iconSize: [28, 28],
-          iconAnchor: [14, 14]
-        })
+      // Marker bengkel
+      L.marker([BENGKEL_LAT, BENGKEL_LNG], { 
+        icon: L.divIcon({ 
+          html: '<i class="fas fa-tools text-red-500 text-3xl"></i>', 
+          className: '', 
+          iconSize: [30, 30],
+          iconAnchor: [15, 15]
+        }) 
       })
         .addTo(map)
         .bindPopup('🏠 Bengkel Melsya Teknik Center');
-
-      // ===== ⚡ RUTE — OSRM + Timeout 10 Detik =====
+      
+      // Rute & jarak — dengan timeout jika lambat
       if (routingControl) map.removeControl(routingControl);
       
-      // Tampilkan status menunggu
-      document.getElementById('jarakRute').textContent = '⏳ Menghitung...';
-      document.getElementById('estimasiWaktu').textContent = '⏳ Menghitung...';
+      let ruteBerhasil = false;
+      const waktuMulai = Date.now();
+      const BATAS_WAKTU = 10000; // 10 detik
       
       routingControl = L.Routing.control({
         waypoints: [
@@ -660,37 +666,109 @@
         addWaypoints: false,
         draggableWaypoints: false,
         routeWhileDragging: false,
-        // ⚡ OPTIMASI KECEPATAN
         router: L.Routing.osrmv1({
           profile: 'driving',
           serviceUrl: 'https://router.project-osrm.org/route/v1',
-          timeout: 10000 // Batasi 10 detik — kalau lama, berikan link GMaps
+          timeout: BATAS_WAKTU
         })
       }).addTo(map);
       
-      // ✅ RUTE BERHASIL
       routingControl.on('routesfound', (e) => {
+        ruteBerhasil = true;
         const rute = e.routes[0];
         const jarakKm = (rute.summary.totalDistance / 1000).toFixed(1);
         const waktuMenit = Math.round(rute.summary.totalTime / 60);
-        
         document.getElementById('jarakRute').textContent = `${jarakKm} km`;
         document.getElementById('estimasiWaktu').textContent = `${waktuMenit} menit`;
-        
-        // Sesuaikan tampilan peta ke kedua titik
-        map.fitBounds([[lat, lng], [BENGKEL_LAT, BENGKEL_LNG]], { padding: [50, 50] });
       });
       
-      // ❌ RUTE GAGAL / LAMBAT — Berikan link langsung GMaps
-      routingControl.on('routingerror', () => {
-        document.getElementById('jarakRute').innerHTML = 
-          `<a href="https://www.google.com/maps/dir/${lat},${lng}/${BENGKEL_LAT},${BENGKEL_LNG}" target="_blank" style="color:#0F4C81;font-weight:bold">🔗 Klik untuk lihat rute</a>`;
-        document.getElementById('estimasiWaktu').textContent = 'Gunakan tombol di atas';
-      });
+      // Fallback jika rute lambat/gagal
+      setTimeout(() => {
+        if (!ruteBerhasil) {
+          // Hitung jarak lurus sebagai cadangan
+          const dLat = (BENGKEL_LAT - lat) * Math.PI / 180;
+          const dLng = (BENGKEL_LNG - lng) * Math.PI / 180;
+          const a = Math.sin(dLat / 2) ** 
+          2 + Math.cos(lat * Math.PI / 180) * Math.cos(BENGKEL_LAT * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+          const jarakLurus = (6371 * c).toFixed(1);
+          
+          document.getElementById('jarakRute').textContent = `~${jarakLurus} km (garis lurus)`;
+          document.getElementById('estimasiWaktu').textContent = 'Buka GMaps untuk rute';
+          
+          if (routingControl) map.removeControl(routingControl);
+          status.textContent = '⚠️ Rute lambat — ditampilkan jarak lurus saja';
+          status.classList.add('text-amber-600');
+        }
+      }, 12000); // 12 detik timeout
       
-      // Perbaiki ukuran peta
       setTimeout(() => map.invalidateSize(), 300);
     }
+
+    // ==============================================
+    // 📤 KIRIM FORM PESANAN — WHATSAPP OTOMATIS
+    // ==============================================
+    document.getElementById('orderForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const nama = document.getElementById('nama').value.trim();
+      const lokasiGps = document.getElementById('lokasiGps').value || 'Belum ditentukan';
+      const catatan = document.getElementById('catatan').value.trim();
+      
+      // Kumpulkan semua perangkat
+      const perangkatList = [];
+      document.querySelectorAll('.perangkat-item').forEach((item, idx) => {
+        const jenis = item.querySelector('.jenis-perangkat').value || 'Tidak dipilih';
+        const merek = item.querySelector('.merek-perangkat').value.trim() || '-';
+        const rusak = item.querySelector('.jenis-kerusakan').value || '-';
+        const keterangan = item.querySelector('.keterangan-perangkat').value.trim() || '-';
+        
+        perangkatList.push(
+          `🔧 Perangkat #${idx + 1}:\n` +
+          `   Jenis: ${jenis}\n` +
+          `   Merek/Tipe: ${merek}\n` +
+          `   Kerusakan: ${rusak}\n` +
+          `   Keterangan: ${keterangan}`
+        );
+      });
+      
+      // Susun pesan WA
+      const pesan = 
+        `📋 PESANAN SERVIS — MELSYA TEKNIK CENTER\n` +
+        `═══════════════════════════════════\n` +
+        `👤 Nama: ${nama}\n` +
+        `📍 Lokasi GPS: ${lokasiGps}\n` +
+        `${pelangganLat ? `🔗 GMaps: https://www.google.com/maps/search/?api=1&query=${pelangganLat},${pelangganLng}\n` : ''}` +
+        `\n${perangkatList.join('\n\n')}\n` +
+        `${catatan ? `\n📝 Catatan: ${catatan}` : ''}\n` +
+        `\n═══════════════════════════════════\n` +
+        `Mohon konfirmasi ketersediaan teknisi. Terima kasih! 🙏`;
+      
+      // Buka WhatsApp
+      const urlWA = `https://wa.me/${NOMOR_WA}?text=${encodeURIComponent(pesan)}`;
+      window.open(urlWA, '_blank');
+      
+      // Reset form
+      document.getElementById('orderForm').reset();
+      document.getElementById('mapContainer').classList.add('hidden');
+      document.getElementById('btnLokasi').innerHTML = '<i class="fas fa-location-dot mr-1"></i> Deteksi Lokasi';
+      document.getElementById('btnLokasi').classList.remove('bg-green-600', 'hover:bg-green-700');
+      document.getElementById('statusLokasi').textContent = 'Klik tombol untuk mendeteksi lokasi & menampilkan rute ke bengkel';
+      document.getElementById('statusLokasi').classList.remove('text-green-600', 'text-red-500', 'text-amber-600');
+      
+      // Reset perangkat ke 1 item
+      const daftar = document.getElementById('daftarPerangkat');
+      daftar.innerHTML = '';
+      const itemPertama = document.querySelector('.perangkat-item').cloneNode(true);
+      itemPertama.querySelectorAll('input, select, textarea').forEach(el => el.value = '');
+      itemPertama.querySelector('.analisa-ai').classList.add('hidden');
+      itemPertama.querySelector('.btn-hapus-perangkat').classList.add('hidden');
+      daftar.appendChild(itemPertama);
+      perangkatCounter = 1;
+      initKerusakan(itemPertama);
+      
+      alert('✅ Pesanan berhasil dibuat! Anda akan diarahkan ke WhatsApp.');
+    });
 
     // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(a => {

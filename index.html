@@ -2,11 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.1">
-
-    <!-- ✅ TAG SEO SUDAH SESUAI ALAMAT WEB AKTIF -->
-    <title>Melsya Teknik Center | Servis AC, Kulkas, Komputer & Listrik Sawahlunto</title>
-    <meta name="description" content="Melsya Teknik Center melayani servis televisi, komputer, HP, instalasi listrik dan jaringan di Kecamatan Barangin, Kota Sawahlunto. Bisa kunjungan rumah, antar-jemput atau bawa ke bengkel.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melsya Teknik Center | Servis AC, Kulkas, Komputer & Listrik — Sawahlunto</title>
+    <meta name="description" content="Melsya Teknik Center — Servis elektronik, komputer, HP, listrik & jaringan di Kec. Barangin, Kota Sawahlunto. Bisa kunjungan rumah, antar-jemput, atau bawa ke bengkel.">
     <meta name="keywords" content="servis ac sawahlunto, servis kulkas sawahlunto, servis elektronik sawahlunto, servis tv sawahlunto, servis komputer sawahlunto, pasang listrik sawahlunto, bengkel servis sawahlunto">
     <meta name="author" content="Tri Iwan Afandi">
     <meta name="robots" content="index, follow">
@@ -16,60 +14,54 @@
     <meta name="geo.position" content="-0.643261;100.755266">
     <meta name="ICBM" content="-0.643261,100.755266">
 
-    <!-- Leaflet Maps -->
+    <!-- Peta & Font -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Leaflet Routing Machine — Hitung Rute Jalan -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
-    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
-    <!-- OCR Foto Label -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-        body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);min-height:100vh;padding:16px 12px;}
-        body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:url('https://images.unsplash.com/photo-1581092160607-ee22621dd758?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center;background-size:cover;opacity:0.06;z-index:-1;}
+        body{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);min-height:100vh;padding:14px 12px;}
+        body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:url('https://images.unsplash.com/photo-1581092160607-ee22621dd758?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center;background-size:cover;opacity:0.05;z-index:-1;}
 
-        @keyframes munculAtas{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+        @keyframes munculAtas{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
         @keyframes berdenyut{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0.4);}50%{box-shadow:0 0 0 10px rgba(220,38,38,0);}}
 
-        /* ===== NAVBAR UTAMA ===== */
-        .navbar{max-width:760px;margin:0 auto 16px;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,0.15);padding:12px 16px;position:sticky;top:8px;z-index:100;}
-        .navbar-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
-        .navbar-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:#1e40af;font-weight:700;font-size:16px;}
-        .navbar-nav{display:flex;gap:10px;flex-wrap:wrap;}
-        .navbar-nav a{color:#475569;text-decoration:none;font-size:13px;font-weight:500;padding:6px 10px;border-radius:8px;transition:all 0.2s;}
-        .navbar-nav a:hover,.navbar-nav a.aktif{background:#dbeafe;color:#1e40af;}
-        .navbar-nav a.btn-admin{background:#f1f5f9;color:#334155;}
-        .navbar-nav a.btn-admin:hover{background:#e2e8f0;}
+        /* Navigasi Halaman */
+        .navigasi{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;}
+        .navigasi a{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:all 0.25s ease;}
+        .nav-utama{background:#2563eb;color:#fff;}
+        .nav-artikel{background:#f59e0b;color:#fff;}
+        .nav-admin{background:#6b7280;color:#fff;}
+        .navigasi a:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,0.2);}
 
-        .container{max-width:760px;margin:0 auto;background:#fff;padding:24px 20px;border-radius:20px;box-shadow:0 16px 50px rgba(0,0,0,0.25);animation:munculAtas 0.6s ease-out forwards;}
-        .header-top{text-align:center;margin-bottom:16px;}
-        .logo-icon{font-size:44px;}
-        h2{font-size:22px;color:#1e40af;font-weight:700;margin-top:6px;}
+        .container{max-width:740px;margin:0 auto;background:#fff;padding:22px 18px;border-radius:20px;box-shadow:0 14px 45px rgba(0,0,0,0.25);animation:munculAtas 0.5s ease-out forwards;}
+        .header-top{text-align:center;margin-bottom:14px;}
+        .logo-icon{font-size:40px;}
+        h2{font-size:20px;color:#1e40af;font-weight:700;margin-top:4px;}
+        .sub-judul{font-size:13px;color:#6b7280;margin-top:4px;}
 
-        .info-toko{background:#eff6ff;padding:14px 16px;border-radius:12px;font-size:13px;color:#1e3a5f;line-height:1.8;margin-bottom:16px;border-left:4px solid #3b82f6;}
+        .info-toko{background:#eff6ff;padding:12px 14px;border-radius:12px;font-size:13px;color:#1e3a5f;line-height:1.8;margin-bottom:16px;border-left:4px solid #3b82f6;}
         .info-toko a{color:#2563eb;text-decoration:none;font-weight:600;}
 
-        .kotak-panduan{background:#fffbeb;border-left:5px solid #f59e0b;padding:14px 16px;border-radius:12px;margin-bottom:20px;}
+        .kotak-panduan{background:#fffbeb;border-left:5px solid #f59e0b;padding:14px 16px;border-radius:12px;margin-bottom:18px;}
         .kotak-panduan h3{font-size:15px;color:#92400e;margin-bottom:8px;}
         .kotak-panduan ol{margin:0;padding-left:20px;font-size:13.5px;color:#78350f;line-height:1.7;}
         .kotak-panduan li{margin:4px 0;}
 
-        .bagian{margin-bottom:22px;padding-bottom:16px;border-bottom:2px dashed #e5e7eb;}
+        .bagian{margin-bottom:20px;padding-bottom:14px;border-bottom:2px dashed #e5e7eb;}
         .bagian h3{font-size:15px;color:#1f2937;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
         .wajib:after{content:"WAJIB";background:#dc2626;color:#fff;font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;margin-left:8px;}
 
-        label{display:block;margin:14px 0 6px;font-weight:600;color:#374151;font-size:14px;}
-        .keterangan{font-size:12.5px;color:#6b7280;margin-bottom:6px;}
-        input,select,textarea{width:100%;padding:11px 14px;border:2px solid #d1d5db;border-radius:10px;font-size:15px;background:#f9fafb;transition:all 0.25s ease;}
+        label{display:block;margin:12px 0 5px;font-weight:600;color:#374151;font-size:14px;}
+        .keterangan{font-size:12.5px;color:#6b7280;margin-bottom:6px;line-height:1.5;}
+        input,select,textarea{width:100%;padding:10px 13px;border:2px solid #d1d5db;border-radius:10px;font-size:15px;background:#f9fafb;transition:all 0.25s ease;}
         input:focus,select:focus,textarea:focus{outline:none;border-color:#2563eb;background:#fff;box-shadow:0 0 0 4px rgba(37,99,235,0.1);}
         input[readonly]{background:#f3f4f6;cursor:not-allowed;}
 
-        .pilihan-baris{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px;}
-        .pilihan-kotak{border:2px solid #d1d5db;border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.25s ease;font-size:13px;font-weight:500;background:#f9fafb;}
+        .pilihan-baris{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px;}
+        .pilihan-kotak{border:2px solid #d1d5db;border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;transition:all 0.25s ease;font-size:12.5px;font-weight:500;background:#f9fafb;}
         .pilihan-kotak:hover{border-color:#93c5fd;background:#eff6ff;}
         .pilihan-kotak.aktif{border-color:#2563eb;background:#dbeafe;color:#1e40af;font-weight:600;}
         .pilihan-kotak input{display:none;}
@@ -88,7 +80,7 @@
         .btn-baca{background:#dbeafe;color:#1e40af;border:none;padding:8px 10px;border-radius:8px;font-size:12.5px;cursor:pointer;margin-left:6px;}
         .btn-baca:disabled{opacity:0.5;cursor:not-allowed;}
         .input-file-sembunyi{display:none;}
-        .pratinjau-foto{margin-top:10px;max-width:180px;border-radius:8px;display:none;border:3px solid #22c55e;}
+        .pratinjau-foto{margin-top:10px;max-width:160px;border-radius:8px;display:none;border:3px solid #22c55e;}
 
         .btn-tambah{background:#fef3c7;color:#92400e;border:2px solid #f59e0b;width:100%;padding:10px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;transition:all 0.25s ease;}
         .btn-tambah:hover{background:#fde68a;}
@@ -97,185 +89,169 @@
         .btn-utama:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(37,99,235,0.35);}
         .btn-utama:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
 
-        .btn-kirim{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;width:100%;padding:12px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:10px;transition:all 0.25s;}
-        .btn-kirim:hover{transform:translateY(-1px);}
-        .btn-wa{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;width:100%;padding:12px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:12px;transition:all 0.25s;}
-        .btn-wa:hover{transform:translateY(-1px);}
-        .btn-artikel{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;width:100%;padding:12px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:10px;transition:all 0.25s;}
-        .btn-artikel:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(217,119,6,0.25);}
-        .btn-reset{background:#f3f4f6;color:#4b5563;border:none;width:100%;padding:10px;border-radius:10px;font-size:14px;cursor:pointer;margin-top:8px;transition:all 0.2s;}
+        .btn-kirim{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;width:100%;padding:12px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:10px;transition:all 0.25s ease;}
+        .btn-kirim:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(34,197,94,0.25);}
+        .btn-wa{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;width:100%;padding:12px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:10px;transition:all 0.25s ease;}
+        .btn-wa:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(37,211,102,0.25);}
+        .btn-artikel{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;width:100%;padding:12px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:10px;transition:all 0.25s ease;}
+        .btn-artikel:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(217,119,6,0.25);}
+        .btn-reset{background:#f3f4f6;color:#4b5563;border:none;width:100%;padding:10px;border-radius:10px;font-size:14px;cursor:pointer;margin-top:8px;transition:all 0.25s ease;}
         .btn-reset:hover{background:#e5e7eb;}
 
-        .info-hasil{background:#f0fdf4;border-left:5px solid #22c55e;padding:18px;border-radius:12px;margin-top:20px;display:none;animation:munculAtas 0.5s ease-out forwards;}
+        .info-hasil{background:#f0fdf4;border-left:5px solid #22c55e;padding:16px;border-radius:12px;margin-top:20px;display:none;animation:munculAtas 0.5s ease-out forwards;}
         .info-hasil h3{color:#166534;margin-bottom:12px;font-size:16px;}
         .ringkasan{background:#eff6ff;padding:12px;border-radius:10px;margin:12px 0;font-size:14px;line-height:1.8;}
         .total-besar{font-size:20px;font-weight:700;color:#b91c1c;margin-top:10px;padding-top:10px;border-top:2px dashed #fecaca;}
         .catatan-hasil{background:#fffbeb;border-left:4px solid #f59e0b;padding:10px 14px;border-radius:8px;margin-top:14px;font-size:13px;line-height:1.6;}
 
         .loading{text-align:center;padding:20px;display:none;color:#2563eb;font-weight:500;}
-        #peta{height:280px;border-radius:10px;margin:10px 0;display:none;border:3px solid #bfdbfe;position:relative;z-index:10;}
+        #peta{height:240px;border-radius:10px;margin:10px 0;display:none;border:3px solid #bfdbfe;position:relative;z-index:10;}
         .tombol-peta-mode{position:absolute;top:10px;left:10px;z-index:999;display:flex;gap:6px;}
-        .tombol-peta-mode button{padding:6px 10px;font-size:12px;background:#fff;color:#374151;border:1px solid #d1d5db;border-radius:6px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.15);}
+        .tombol-peta-mode button{padding:6px 10px;font-size:12px;background:#fff;color:#374151;border:1px solid #d1d5db;border-radius:6px;cursor:pointer;}
         .tombol-peta-mode button.aktif{background:#2563eb;color:#fff;border-color:#2563eb;}
 
-        .peringatan,.info-akurasi,.lokasi-terkunci,.peringatan-merah,.info-rute{padding:10px 12px;border-radius:8px;margin:8px 0;font-size:13px;line-height:1.6;}
-        .peringatan-merah{background:#fef2f2;border-left:4px solid #ef4444;color:#b91c1c;display:none;}
-        .info-akurasi{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af;display:none;}
-        .lokasi-terkunci{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534;font-weight:500;display:none;}
-        .info-rute{background:#dbeafe;border-left:4px solid #3b82f6;color:#1e40af;display:none;}
+        .peringatan,.info-akurasi,.lokasi-terkunci,.peringatan-merah,.info-rute{padding:10px 12px;border-radius:8px;margin:8px 0;font-size:13px;display:none;line-height:1.6;}
+        .peringatan-merah{background:#fef2f2;border-left:4px solid #ef4444;color:#b91c1c;}
+        .info-akurasi{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af;}
+        .lokasi-terkunci{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534;font-weight:500;}
+        .info-rute{background:#dbeafe;border-left:4px solid #3b82f6;color:#1e40af;display:block;}
         .link-peta{color:#2563eb;text-decoration:none;font-weight:600;}
         .sembunyi{display:none !important;}
-
-        /* Footer */
-        .footer-note{max-width:760px;margin:16px auto 0;text-align:center;color:#94a3b8;font-size:12px;padding:0 12px;}
     </style>
 </head>
 <body>
 
-    <!-- ✅ NAVIGASI UTAMA — HUBUNGKAN KE HALAMAN LAIN -->
-    <nav class="navbar">
-        <div class="navbar-inner">
-            <a href="index.html" class="navbar-brand">
-                <span>🔧</span> Melsya Teknik Center
-            </a>
-            <div class="navbar-nav">
-                <a href="index.html" class="aktif">🏠 Beranda</a>
-                <a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank">📖 Artikel</a>
-                <a href="admin.html" class="btn-admin">⚙️ Admin</a>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container">
-        <div class="header-top">
-            <div class="logo-icon">🔧</div>
-            <h2>Melsya Teknik Center</h2>
-            <p style="font-size:13px;color:#6b7280;margin-top:4px;">Servis & Perbaikan Terpercaya — Sawahlunto</p>
-        </div>
-
-        <div class="info-toko">
-            📍 <strong>Alamat:</strong> <a href="https://www.google.com/maps/search/?api=1&query=-0.643261,100.755266" target="_blank" rel="noopener">Dusun Karang Anyar, Desa Santur, Kec. Barangin, Kota Sawahlunto</a><br>
-            📱 <strong>WhatsApp:</strong> <a href="https://wa.me/6285356434003" target="_blank" rel="noopener">0853-5643-4003</a> — Teknisi: Tri Iwan Afandi<br>
-            🛠️ <strong>Layanan:</strong> Elektronik · Komputer · HP · Listrik · Jaringan
-        </div>
-
-        <div class="kotak-panduan">
-            <h3>📋 CARA PENGISIAN MUDAH</h3>
-            <ol>
-                <li>Pilih jenis layanan yang Anda butuhkan</li>
-                <li>Isi nama lengkap Anda</li>
-                <li>⚠️ <strong>KLIK "DETEKSI LOKASI" DAN IZINKAN AKSES & AKTIFKAN GPS</strong> — Wajib!</li>
-                <li>Tambahkan perangkat, foto label otomatis terbaca, tulis keluhan</li>
-                <li>Klik "LIHAT PERKIRAAN BIAYA" — hitung rute jalan otomatis</li>
-                <li>Jika setuju → Klik "KIRIM KE WHATSAPP"</li>
-            </ol>
-        </div>
-
-        <form id="formPesanan" novalidate>
-            <div class="bagian">
-                <h3>1️⃣ PILIH JENIS LAYANAN</h3>
-                <label>Kategori Layanan</label>
-                <div class="pilihan-baris" id="pilihanJenis">
-                    <label class="pilihan-kotak aktif" data-jenis="elektronik">
-                        📺 Elektronik
-                        <input type="radio" name="jenis" value="elektronik" checked>
-                    </label>
-                    <label class="pilihan-kotak" data-jenis="komputer">
-                        💻 Komputer & HP
-                        <input type="radio" name="jenis" value="komputer">
-                    </label>
-                    <label class="pilihan-kotak" data-jenis="listrik">
-                        ⚡ Listrik & Jaringan
-                        <input type="radio" name="jenis" value="listrik">
-                    </label>
-                </div>
-
-                <label style="margin-top:16px;">Cara Penanganan</label>
-                <div class="pilihan-baris" id="pilihanCara">
-                    <label class="pilihan-kotak aktif" data-cara="kunjungan">
-                        🚗 Teknisi Datang ke Lokasi Anda
-                        <input type="radio" name="cara" value="kunjungan" checked>
-                    </label>
-                    <label class="pilihan-kotak" data-cara="antarjemput">
-                        🚚 Teknisi Antar Jemput
-                        <input type="radio" name="cara" value="antarjemput">
-                    </label>
-                    <label class="pilihan-kotak" data-cara="bawa">
-                        📦 Anda Bawa Langsung ke Bengkel
-                        <input type="radio" name="cara" value="bawa">
-                    </label>
-                </div>
-                <div class="sembunyi" id="infoBengkelLokasi" style="margin-top:10px;font-size:13px;color:#1e40af;">
-                    📍 Lokasi Bengkel: <a class="link-peta" href="https://www.google.com/maps/search/?api=1&query=-0.643261,100.755266" target="_blank">Buka di Google Maps ↗️</a>
-                </div>
-            </div>
-
-            <div class="bagian">
-                <h3>2️⃣ DATA ANDA</h3>
-                <label for="nama">👤 Nama Lengkap <span style="color:#dc2626">*</span></label>
-                <input type="text" id="nama" required placeholder="Contoh: Budi Santoso">
-            </div>
-
-            <div class="bagian">
-                <h3 class="wajib">3️⃣ LOKASI ANDA & RUTE JALAN</h3>
-                <label>📍 Koordinat Lokasi</label>
-                <div class="baris-alamat">
-                    <input type="text" id="alamat" required placeholder="👉 Klik tombol di sebelah kanan" readonly>
-                    <button type="button" class="btn-lokasi" id="btnDeteksiLokasi">📍 DETEKSI LOKASI</button>
-                </div>
-                <div class="keterangan" style="color:#b91c1c;font-weight:500;">⚠️ Wajib klik tombol lalu izinkan akses lokasi & aktifkan GPS</div>
-
-                <div class="info-akurasi" id="infoAkurasi"></div>
-                <div class="info-rute" id="infoRute"></div>
-                <div class="lokasi-terkunci" id="lokasiTerkunci">✅ LOKASI BERHASIL DITEMUKAN — RUTE JALAN SEDANG DIHITUNG</div>
-                <div class="peringatan-merah" id="peringatanAlamat"></div>
-
-                <div id="peta">
-                    <div class="tombol-peta-mode">
-                        <button type="button" id="btnJalan" onclick="gantiPeta('jalan')" class="aktif">🗺️ Peta Jalan</button>
-                        <button type="button" id="btnSatelit" onclick="gantiPeta('satelit')">🛰️ Satelit</button>
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=-0.643261,100.755266" target="_blank" style="margin-left:auto;padding:6px 8px;font-size:12px;background:#22c55e;color:#fff;border-radius:6px;text-decoration:none;">🔗 Buka GMaps</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bagian">
-                <h3 id="judulPerangkat">4️⃣ PERANGKAT / PEKERJAAN</h3>
-                <div id="daftarItem"></div>
-                <button type="button" class="btn-tambah" onclick="tambahItem()">➕ TAMBAH PERANGKAT</button>
-            </div>
-
-            <button type="button" class="btn-utama" id="btnAnalisa" onclick="mulaiAnalisa()">🔍 LIHAT PERKIRAAN BIAYA</button>
-        </form>
-
-        <div class="loading" id="loading">🔄 Sedang menghitung rute jalan & biaya... Mohon tunggu sebentar</div>
-
-        <div class="info-hasil" id="hasil">
-            <h3>✅ HASIL PERKIRAAN BIAYA</h3>
-            <div id="isiHasil"></div>
-            <div class="ringkasan">
-                <p><strong>📍 Jarak Rute Jalan dari Bengkel:</strong> <span id="jarakTeks">—</span></p>
-                <p><strong>📍 Lokasi Anda:</strong> <a id="linkAlamatPelanggan" class="link-peta" href="#" target="_blank">Buka di Google Maps ↗️</a></p>
-                <p><strong>🚚 Biaya Perjalanan:</strong> <span id="biayaTransport">—</span></p>
-            </div>
-            <div class="total-besar">💰 TOTAL PERKIRAAN: <span id="totalBiaya">Rp 0</span></div>
-            <div class="catatan-hasil">⚠️ Harga di atas adalah perkiraan berdasarkan rute jalan dan jenis perangkat/kerusakan. Harga pasti akan diberitahukan setelah pengecekan langsung.<br>📦 Jika jarak lebih dari 15 km atau di luar wilayah layanan, disarankan membawa perangkat langsung ke bengkel atau menggunakan jasa kirim.</div>
-            <button type="button" class="btn-kirim" onclick="kirimKeWA()">📤 KIRIM PESANAN KE WHATSAPP</button>
-        </div>
-
-        <button class="btn-wa" onclick="window.open('https://wa.me/6285356434003','_blank','noopener')">💬 CHAT LANGSUNG DENGAN TEKNISI</button>
-        <button class="btn-artikel" onclick="window.open('https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1','_blank','noopener')">📖 LIHAT ARTIKEL TERKAIT</button>
-        <button class="btn-reset" onclick="window.location.reload()">🔄 BUAT PESANAN BARU</button>
+<div class="container">
+    <!-- 🔗 NAVIGASI HALAMAN -->
+    <div class="navigasi">
+        <a href="index.html" class="nav-utama">🏠 Beranda</a>
+        <a href="https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1" target="_blank" class="nav-artikel" rel="noopener">📖 Artikel</a>
+        <a href="admin.html" class="nav-admin">🔐 Admin</a>
     </div>
 
-    <div class="footer-note">
-        © 2026 Melsya Teknik Center — <a href="admin.html" style="color:#94a3b8;text-decoration:underline;">Halaman Admin</a>
+    <div class="header-top">
+        <div class="logo-icon">🔧</div>
+        <h2>Melsya Teknik Center</h2>
+        <p class="sub-judul">Servis & Perbaikan Terpercaya — Sawahlunto</p>
     </div>
+
+    <div class="info-toko">
+        📍 <strong>Alamat Bengkel:</strong> <a href="https://www.google.com/maps/search/?api=1&query=-0.643261,100.755266" target="_blank" rel="noopener">Dusun Karang Anyar, Desa Santur, Kec. Barangin, Kota Sawahlunto</a><br>
+        📱 <strong>WhatsApp:</strong> <a href="https://wa.me/6285356434003" target="_blank" rel="noopener">0853-5643-4003</a> — Teknisi: Tri Iwan Afandi<br>
+        🛠️ <strong>Layanan:</strong> Elektronik · Komputer · HP · Listrik · Jaringan
+    </div>
+
+    <div class="kotak-panduan">
+        <h3>📋 CARA PESAN — LANGKAH MUDAH</h3>
+        <ol>
+            <li><strong>Pilih jenis layanan</strong> yang Anda butuhkan</li>
+            <li><strong>Tulis nama lengkap</strong> Anda</li>
+            <li><strong>👉 KLIK TOMBOL "DETEKSI LOKASI"</strong> — izinkan akses & aktifkan GPS di HP Anda (Wajib!)</li>
+            <li><strong>Tambah perangkat</strong> → pilih jenis → tulis merk → <strong>foto label barang</strong> → tulis keluhan kerusakan</li>
+            <li>Klik <strong>"LIHAT PERKIRAAN BIAYA"</strong> untuk melihat rincian harga</li>
+            <li>Jika setuju → Klik <strong>"KIRIM KE WHATSAPP"</strong> — pesanan langsung terkirim ke teknisi!</li>
+        </ol>
+    </div>
+
+    <form id="formPesanan" novalidate>
+        <div class="bagian">
+            <h3>1️⃣ PILIH JENIS LAYANAN</h3>
+            <label>Kategori Barang / Pekerjaan</label>
+            <div class="pilihan-baris" id="pilihanJenis">
+                <label class="pilihan-kotak aktif" data-jenis="elektronik">
+                    📺 Elektronik
+                    <input type="radio" name="jenis" value="elektronik" checked>
+                </label>
+                <label class="pilihan-kotak" data-jenis="komputer">
+                    💻 Komputer & HP
+                    <input type="radio" name="jenis" value="komputer">
+                </label>
+                <label class="pilihan-kotak" data-jenis="listrik">
+                    ⚡ Listrik & Jaringan
+                    <input type="radio" name="jenis" value="listrik">
+                </label>
+            </div>
+
+            <label style="margin-top:16px;">Cara Penanganan Barang</label>
+            <div class="pilihan-baris" id="pilihanCara">
+                <label class="pilihan-kotak aktif" data-cara="kunjungan">
+                    🚗 Teknisi ke Rumah
+                    <input type="radio" name="cara" value="kunjungan" checked>
+                </label>
+                <label class="pilihan-kotak" data-cara="antarjemput">
+                    🚚 Ambil & Antar Kembali
+                    <input type="radio" name="cara" value="antarjemput">
+                </label>
+                <label class="pilihan-kotak" data-cara="bawa">
+                    📦 Bawa ke Bengkel
+                    <input type="radio" name="cara" value="bawa">
+                </label>
+            </div>
+            <div class="sembunyi" id="infoBengkelLokasi" style="margin-top:10px;font-size:13px;color:#1e40af;">
+                📍 Bengkel: <a class="link-peta" href="https://www.google.com/maps/search/?api=1&query=-0.643261,100.755266" target="_blank">Buka di Google Maps ↗️</a>
+            </div>
+        </div>
+
+        <div class="bagian">
+            <h3>2️⃣ DATA ANDA</h3>
+            <label for="nama">👤 Nama Lengkap <span style="color:#dc2626">*</span></label>
+            <input type="text" id="nama" required placeholder="Contoh: Siti Aminah">
+        </div>
+
+        <div class="bagian">
+            <h3 class="wajib">3️⃣ LOKASI ANDA</h3>
+            <label>📍 Alamat Lokasi (Koordinat Otomatis)</label>
+            <div class="baris-alamat">
+                <input type="text" id="alamat" required placeholder="👉 Klik tombol di sebelah kanan" readonly>
+                <button type="button" class="btn-lokasi" id="btnDeteksiLokasi">📍 DETEKSI LOKASI</button>
+            </div>
+            <div class="keterangan" style="color:#b91c1c;font-weight:500;">⚠️ Wajib klik tombol di atas → izinkan akses lokasi → aktifkan GPS HP</div>
+
+            <div class="info-akurasi" id="infoAkurasi"></div>
+            <div class="info-rute" id="infoRute" style="display:none;"></div>
+            <div class="lokasi-terkunci" id="lokasiTerkunci">✅ LOKASI BERHASIL DITEMUKAN</div>
+            <div class="peringatan-merah" id="peringatanAlamat"></div>
+
+            <div id="peta">
+                <div class="tombol-peta-mode">
+                    <button type="button" id="btnJalan" onclick="gantiPeta('jalan')" class="aktif">🗺️ Peta Jalan</button>
+                    <button type="button" id="btnSatelit" onclick="gantiPeta('satelit')">🛰️ Satelit</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bagian">
+            <h3 id="judulPerangkat">4️⃣ PERANGKAT / BARANG SERVIS</h3>
+            <div class="keterangan">📸 Foto label barang membantu teknisi mengetahui merk & tipe dengan tepat</div>
+            <div id="daftarItem"></div>
+            <button type="button" class="btn-tambah" onclick="tambahItem()">➕ TAMBAH PERANGKAT (jika lebih dari 1 barang)</button>
+        </div>
+
+        <button type="button" class="btn-utama" id="btnAnalisa" onclick="mulaiAnalisa()">🔍 LIHAT PERKIRAAN BIAYA</button>
+    </form>
+
+    <div class="loading" id="loading">🔄 Sedang menghitung rute jalan & estimasi biaya... Mohon tunggu sebentar</div>
+
+    <div class="info-hasil" id="hasil">
+        <h3>✅ HASIL PERKIRAAN BIAYA</h3>
+        <div id="isiHasil"></div>
+        <div class="ringkasan">
+            <p><strong>📍 Jarak Rute Jalan ke Bengkel:</strong> <span id="jarakTeks">—</span></p>
+            <p><strong>📍 Lokasi Anda:</strong> <a id="linkAlamatPelanggan" class="link-peta" href="#" target="_blank">Buka di Google Maps ↗️</a></p>
+            <p><strong>🚚 Biaya Perjalanan:</strong> <span id="biayaTransport">—</span></p>
+        </div>
+        <div class="total-besar">💰 TOTAL PERKIRAAN: <span id="totalBiaya">Rp 0</span></div>
+        <div class="catatan-hasil">⚠️ Harga di atas adalah <strong>perkiraan biaya</strong>. Harga pasti akan diberitahukan setelah teknisi mengecek langsung kondisi barang.<br>📦 Jika jarak lebih dari 15 km, disarankan membawa barang ke bengkel atau kirim via jasa pengiriman.</div>
+        <button type="button" class="btn-kirim" onclick="kirimKeWA()">📤 KIRIM PESANAN KE WHATSAPP</button>
+    </div>
+
+    <button class="btn-wa" onclick="window.open('https://wa.me/6285356434003','_blank','noopener')">💬 CHAT LANGSUNG DENGAN TEKNISI</button>
+    <button class="btn-artikel" onclick="window.open('https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1','_blank','noopener')">📖 BACA ARTIKEL & PANDUAN</button>
+    <button class="btn-reset" onclick="window.location.reload()">🔄 BUAT PESANAN BARU</button>
+</div>
 
 <script>
-// ==============================================
-// 📍 KONFIGURASI UTAMA — SUDAH DIPERBAIKI
-// ==============================================
+// ⚙️ KONFIGURASI UTAMA
 const BENGKEL = {
     nama:"Melsya Teknik Center",
     alamat:"Dusun Karang Anyar, Desa Santur, Kec. Barangin, Kota Sawahlunto",
@@ -323,36 +299,36 @@ const PILIHAN_ITEM = {
 
 const DATA_ANALISA = {
     elektronik: [
-        {kata:["tidak menyala","mati total","tidak ada daya"], kerusakan:"Kerusakan Sumber Daya", estimasiJasa:150000, sukuCadang:"Sekring, Dioda, IC Regulator"},
-        {kata:["tidak ada suara","suara hilang"], kerusakan:"Kerusakan Bagian Audio", estimasiJasa:160000, sukuCadang:"IC Audio, Speaker"},
-        {kata:["layar gelap","tidak tampil gambar"], kerusakan:"Kerusakan Lampu Layar", estimasiJasa:200000, sukuCadang:"Modul Lampu LED"},
-        {kata:["tidak dingin","kulkas panas","es mencair"], kerusakan:"Masalah Sistem Pendingin/Freon", estimasiJasa:250000, sukuCadang:"Cek kebocoran, isi Freon, kemungkinan ganti Relai"},
-        {kata:["berisik","berdengung","bergetar"], kerusakan:"Kerusakan Kompresor/Dudukan", estimasiJasa:300000, sukuCadang:"Cek dudukan, kemungkinan ganti Kompresor baru"},
-        {kata:["air menetes","saluran mampet"], kerusakan:"Saluran Pembuangan Tersumbat", estimasiJasa:120000, sukuCadang:"Pembersihan saluran air"}
+        {kata:["tidak menyala","mati total","tidak ada daya"], kerusakan:"Kerusakan Sumber Daya/Listrik", estimasiJasa:150000, sukuCadang:"Sekring, Dioda, IC Regulator, Kabel Power"},
+        {kata:["tidak ada suara","suara hilang"], kerusakan:"Kerusakan Bagian Audio/Speaker", estimasiJasa:160000, sukuCadang:"IC Audio, Speaker, Kabel"},
+        {kata:["layar gelap","tidak tampil gambar"], kerusakan:"Kerusakan Lampu/Modul Layar", estimasiJasa:200000, sukuCadang:"Modul Lampu LED, Kabel Fleksibel"},
+        {kata:["tidak dingin","kulkas panas","es mencair"], kerusakan:"Masalah Sistem Pendingin/Freon", estimasiJasa:250000, sukuCadang:"Cek kebocoran, isi Freon, ganti Relai/Kompresor"},
+        {kata:["berisik","berdengung","bergetar"], kerusakan:"Kerusakan Kompresor/Dudukan", estimasiJasa:300000, sukuCadang:"Dudukan karet, Kompresor baru, perbaikan penempatan"},
+        {kata:["air menetes","saluran mampet"], kerusakan:"Saluran Pembuangan Tersumbat", estimasiJasa:120000, sukuCadang:"Pembersihan saluran air, bak penampungan"}
     ],
     komputer: [
-        {kata:["lambat","lemot","sering macet"], kerusakan:"Perlu Perawatan & Pembersihan", estimasiJasa:100000, sukuCadang:"Pasta Pendingin, Perawatan Sistem"},
-        {kata:["tidak menyala","mati total"], kerusakan:"Kerusakan Sumber Daya", estimasiJasa:150000, sukuCadang:"Adaptor, Sekring"},
-        {kata:["tidak terhubung wifi","sinyal lemah"], kerusakan:"Masalah Jaringan", estimasiJasa:120000, sukuCadang:"Pengaturan Ulang / Modul WiFi"},
-        {kata:["baterai cepat habis","tidak mengisi"], kerusakan:"Kerusakan Baterai / Port Cas", estimasiJasa:100000, sukuCadang:"Baterai, Konektor Cas"}
+        {kata:["lambat","lemot","sering macet"], kerusakan:"Perlu Perawatan & Pembersihan", estimasiJasa:100000, sukuCadang:"Pasta pendingin, pembersihan virus, optimasi sistem"},
+        {kata:["tidak menyala","mati total"], kerusakan:"Kerusakan Sumber Daya/Adaptor", estimasiJasa:150000, sukuCadang:"Adaptor baru, sekring, kabel power"},
+        {kata:["tidak terhubung wifi","sinyal lemah"], kerusakan:"Masalah Jaringan/WiFi", estimasiJasa:120000, sukuCadang:"Pengaturan ulang, modul WiFi, antena"},
+        {kata:["baterai cepat habis","tidak mengisi"], kerusakan:"Kerusakan Baterai / Port Cas", estimasiJasa:100000, sukuCadang:"Baterai baru, konektor cas, kabel charger"}
     ],
     listrik: [
-        {kata:["tidak ada listrik","lampu mati","sekring putus"], kerusakan:"Gangguan Jalur Listrik", estimasiJasa:150000, sukuCadang:"Sekring, MCB, Saklar"},
-        {kata:["kabel panas","berasap"], kerusakan:"Korsleting — Perlu Perbaikan Segera", estimasiJasa:180000, sukuCadang:"Kabel Baru, Pengaman"},
-        {kata:["internet lemot","sering putus"], kerusakan:"Kabel / Koneksi Tidak Stabil", estimasiJasa:180000, sukuCadang:"Kabel & Konektor Baru"}
+        {kata:["tidak ada listrik","lampu mati","sekring putus"], kerusakan:"Gangguan Jalur Listrik", estimasiJasa:150000, sukuCadang:"Sekring, MCB baru, kabel, saklar"},
+        {kata:["kabel panas","berasap"], kerusakan:"Korsleting — Perlu Perbaikan Segera", estimasiJasa:180000, sukuCadang:"Kabel baru, isolasi, pengaman beban"},
+        {kata:["internet lemot","sering putus"], kerusakan:"Kabel / Koneksi Tidak Stabil", estimasiJasa:180000, sukuCadang:"Kabel LAN baru, konektor RJ45, perangkat jaringan"}
     ]
 };
 
-let JENIS="elektronik", CARA="kunjungan", latPelanggan=null, lngPelanggan=null, jarak=5, durasiMenit="—";
-let peta, penandaPelanggan, penandaBengkel, lapisanJalan, lapisanSatelit, kontrolRute;
+// 📦 VARIABEL GLOBAL
+let JENIS="elektronik", CARA="kunjungan", latPelanggan=null, lngPelanggan=null, jarak=5;
+let peta, penandaPelanggan, penandaBengkel, lapisanJalan, lapisanSatelit, garisRute;
 let nomorItem=0, fotoItem={}, berkasFotoItem={}, daftarItem=[], infoBiaya={}, totalAkhir=0;
 
+// 🔧 FUNGSI BANTUAN
 function rp(n){return 'Rp ' + Math.round(n||0).toLocaleString('id-ID');}
 function tampilPeringatan(pesan){const el=document.getElementById('peringatanAlamat'); el.style.display=pesan?'block':'none'; el.textContent=pesan||'';}
 
-// ==============================================
-// NAVIGASI PILIHAN LAYANAN
-// ==============================================
+// 📋 PILIHAN JENIS LAYANAN
 document.querySelectorAll('#pilihanJenis .pilihan-kotak').forEach(k=>{
     k.onclick=()=>{
         document.querySelectorAll('#pilihanJenis .pilihan-kotak').forEach(x=>x.classList.remove('aktif'));
@@ -373,18 +349,17 @@ document.querySelectorAll('#pilihanCara .pilihan-kotak').forEach(k=>{
     };
 });
 
+// 🔄 UBAH FORM SESUAI PILIHAN
 function ubahFormItem(){
     document.getElementById('judulPerangkat').textContent=
-        JENIS==='elektronik'?'4️⃣ JENIS PERANGKAT':
+        JENIS==='elektronik'?'4️⃣ PERANGKAT ELEKTRONIK':
         JENIS==='komputer'?'4️⃣ KOMPUTER / HP':'4️⃣ LISTRIK & JARINGAN';
     document.getElementById('daftarItem').innerHTML='';
     nomorItem=0;
     tambahItem();
 }
 
-// ==============================================
-// FORM PERANGKAT + UPLOAD FOTO LABEL
-// ==============================================
+// ➕ TAMBAH BARANG / PERANGKAT
 function tambahItem(){
     nomorItem++;
     const idx=nomorItem;
@@ -393,11 +368,11 @@ function tambahItem(){
 
     const html=`
     <div class="kotak-item" id="item-${idx}">
-        <h4>Perangkat #${idx} <button type="button" class="btn-hapus" onclick="hapusItem(${idx})">✕ Hapus</button></h4>
+        <h4>Barang #${idx} <button type="button" class="btn-hapus" onclick="hapusItem(${idx})">✕ Hapus</button></h4>
         
-        <label>Jenis Perangkat <span style="color:#dc2626">*</span></label>
+        <label>Jenis Barang <span style="color:#dc2626">*</span></label>
         <select class="jenis-opt" required onchange="isiBeratOtomatis(${idx},this.value)">
-            <option value="">-- Pilih Jenis --</option>
+            <option value="">-- Pilih Jenis Barang --</option>
             ${PILIHAN.map(p=>`<option value="${p.nilai}" data-berat="${p.berat||0}">${p.label}</option>`).join('')}
         </select>
 
@@ -408,15 +383,15 @@ function tambahItem(){
             <input type="file" id="foto-${idx}" class="input-file-sembunyi" accept="image/*" capture="environment" onchange="siapkanFotoBaca(${idx},this)">
             <button type="button" class="btn-baca" id="btnBaca-${idx}" onclick="bacaMerkDariFoto(${idx})" disabled>🔍 Baca Otomatis</button>
         </div>
-        <img id="prv-${idx}" class="pratinjau-foto" alt="Pratinjau Label — Foto akan muncul di sini">
+        <img id="prv-${idx}" class="pratinjau-foto" alt="Pratinjau Label Barang">
 
         <div class="${tampilBerat?'':'sembunyi'}" style="margin-top:8px;">
             <label>Perkiraan Berat (kg)</label>
             <input type="number" class="berat-val" min="0" step="0.1" placeholder="0">
         </div>
 
-        <label style="margin-top:10px;">📝 Keterangan Kerusakan Barang Ini</label>
-        <textarea class="keluhan-item" rows="2" placeholder="Contoh: Kulkas tidak dingin, es mencair, berdengung... Jelaskan keluhan secara detail"></textarea>
+        <label style="margin-top:10px;">📝 Keterangan Kerusakan</label>
+        <textarea class="keluhan-item" rows="2" placeholder="Contoh: Kulkas tidak dingin, es mencair, terdengar berdengung..."></textarea>
     </div>`;
     document.getElementById('daftarItem').insertAdjacentHTML('beforeend',html);
 }
@@ -424,9 +399,7 @@ function tambahItem(){
 function hapusItem(i){document.getElementById(`item-${i}`)?.remove();}
 function isiBeratOtomatis(idx,nilai){const p=PILIHAN_ITEM[JENIS].find(x=>x.nilai===nilai); if(p&&p.berat) document.querySelector(`#item-${idx} .berat-val`).value=p.berat;}
 
-// ==============================================
-// 📷 UPLOAD FOTO LABEL + OCR OTOMATIS
-// ==============================================
+// 📸 FOTO LABEL & BACA OTOMATIS MERK
 function siapkanFotoBaca(idx,input){
     const f=input.files[0];
     if(!f) return;
@@ -439,13 +412,12 @@ function siapkanFotoBaca(idx,input){
         prv.src=e.target.result;
         prv.style.display='block';
         btn.disabled=false;
-        btn.textContent='🔍 Baca Otomatis';
     };
     rd.readAsDataURL(f);
 }
 
 async function bacaMerkDariFoto(idx){
-    if(!berkasFotoItem[idx]) return alert('⚠️ Pilih foto label terlebih dahulu!');
+    if(!berkasFotoItem[idx]) return alert('📸 Silakan foto label barang terlebih dahulu!');
     const inputMerek=document.querySelector(`#item-${idx} .merek-val`);
     const btn=document.getElementById(`btnBaca-${idx}`);
 
@@ -453,26 +425,61 @@ async function bacaMerkDariFoto(idx){
     btn.disabled=true;
 
     try{
-        const hasil=await Tesseract.recognize(berkasFotoItem[idx],'ind+eng',{logger:m=>console.log(m)});
+        const hasil=await Tesseract.recognize(berkasFotoItem[idx],'ind+eng');
         const teks=hasil.data.text.trim().replace(/\s+/g,' ');
         if(teks.length>5){
             inputMerek.value=teks;
-            alert('✅ Berhasil terbaca!\nTeks: "'+teks.substring(0,60)+'"\nSilakan periksa & perbaiki jika kurang tepat.');
+            alert('✅ Berhasil terbaca! Silakan periksa dan edit jika kurang tepat');
         }else{
-            alert('⚠️ Tulisan kurang jelas atau terlalu pendek. Silakan tulis merek secara manual.');
+            alert('⚠️ Tulisan kurang jelas. Silakan tulis merk secara manual ya');
         }
-    }catch(err){
-        alert('❌ Gagal membaca foto. Silakan tulis merek secara manual.');
-        console.error(err);
+    }catch{
+        alert('❌ Gagal membaca foto. Silakan tulis merk secara manual');
     }
 
     btn.textContent='🔍 Baca Otomatis';
     btn.disabled=false;
 }
 
-// ==============================================
-// 📍 DETEKSI LOKASI + RUTE JALAN — LEAFLET ROUTING
-// ==============================================
+// 🗺️ HITUNG JARAK RUTE JALAN (OSRM)
+async function hitungJarak(lat2,lng2){
+    const awal=`${BENGKEL.lng},${BENGKEL.lat}`;
+    const akhir=`${lng2},${lat2}`;
+    const url=`https://router.project-osrm.org/route/v1/driving/${awal};${akhir}?overview=full&geometries=geojson&steps=true`;
+    const elInfoRute=document.getElementById('infoRute');
+
+    try{
+        const res=await fetch(url,{signal:AbortSignal.timeout(10000)});
+        const data=await res.json();
+        if(data.code==='Ok'&&data.routes.length>0){
+            jarak=Math.round(data.routes[0].distance/100)/10;
+            const durasi=Math.round(data.routes[0].duration/60);
+            elInfoRute.innerHTML=`✅ Jarak rute jalan: <strong>${jarak} km</strong> · Estimasi waktu tempuh: ${durasi} menit`;
+            elInfoRute.style.display='block';
+
+            if(garisRute) peta.removeLayer(garisRute);
+            garisRute=L.geoJSON(data.routes[0].geometry,{color:'#2563eb',weight:5,opacity:0.7}).addTo(peta);
+            peta.fitBounds(garisRute.getBounds(),{padding:[30,30]});
+
+            tampilPeringatan(jarak>TARIF.jarakMaks?`⚠️ Jarak melebihi batas layanan (${TARIF.jarakMaks} km). Disarankan bawa barang ke bengkel atau kirim via jasa pengiriman.`:"");
+            return jarak;
+        }
+    }catch{
+        elInfoRute.style.display='none';
+    }
+
+    // Fallback: Hitung jarak lurus jika rute gagal
+    const dLat=(lat2-BENGKEL.lat)*Math.PI/180;
+    const dLng=(lng2-BENGKEL.lng)*Math.PI/180;
+    const a=Math.sin(dLat/2)**2+Math.cos(BENGKEL.lat*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+    jarak=Math.round(6371*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))*10)/10;
+    elInfoRute.innerHTML=`📍 Perkiraan jarak: <strong>${jarak} km</strong> (rute jalan sementara tidak tersedia)`;
+    elInfoRute.style.display='block';
+    tampilPeringatan("");
+    return jarak;
+}
+
+// 📍 DETEKSI LOKASI PELANGGAN
 async function deteksiLokasiAkurat(){
     tampilPeringatan("");
     document.getElementById('infoRute').style.display='none';
@@ -480,8 +487,8 @@ async function deteksiLokasiAkurat(){
     btn.disabled=true; btn.textContent="⏳ Mencari lokasi...";
 
     if(!navigator.geolocation){
-        tampilPeringatan("❌ Perangkat tidak mendukung lokasi.");
-        btn.disabled=false; return;
+        tampilPeringatan("❌ HP tidak mendukung fitur lokasi. Silakan gunakan browser lain.");
+        btn.disabled=false; btn.textContent="📍 DETEKSI LOKASI"; return;
     }
 
     document.getElementById('peta').style.display='block';
@@ -493,149 +500,68 @@ async function deteksiLokasiAkurat(){
         document.getElementById('infoAkurasi').innerHTML=(pos.coords.accuracy<=50?"✅ Lokasi Akurat":"⚠️ Kurang Akurat")+` (±${Math.round(pos.coords.accuracy)} meter)`;
         document.getElementById('infoAkurasi').style.display='block';
 
+        jarak=await hitungJarak(latPelanggan,lngPelanggan);
         document.getElementById('alamat').value=`${latPelanggan.toFixed(6)}, ${lngPelanggan.toFixed(6)}`;
         tandaiDiPeta(latPelanggan,lngPelanggan);
-
-        // ✅ HITUNG RUTE JALAN OTOMATIS
-        await hitungRuteJalan(latPelanggan,lngPelanggan);
-
         document.getElementById('lokasiTerkunci').style.display='block';
         btn.disabled=false; btn.textContent="✅ LOKASI TERDETEKSI"; btn.classList.add('sukses');
     }, err=>{
         let pesan=err.code===1?"❌ Izin lokasi ditolak! Aktifkan izin lokasi di pengaturan browser":
-                  err.code===2?"❌ Lokasi tidak ditemukan! Silakan aktifkan GPS HP Anda":
-                  "⏳ Waktu habis! Coba lagi dan pastikan sinyal bagus.";
+                  err.code===2?"❌ Lokasi tidak ditemukan! Aktifkan GPS & pastikan sinyal bagus":
+                  "⏳ Waktu habis! Coba lagi di tempat terbuka dengan sinyal kuat.";
         tampilPeringatan(pesan);
         btn.disabled=false; btn.textContent="📍 DETEKSI LOKASI";
-    },{enableHighAccuracy:true,timeout:30000,maximumAge:0});
+    },{enableHighAccuracy:true,timeout:20000,maximumAge:0});
 }
 
-// ✅ HITUNG RUTE JALAN MENGGUNAKAN LEAFLET ROUTING
-async function hitungRuteJalan(lat2,lng2){
-    const elInfoRute=document.getElementById('infoRute');
-    elInfoRute.innerHTML='⏳ Sedang menghitung rute jalan...';
-    elInfoRute.style.display='block';
-
-    if(kontrolRute) peta.removeControl(kontrolRute);
-
-    kontrolRute=L.Routing.control({
-        waypoints: [
-            L.latLng(lat2,lng2),
-            L.latLng(BENGKEL.lat,BENGKEL.lng)
-        ],
-        language: 'id',
-        routeWhileDragging: false,
-        showAlternatives: false,
-        lineOptions: {
-            styles: [{color:'#2563eb',opacity:0.8,weight:5}]
-        },
-        addWaypoints: false,
-        draggableWaypoints: false,
-        fitSelectedRoutes: true
-    }).addTo(peta);
-
-    kontrolRute.on('routesfound', function(e){
-        const rute=e.routes[0];
-        jarak=Math.round(rute.summary.totalDistance/100)/10;
-        durasiMenit=Math.round(rute.summary.totalTime/60);
-
-        elInfoRute.innerHTML=
-            `✅ <strong>Rute Jalan:</strong> ${jarak} km · Estimasi: ${durasiMenit} menit`;
-
-        tampilPeringatan(jarak>TARIF.jarakMaks?`⚠️ Jarak melebihi batas layanan (${TARIF.jarakMaks} km). Disarankan bawa langsung ke bengkel.`:"");
-    });
-
-    kontrolRute.on('routingerror', function(err){
-        elInfoRute.innerHTML='⚠️ Tidak dapat menghitung rute jalan — menampilkan jarak garis lurus';
-        elInfoRute.style.background='#fef3c7';
-        elInfoRute.style.borderColor='#f59e0b';
-
-        // Fallback: hitung jarak lurus
-        const dLat=(BENGKEL.lat-lat2)*Math.PI/180;
-        const dLng=(BENGKEL.lng-lng2)*Math.PI/180;
-        const a=Math.sin(dLat/2)**2+Math.cos(lat2*Math.PI/180)*Math.cos(BENGKEL.lat*Math.PI/180)*Math.sin(dLng/2)**2;
-        jarak=Math.round(6371*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))*10)/10;
-    });
-}
-
-// ==============================================
-// PETA — SATELIT & JALAN
-// ==============================================
+// 🗺️ INISIALISASI PETA
 function inisialisasiPeta(){
     if(peta) return;
-    peta=L.map('peta').setView([BENGKEL.lat,BENGKEL.lng],13);
-
-    // 🗺️ Peta Jalan — OpenStreetMap
-    lapisanJalan=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-        attribution:'© OpenStreetMap contributors',
-        maxNativeZoom:19,
-        maxZoom:20
-    });
-
-    // 🛰️ Peta Satelit — Esri World Imagery
-    lapisanSatelit=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{
-        attribution:'© Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
-        maxZoom:18
-    });
-
-    // Default: Tampilkan Peta Jalan
+    peta=L.map('peta').setView([BENGKEL.lat,BENGKEL.lng],12);
+    lapisanJalan=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap kontributor'});
+    lapisanSatelit=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri — Gambar Satelit'});
     lapisanJalan.addTo(peta);
-
-    // Marker Bengkel
-    penandaBengkel=L.marker([BENGKEL.lat,BENGKEL.lng],{
-        icon:L.divIcon({
-            html:'🏠',
-            className:'',
-            iconSize:[30,30],
-            iconAnchor:[15,15]
-        })
-    }).addTo(peta).bindPopup('<strong>🏠 Melsya Teknik Center</strong><br>Dusun Karang Anyar, Desa Santur, Kec. Barangin, Kota Sawahlunto');
+    penandaBengkel=L.marker([BENGKEL.lat,BENGKEL.lng]).addTo(peta)
+        .bindPopup(`🏠 <strong>Melsya Teknik Center</strong><br><a href="${BENGKEL.linkGM}" target="_blank">Buka di Google Maps</a>`);
 }
 
 function tandaiDiPeta(lat,lng){
     inisialisasiPeta();
     if(penandaPelanggan) peta.removeLayer(penandaPelanggan);
-    penandaPelanggan=L.marker([lat,lng],{
-        icon:L.divIcon({
-            html:'📍',
-            className:'',
-            iconSize:[24,24],
-            iconAnchor:[12,12]
-        })
-    }).addTo(peta).bindPopup(`<strong>📍 Lokasi Anda</strong><br>${lat.toFixed(6)}, ${lng.toFixed(6)}`).openPopup();
+    penandaPelanggan=L.marker([lat,lng],{icon:L.icon({iconUrl:'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',iconSize:[25,41],iconAnchor:[12,41]})})
+        .addTo(peta).bindPopup(`✅ <strong>Lokasi Anda</strong><br>Jarak: ${jarak} km`).openPopup();
     peta.setView([lat,lng],13);
 }
 
 function gantiPeta(mode){
     document.getElementById('btnJalan').classList.toggle('aktif',mode==='jalan');
     document.getElementById('btnSatelit').classList.toggle('aktif',mode==='satelit');
-    if(!peta) return alert("⚠️ Deteksi lokasi dulu!");
+    if(!peta) return alert("⚠️ Silakan deteksi lokasi terlebih dahulu!");
     if(peta.hasLayer(lapisanJalan)) peta.removeLayer(lapisanJalan);
     if(peta.hasLayer(lapisanSatelit)) peta.removeLayer(lapisanSatelit);
     mode==='jalan'?lapisanJalan.addTo(peta):lapisanSatelit.addTo(peta);
 }
 
-// ==============================================
-// HITUNG BIAYA & ANALISA OTOMATIS
-// ==============================================
+// 💰 HITUNG BIAYA
 function hitungBiayaTransport(beratTotal){
-    if(CARA==='bawa') return {jarak,biaya:0,teks:"Tanpa biaya perjalanan"};
-    if(CARA==='kunjungan') return {jarak,biaya:Math.round(jarak*TARIF.kunjunganPerKm),teks:`${jarak} km × Rp ${TARIF.kunjunganPerKm.toLocaleString('id-ID')}`};
+    if(CARA==='bawa') return {jarak,biaya:0,teks:"Tanpa biaya perjalanan — bawa langsung ke bengkel"};
+    if(CARA==='kunjungan') return {jarak,biaya:Math.round(jarak*TARIF.kunjunganPerKm),teks:`${jarak} km × Rp ${TARIF.kunjunganPerKm.toLocaleString('id-ID')}/km`};
     const jarakPulangPergi=jarak*2;
     const biayaJarak=Math.round(jarakPulangPergi*TARIF.antarPerKm);
     const biayaBerat=JENIS!=='listrik'?beratTotal*TARIF.perKg:0;
-    return {jarak,biaya:TARIF.antarDasar+biayaJarak+biayaBerat,teks:`Biaya dasar + jarak${biayaBerat?' + berat':''}`};
+    return {jarak,biaya:TARIF.antarDasar+biayaJarak+biayaBerat,teks:`Biaya dasar + jarak (PP)${biayaBerat?' + berat':''}`};
 }
 
+// 🔍 ANALISA KERUSAKAN & HITUNG TOTAL
 async function mulaiAnalisa(){
     const nama=document.getElementById('nama').value.trim();
     const alamat=document.getElementById('alamat').value.trim();
     const daftarEl=document.querySelectorAll('.kotak-item');
 
-    if(!nama)return alert("⚠️ Isi Nama Lengkap dulu!");
-    if(!latPelanggan||!lngPelanggan||alamat==="")return alert("⚠️ WAJIB KLIK 'DETEKSI LOKASI' DULU!");
-    if(daftarEl.length===0)return alert("⚠️ Tambahkan perangkat dulu!");
-    for(const el of daftarEl){if(!el.querySelector('.jenis-opt').value)return alert("⚠️ Pilih jenis untuk semua perangkat!");}
+    if(!nama)return alert("⚠️ Silakan isi Nama Lengkap terlebih dahulu!");
+    if(!latPelanggan||!lngPelanggan||alamat==="")return alert("⚠️ WAJIB KLIK TOMBOL 'DETEKSI LOKASI' DULU!");
+    if(daftarEl.length===0)return alert("⚠️ Silakan tambahkan minimal 1 barang/perangkat!");
+    for(const el of daftarEl){if(!el.querySelector('.jenis-opt').value)return alert("⚠️ Pilih jenis barang untuk SEMUA perangkat!");}
 
     document.getElementById('btnAnalisa').disabled=true;
     document.getElementById('loading').style.display='block';
@@ -649,6 +575,7 @@ async function mulaiAnalisa(){
 
         daftarEl.forEach(el=>{
             const jenis=el.querySelector('.jenis-opt').value||"Umum";
+           
             const merek=el.querySelector('.merek-val').value.trim()||"-";
             const berat=parseFloat(el.querySelector('.berat-val')?.value)||0;
             const keluhan=el.querySelector('.keluhan-item').value.trim() || "Belum ada keterangan khusus";
@@ -657,11 +584,18 @@ async function mulaiAnalisa(){
             let terbaik=null,skorTerbaik=0;
             dataDasar.forEach(d=>{
                 let skor=0;
-                d.kata.forEach(k=>{if(keluhan.toLowerCase().includes(k.toLowerCase())||merek.toLowerCase().includes(k.toLowerCase()))skor+=k.length;});
+                d.kata.forEach(k=>{
+                    if(keluhan.toLowerCase().includes(k.toLowerCase())||merek.toLowerCase().includes(k.toLowerCase()))
+                        skor+=k.length;
+                });
                 if(skor>skorTerbaik){skorTerbaik=skor;terbaik=d;}
             });
             if(!terbaik||skorTerbaik<3){
-                terbaik={kerusakan:"Perlu dicek langsung",estimasiJasa:JENIS==='elektronik'?120000:JENIS==='komputer'?110000:150000,sukuCadang:"Belum diketahui"};
+                terbaik={
+                    kerusakan:"Perlu dicek langsung oleh teknisi",
+                    estimasiJasa:JENIS==='elektronik'?120000:JENIS==='komputer'?110000:150000,
+                    sukuCadang:"Belum diketahui — akan diperiksa"
+                };
             }
 
             totalJasa+=terbaik.estimasiJasa;
@@ -674,13 +608,14 @@ async function mulaiAnalisa(){
                 biaya:terbaik.estimasiJasa,
                 catatanPelanggan:keluhan
             });
+
             htmlHasil+=`
-            <div style="border-top:1px dashed #ccc;padding:8px 0;">
+            <div style="border-top:1px dashed #ccc;padding:10px 0;">
                 <strong>🔹 ${jenis}${merek!=='-'?` (${merek})`:''}</strong><br>
-                Catatan Anda: ${keluhan}<br>
-                Kerusakan: ${terbaik.kerusakan}<br>
-                Pekerjaan & Suku Cadang: ${terbaik.sukuCadang}<br>
-                Biaya Jasa: ${rp(terbaik.estimasiJasa)}
+                <small>Catatan: ${keluhan}</small><br>
+                <span style="color:#b91c1c;font-weight:500;">Kerusakan: ${terbaik.kerusakan}</span><br>
+                Suku Cadang: ${terbaik.sukuCadang}<br>
+                <strong>Biaya Jasa: ${rp(terbaik.estimasiJasa)}</strong>
             </div>`;
             nomor++;
         });
@@ -688,7 +623,14 @@ async function mulaiAnalisa(){
         infoBiaya=hitungBiayaTransport(beratTotal);
         totalAkhir=totalJasa+infoBiaya.biaya;
         const linkPelangganGM=`https://www.google.com/maps/search/?api=1&query=${latPelanggan},${lngPelanggan}`;
-        window.DATA_NOTA={nama:nama,linkPeta:linkPelangganGM,jarak:jarak,biayaTransport:infoBiaya.biaya,items:daftarItem,total:totalAkhir};
+        window.DATA_NOTA={
+            nama:nama,
+            linkPeta:linkPelangganGM,
+            jarak:jarak,
+            biayaTransport:infoBiaya.biaya,
+            items:daftarItem,
+            total:totalAkhir
+        };
 
         document.getElementById('linkAlamatPelanggan').href=linkPelangganGM;
         document.getElementById('jarakTeks').textContent=`${jarak} km — Rute Jalan`;
@@ -701,8 +643,9 @@ async function mulaiAnalisa(){
     },1500);
 }
 
+// 📲 KIRIM PESANAN KE WHATSAPP
 function kirimKeWA(){
-    if(!window.DATA_NOTA)return alert("⚠️ Klik 'LIHAT PERKIRAAN BIAYA' dulu!");
+    if(!window.DATA_NOTA) return alert("⚠️ Klik tombol 'LIHAT PERKIRAAN BIAYA' terlebih dahulu!");
     const linkPelangganGM=`https://www.google.com/maps/search/?api=1&query=${latPelanggan},${lngPelanggan}`;
     let daftarTeks="",nomor=1;
 
@@ -728,22 +671,21 @@ Buka di Peta: ${linkPelangganGM}
 📏 Jarak Rute Jalan: ${jarak} km
 🚚 Biaya Perjalanan: ${rp(infoBiaya.biaya)}
 
-📋 DAFTAR PERANGKAT:
+📋 DAFTAR BARANG:
 ${daftarTeks}💰 TOTAL PERKIRAAN: ${rp(totalAkhir)}
 
 🏠 LOKASI BENKEL:
 ${BENGKEL.linkGM}
-════════════════════════`);
+════════════════════════
+Terima kasih — kami akan segera merespons!`);
+
     window.open(`https://wa.me/${BENGKEL.wa}?text=${pesan}`,'_blank','noopener');
-    alert("✅ Pesan sudah siap dikirim lengkap dengan lokasi pelanggan & rute jalan ke bengkel!");
+    alert("✅ Pesanan berhasil disiapkan! WhatsApp akan terbuka — silakan tekan tombol KIRIM. Terima kasih!");
 }
 
-// ==============================================
-// INISIALISASI SAAT HALAMAN DIMUAT
-// ==============================================
+// 🚀 INISIALISASI SAAT HALAMAN DIMUAT
 document.addEventListener('DOMContentLoaded', () => {
     ubahFormItem();
-    // Pasang event listener tombol deteksi lokasi
     document.getElementById('btnDeteksiLokasi').addEventListener('click', deteksiLokasiAkurat);
 });
 </script>

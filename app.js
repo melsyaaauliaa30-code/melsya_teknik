@@ -1,140 +1,116 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+// ==============================================
+// APP.JS — KONFIGURASI UTAMA & LOGIKA
+// Semua pengaturan SERAGAM untuk seluruh website
+// ==============================================
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC2_DvJZ469gEAxukqyKeT4BaE-_c1x_Oc",
-  authDomain: "melsya-teknik.firebaseapp.com",
-  projectId: "melsya-teknik",
-  storageBucket: "melsya-teknik.firebasestorage.app",
-  messagingSenderId: "704099609611",
-  appId: "1:704099609611:web:8c7d2f5a4e3b1c2d3e4f5a"
+// ⚙️ KONFIGURASI UTAMA — UBAH DATA DI SINI SAJA!
+export const KONFIG = {
+  // 📍 LOKASI BENKEL
+  BENGKEL: {
+    lat: -0.643261,
+    lng: 100.755266,
+    nama: "Melsya Teknik Center",
+    alamat: "Dusun Karang Anyar, Desa Santur, Kec. Barangin, Kota Sawahlunto",
+    wa: "6285356434003",
+    linkGM: "https://www.google.com/maps/search/?api=1&query=-0.643261,100.755266"
+  },
+
+  // 📖 LINK ARTIKEL / BLOG
+  LINK_ARTIKEL: "https://sumberenergimandiri19.blogspot.com/p/daftar-isi-seri-panduan-plts-biogas_01681296252.html?m=1",
+
+  // 💰 TARIF & HARGA
+  TARIF: {
+    jarakMaks: 50,        // km — batas layanan
+    antarPerKm: 5000,     // Rp/km — antar-jemput
+    antarDasar: 15000,    // Rp — biaya dasar antar
+    kunjunganPerKm: 4000  // Rp/km — kunjungan ke rumah
+  },
+
+  // 🔐 AKUN ADMIN (jika perlu)
+  ADMIN: {
+    username: "admin",
+    password: "melsya123"
+  }
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const NOMOR_WA_TUJUAN = '6285356434003';
+// 📋 PILIHAN PERANGKAT
+export const PILIHAN_ITEM = {
+  elektronik: [
+    {nilai:'tv',label:'📺 Televisi'},
+    {nilai:'kulkas',label:'🧊 Kulkas / Lemari Es'},
+    {nilai:'ac',label:'❄️ AC / Pendingin Ruangan'},
+    {nilai:'mesincuci',label:'🧺 Mesin Cuci'},
+    {nilai:'audio',label:'🔊 Audio / Sound System'},
+    {nilai:'lainnya',label:'📦 Lainnya'}
+  ],
+  komputer: [
+    {nilai:'laptop',label:'💻 Laptop'},
+    {nilai:'pc',label:'🖥️ Komputer PC'},
+    {nilai:'printer',label:'🖨️ Printer'},
+    {nilai:'hp',label:'📱 HP / Smartphone'},
+    {nilai:'tablet',label:'📲 Tablet'},
+    {nilai:'lainnya',label:'📦 Lainnya'}
+  ],
+  listrik: [
+    {nilai:'instalasi',label:'⚡ Instalasi Listrik'},
+    {nilai:'jaringan',label:'🌐 Jaringan Internet'},
+    {nilai:'listrikmati',label:'🔌 Listrik Mati / Gangguan'},
+    {nilai:'lainnya',label:'📦 Lainnya'}
+  ]
+};
 
-// Baca lokasi bengkel dari Firebase
-async function muatLokasiBengkel() {
-  try {
-    const docRef = doc(db, "pengaturan", "lokasi_bengkel");
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      window.BENGKEL_LAT = data.lat || -0.6432566;
-      window.BENGKEL_LNG = data.lng || 100.7552686;
-      // Update tampilan
-      document.getElementById('koordinatBengkel').textContent = 
-        `${window.BENGKEL_LAT}, ${window.BENGKEL_LNG} — Sawahlunto, Sumatera Barat`;
-      document.getElementById('linkLokasiBengkel').href = 
-        `https://www.google.com/maps/search/?api=1&query=${window.BENGKEL_LAT},${window.BENGKEL_LNG}`;
-      document.getElementById('footerLokasiBengkel').href = 
-        `https://www.google.com/maps/search/?api=1&query=${window.BENGKEL_LAT},${window.BENGKEL_LNG}`;
-      document.getElementById('footerLokasiBengkel').textContent = 
-        `${window.BENGKEL_LAT}, ${window.BENGKEL_LNG}`;
-    }
-  } catch (e) {
-    console.log('Gagal muat lokasi bengkel, pakai default');
-  }
+// 🧠 DATA ANALISA KERUSAKAN OTOMATIS
+export const DATA_ANALISA = {
+  elektronik: [
+    {kata:['tidak dingin','panas','mencair','hangat'], kerusakan:'Masalah Sistem Pendinginan — Kemungkinan kebocoran freon atau kompresor bermasalah', estimasiJasa:150000, sukuCadang:'Freon, Kapasitor, atau Kompresor'},
+    {kata:['tidak menyala','mati','tidak hidup','mati total'], kerusakan:'Masalah Sumber Daya / Listrik — Kemungkinan kerusakan pada modul daya atau kabel', estimasiJasa:120000, sukuCadang:'Modul Daya, Sekring, atau Kabel'},
+    {kata:['berbunyi','bunyi kasar','berdengung','getar'], kerusakan:'Komponen Mekanis / Kipas Bermasalah — Perlu pengecekan kipas atau dudukan', estimasiJasa:95000, sukuCadang:'Kipas, Bantalan, atau Pemasangan'},
+    {kata:['gambar','layar','garis','buram','gelap'], kerusakan:'Masalah Bagian Tampilan — Kemungkinan kerusakan layar atau modul pengaturan gambar', estimasiJasa:180000, sukuCadang:'Layar, Lampu Backlight, atau Modul Video'},
+    {kata:['remote','tombol','tidak merespon','sinyal'], kerusakan:'Masalah Kontrol / Sensor', estimasiJasa:85000, sukuCadang:'Sensor, Remote, atau Tombol Panel'}
+  ],
+  komputer: [
+    {kata:['lambat','lambat sekali','berat','lemot'], kerusakan:'Perlu Optimasi Sistem — Penumpukan file sampah, virus, atau kapasitas penyimpanan penuh', estimasiJasa:80000, sukuCadang:'Tidak perlu — Software only'},
+    {kata:['tidak menyala','mati','hidup mati','beep'], kerusakan:'Masalah Perangkat Keras — Power supply, RAM, atau Motherboard bermasalah', estimasiJasa:130000, sukuCadang:'Power Supply, RAM, atau Komponen Board'},
+    {kata:['layar','gelap','blank','garis','berkedip'], kerusakan:'Kerusakan Layar / Kabel Fleksibel', estimasiJasa:160000, sukuCadang:'Layar LCD / Kabel Fleksibel'},
+    {kata:['hang','macet','freeze','restart sendiri'], kerusakan:'Sistem Bermasalah / Overheat — Kemungkinan suhu berlebih atau sistem korup', estimasiJasa:100000, sukuCadang:'Pasta pendingin, Perbaikan sistem'},
+    {kata:['virus','malware','banyak iklan','buka sendiri'], kerusakan:'Infeksi Virus / Malware', estimasiJasa:75000, sukuCadang:'Tidak perlu — Software only'}
+  ],
+  listrik: [
+    {kata:['listrik mati','tidak ada listrik','bolak-balik'], kerusakan:'Gangguan Jalur Listrik — Perlu pengecekan kabel, sekring, atau MCB', estimasiJasa:90000, sukuCadang:'Kabel, Sekring, atau MCB'},
+    {kata:['terlalu beban','mcb turun','jatuh'], kerusakan:'Beban Berlebih / Korsleting — Perlu pengecekan beban dan kabel', estimasiJasa:110000, sukuCadang:'Kabel, MCB, atau Perangkat Proteksi'},
+    {kata:['jaringan','lambat internet','putus-nyambung','sinyal lemah'], kerusakan:'Masalah Jaringan / Kabel — Pengecekan kabel, konektor, atau perangkat jaringan', estimasiJasa:85000, sukuCadang:'Kabel LAN, Konektor, atau Switch'}
+  ]
+};
+
+// 💰 FORMAT RUPIAH
+export function rp(nilai) {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0
+  }).format(nilai);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  muatLokasiBengkel();
-  
-  const form = document.getElementById('orderForm');
-  if (!form) return;
+// 📜 SCROLL HALAMAN
+export function scrollKe(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+}
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const nama = document.getElementById('nama').value.trim();
-    const lok
-    const nama = document.getElementById('nama').value.trim();
-    const lokasiGps = document.getElementById('lokasiGps').value.trim();
-    const catatan = document.getElementById('catatan')?.value.trim() || '';
+// 📍 AMBIL KOORDINAT BENKEL TERBARU (dari localStorage jika diubah di Admin)
+export function getBengkel() {
+  const lat = localStorage.getItem('bengkelLat') || KONFIG.BENGKEL.lat;
+  const lng = localStorage.getItem('bengkelLng') || KONFIG.BENGKEL.lng;
+  return {
+    lat: parseFloat(lat),
+    lng: parseFloat(lng),
+    nama: KONFIG.BENGKEL.nama,
+    alamat: KONFIG.BENGKEL.alamat,
+    wa: KONFIG.BENGKEL.wa,
+    linkGM: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
+  };
+}
 
-    // Validasi
-    if (!nama) { alert('❌ Silakan isi nama lengkap!'); return; }
-    if (!lokasiGps) { alert('❌ Silakan deteksi lokasi GPS terlebih dahulu!'); return; }
-
-    // Pisahkan koordinat
-    let lat = '', lng = '';
-    if (lokasiGps && lokasiGps.includes(',')) {
-      [lat, lng] = lokasiGps.split(',').map(s => s.trim());
-    }
-
-    // Ambil data perangkat
-    const perangkatList = [];
-    document.querySelectorAll('.perangkat-item').forEach((item) => {
-      const jenis = item.querySelector('.jenis-perangkat').value;
-      if (!jenis) return;
-      perangkatList.push({
-        jenis,
-        merek: item.querySelector('.merek-perangkat').value.trim(),
-        kerusakan: item.querySelector('.jenis-kerusakan').value,
-        keterangan: item.querySelector('.keterangan-perangkat').value.trim()
-      });
-    });
-
-    if (perangkatList.length === 0) {
-      alert('❌ Silakan pilih perangkat yang akan diservis!');
-      return;
-    }
-
-    // ===== 1. Simpan ke Firestore =====
-    let pesananId = '';
-    try {
-      const docRef = await addDoc(collection(db, "orders"), {
-        nama,
-        lokasiGps,
-        lat,
-        lng,
-        perangkat: perangkatList,
-        catatan,
-        status: 'baru',
-        createdAt: serverTimestamp()
-      });
-      pesananId = docRef.id;
-      console.log('✅ Pesanan tersimpan:', pesananId);
-    } catch (err) {
-      console.error('❌ Gagal simpan:', err);
-    }
-
-    // ===== 2. Susun Pesan WhatsApp =====
-    const bLat = window.BENGKEL_LAT || -0.6432566;
-    const bLng = window.BENGKEL_LNG || 100.7552686;
-
-    let pesan = `🔔 *PESANAN SERVIS BARU*
-────────────────────
-🆔 *No. Pesanan:* ${pesananId || 'Tanpa ID'}
-👤 *Nama:* ${nama}
-📍 *Lokasi Pelanggan:* ${lokasiGps}
-🗺️ *Buka di Maps:* https://www.google.com/maps/search/?api=1&query=${lat},${lng}
-🏠 *Lokasi Bengkel:* ${bLat}, ${bLng}
-────────────────────
-🔧 *DAFTAR PERANGKAT:*
-`;
-    perangkatList.forEach((p, i) => {
-      pesan += `
-*Perangkat #${i+1}*
-├─ Jenis: ${p.jenis}
-├─ Merek: ${p.merek || '-'}
-├─ Kerusakan: ${p.kerusakan || '-'}
-└─ Keterangan: ${p.keterangan || '-'}`;
-    });
-
-    if (catatan) pesan += `\n────────────────────\n📝 *Catatan:* ${catatan}`;
-    pesan += `\n────────────────────\n*Dari Melsya Teknik Center*`;
-
-    // ===== 3. Buka WhatsApp =====
-    const waUrl = `https://wa.me/${NOMOR_WA_TUJUAN}?text=${encodeURIComponent(pesan)}`;
-    window.open(waUrl, '_blank');
-
-    // ===== 4. Reset Form =====
-    form.reset();
-    document.getElementById('mapContainer')?.classList.add('hidden');
-    alert('✅ Pesanan berhasil dikirim! Terima kasih.');
-  });
-});
-
-export { db };
+// ==============================================
+// AKHIR FILE — Semua fungsi lain di index.html
+// tetap menggunakan pengaturan di atas
+// ==============================================

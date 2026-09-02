@@ -12,152 +12,347 @@
         .kotak-login{background:#fff;padding:30px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.3);margin-top:60px;}
         h2{text-align:center;color:#1f2937;margin-bottom:24px;}
         label{display:block;margin:12px 0 6px;font-weight:600;color:#374151;}
-        input,textarea{width:100%;padding:12px;border:2px solid #d1d5db;border-radius:10px;font-size:15px;}
-        input:focus,textarea:focus{outline:none;border-color:#2563eb;}
-        .btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;margin-top:16px;}
+        input,textarea{width:100%;padding:12px;border:2px solid #d1d5db;border-radius:10px;font-size:15px;transition:0.2s;}
+        input:focus,textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+        .btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;margin-top:16px;transition:0.2s;}
         .btn-masuk{background:#2563eb;color:#fff;}
         .btn-masuk:hover{background:#1d4ed8;}
         .panel{display:none;background:#fff;padding:24px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.3);}
         .panel h3{color:#1f2937;margin-bottom:20px;border-bottom:2px solid #e5e7eb;padding-bottom:10px;}
         .btn-cetak{background:#22c55e;color:#fff;}
         .btn-cetak:hover{background:#16a34a;}
+        .btn-simpan{background:#f
         .btn-simpan{background:#f59e0b;color:#fff;}
         .btn-simpan:hover{background:#d97706;}
         .btn-keluar{background:#ef4444;color:#fff;}
         .btn-keluar:hover{background:#dc2626;}
-        .peringatan{color:#dc2626;margin-top:12px;display:none;}
-        .info-sukses{color:#16a34a;margin-top:12px;display:none;}
-        .nav-kembali{text-align:center;margin-top:20px;}
-        .nav-kembali a{color:#9ca3af;text-decoration:none;}
-        .nav-kembali a:hover{color:#fff;}
-        .section{margin-bottom:30px;}
+        .info-box{background:#eff6ff;border-left:4px solid #2563eb;padding:12px;border-radius:8px;margin:12px 0;}
+        .peringatan-box{background:#fef3c7;border-left:4px solid #f59e0b;color:#92400e;padding:12px;border-radius:8px;margin:12px 0;}
+        .sukses-box{background:#f0fdf4;border-left:4px solid #16a34a;color:#166534;padding:12px;border-radius:8px;margin:12px 0;}
+        .hidden{display:none!important;}
+        table{width:100%;border-collapse:collapse;margin-top:15px;}
+        th,td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb;}
+        th{background:#f9fafb;font-weight:600;color:#374151;}
+        .aksi-btns{display:flex;gap:8px;}
+        .aksi-btns button{padding:6px 10px;border:none;border-radius:6px;cursor:pointer;font-size:14px;}
+        .btn-edit{background:#dbeafe;color:#1d4ed8;}
+        .btn-hapus{background:#fee2e2;color:#dc2626;}
+        #notaPreview{margin-top:20px;padding:25px;border:2px dashed #ccc;border-radius:12px;background:#fafafa;}
+        @media print{body{background:#fff;padding:0;}.no-print{display:none!important;}#notaPreview{border:none;}}
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- 🔐 HALAMAN LOGIN -->
-    <div class="kotak-login" id="halamanLogin">
-        <h2>🔐 Login Admin</h2>
-        <label>👤 Nama Pengguna</label>
-        <input type="text" id="username" placeholder="Masukkan nama pengguna">
-        <label>🔒 Kata Sandi</label>
-        <input type="password" id="password" placeholder="Masukkan kata sandi">
-        <div class="peringatan" id="peringatanLogin">❌ Nama pengguna atau kata sandi salah!</div>
-        <button class="btn btn-masuk" onclick="cekLogin()">MASUK KE PANEL ADMIN</button>
-        <div class="nav-kembali">
-            <a href="index.html">← Kembali ke Halaman Utama</a>
+    <!-- 🔐 FORM LOGIN FIREBASE -->
+    <div id="formLogin" class="kotak-login">
+        <h2>🔐 Login Admin — Melsya Teknik Center</h2>
+        <div class="info-box">
+            <strong>✅ Login Aman Menggunakan Firebase Authentication</strong><br>
+            Masuk dengan email & kata sandi yang terdaftar di Firebase Console.
         </div>
+        
+        <label>📧 Email</label>
+        <input type="email" id="emailAdmin" placeholder="admin@melsya-teknik.firebaseapp.com">
+        
+        <label>🔒 Kata Sandi</label>
+        <input type="password" id="passAdmin" placeholder="Masukkan kata sandi" onkeydown="if(event.key==='Enter')loginAdmin()">
+        
+        <button class="btn btn-masuk" onclick="loginAdmin()">🔑 MASUK KE PANEL</button>
+        <p style="text-align:center;margin-top:15px;color:#6b7280;font-size:14px;">
+            Lupa sandi? Ubah melalui <strong>Firebase Console → Authentication</strong>
+        </p>
+        <div id="pesanError" class="peringatan-box hidden"></div>
     </div>
 
-    <!-- 🛠️ PANEL ADMIN -->
-    <div class="panel" id="halamanAdmin">
-        <h3>🛠️ Panel Admin — Melsya Teknik Center</h3>
-        
-        <!-- 📍 UBAH LOKASI BENKEL -->
-        <div class="section">
-            <h4 style="margin:20px 0 10px;color:#374151;">📍 UBAH LOKASI BENKEL</h4>
-            <label>Latitude (Contoh: -0.643261)</label>
-            <input type="text" id="latBengkel" placeholder="-0.643261">
-            <label>Longitude (Contoh: 100.755266)</label>
-            <input type="text" id="lngBengkel" placeholder="100.755266">
-            <button class="btn btn-simpan" onclick="simpanLokasi()">💾 SIMPAN LOKASI BENKEL</button>
-            <div class="info-sukses" id="suksesLokasi">✅ Lokasi bengkel berhasil disimpan!</div>
+    <!-- 📊 PANEL ADMIN — HANYA TERLIHAT SETELAH LOGIN -->
+    <div id="panelAdmin" class="panel hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h2>⚙️ Panel Admin — Melsya Teknik Center</h2>
+            <button class="btn btn-keluar" style="width:auto;padding:10px 20px;" onclick="keluarAdmin()">🚪 Keluar</button>
         </div>
 
-        <!-- 📄 NOTA -->
-        <div class="section">
-            <h4 style="margin:30px 0 10px;color:#374151;">📄 EDIT & CETAK NOTA</h4>
-            <label>Nama Pelanggan</label>
-            <input type="text" id="notaNama" placeholder="Nama pelanggan">
-            <label>Detail Barang & Biaya</label>
-            <textarea id="notaDetail" rows="6" placeholder="1. Kulkas — Tidak dingin&#10;   Biaya Jasa: Rp 150.000&#10;   Suku Cadang: Freon&#10;2. TV — Tidak menyala&#10;   Biaya Jasa: Rp 120.000"></textarea>
-            <label>Biaya Transportasi</label>
-            <input type="text" id="notaTransport" placeholder="Rp 0">
-            <label>TOTAL BIAYA</label>
-            <input type="text" id="notaTotal" placeholder="Rp 0">
-            <button class="btn btn-cetak" onclick="cetakNota()">🖨️ CETAK NOTA</button>
+        <!-- 📍 UBAH LOKASI BENKEL -->
+        <div class="card" style="margin-bottom:25px;">
+            <h3>📍 Ubah Lokasi Bengkel</h3>
+            <div class="info-box">
+                Koordinat yang disimpan akan otomatis terpakai di seluruh website.
+            </div>
+            <label>Latitude</label>
+            <input type="text" id="bengkelLat" placeholder="-0.643261">
+            <label>Longitude</label>
+            <input type="text" id="bengkelLng" placeholder="100.755266">
+            <label>Alamat Lengkap</label>
+            <textarea id="bengkelAlamat" rows="2" placeholder="Dusun Karang Anyar, Desa Santur, Kec. Barangin, Kota Sawahlunto"></textarea>
+            <button class="btn btn-simpan" onclick="simpanLokasi()">💾 SIMPAN LOKASI BENKEL</button>
+            <div id="pesanLokasi" class="sukses-box hidden">✅ Lokasi bengkel berhasil disimpan!</div>
         </div>
-        
-        <button class="btn btn-keluar" onclick="keluarAdmin()" style="margin-top:30px;">🚪 KELUAR</button>
+
+        <!-- 📋 DAFTAR PESANAN -->
+        <div class="card" style="margin-bottom:25px;">
+            <h3>📋 Daftar Pesanan Servis</h3>
+            <div id="daftarPesananKosong" class="info-box">
+                Belum ada pesanan baru.
+            </div>
+            <table id="tabelPesanan" class="hidden">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Tanggal</th>
+                        <th>Total</th>
+                        <th class="no-print">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="isiTabelPesanan"></tbody>
+            </table>
+        </div>
+
+        <!-- 🖨️ CETAK & EDIT NOTA -->
+        <div class="card">
+            <h3>📄 Cetak & Edit Nota</h3>
+            <label>Nama Pelanggan</label>
+            <input type="text" id="notaNama" placeholder="Nama Pelanggan">
+            <label>Tanggal</label>
+            <input type="date" id="notaTanggal">
+            <label>Detail Pesanan</label>
+            <textarea id="notaDetail" rows="5" placeholder="Daftar barang & kerusakan..."></textarea>
+            <label>Total Biaya (Rp)</label>
+            <input type="number" id="notaTotal" placeholder="0">
+            
+            <div style="display:flex;gap:10px;margin-top:15px;">
+                <button class="btn btn-simpan" style="flex:1;" onclick="simpanNota()">💾 SIMPAN NOTA</button>
+                <button class="btn btn-cetak" style="flex:1;" onclick="cetakNota()">🖨️ CETAK NOTA</button>
+            </div>
+
+            <!-- PREVIEW NOTA -->
+            <div id="notaPreview" class="no-print">
+                <h3 style="text-align:center;border-bottom:2px solid #000;padding-bottom:15px;">NOTA SERVIS<br><small>Melsya Teknik Center</small></h3>
+                <p><strong>No. Nota:</strong> <span id="previewNoNota">---</span></p>
+                <p><strong>Tanggal:</strong> <span id="previewTanggal">---</span></p>
+                <p><strong>Nama Pelanggan:</strong> <span id="previewNama">---</span></p>
+                <hr style="border:none;border-top:1px dashed #000;margin:10px 0;">
+                <p><strong>Detail Pesanan:</strong></p>
+                <p id="previewDetail" style="white-space:pre-wrap;">---</p>
+                <hr style="border:none;border-top:1px dashed #000;margin:10px 0;">
+                <p style="text-align:right;font-size:18px;"><strong>TOTAL: Rp <span id="previewTotal">0</span></strong></p>
+                <br>
+                <p style="text-align:center;">Terima kasih — Melsya Teknik Center<br>📞 0853-5643-4003</p>
+            </div>
+        </div>
     </div>
 </div>
 
+<!-- Firebase SDK -->
+<script type="module">
+    // ==============================================
+    // 🔐 KONFIGURASI FIREBASE — GANTI DENGAN MILIK ANDA
+    // ==============================================
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyC2_DvJZ469gEAxukqyKeT4BaE-_c1x_Oc",
+        authDomain: "melsya-teknik.firebaseapp.com",
+        projectId: "melsya-teknik",
+        storageBucket: "melsya-teknik.firebasestorage.app",
+        messagingSenderId: "704099609611",
+        appId: "1:704099609611:web:GANTI_DENGAN_APP_ID_ANDA"
+    };
+
+    // Inisialisasi Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // 🌐 Simpan ke window agar bisa dipakai fungsi di bawah
+    window.firebaseAuth = auth;
+    window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+    window.signOut = signOut;
+
+    // ✅ Cek status login saat halaman dibuka
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // Sudah login → tampilkan panel admin
+            document.getElementById('formLogin').classList.add('hidden');
+            document.getElementById('panelAdmin').classList.remove('hidden');
+            muatDataLokasi();
+            muatPesanan();
+            document.getElementById('notaTanggal').valueAsDate = new Date();
+        } else {
+            // Belum login → tampilkan form login
+            document.getElementById('formLogin').classList.remove('hidden');
+            document.getElementById('panelAdmin').classList.add('hidden');
+        }
+    });
+
+    // 🔑 Fungsi Login
+    window.loginAdmin = async function() {
+        const email = document.getElementById('emailAdmin').value.trim();
+        const pass = document.getElementById('passAdmin').value;
+        const pesan = document.getElementById('pesanError');
+
+        if (!email || !pass) {
+            pesan.textContent = "⚠️ Isi email & kata sandi!";
+            pesan.classList.remove('hidden');
+            return;
+        }
+
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+            pesan.classList.add('hidden');
+            document.getElementById('emailAdmin').value = '';
+            document.getElementById('passAdmin').value = '';
+        } catch (err) {
+            console.error(err);
+            let teks = "❌ Gagal login! ";
+            if (err.code === 'auth/invalid-email') teks += "Format email salah.";
+            else if (err.code === 'auth/user-not-found') teks += "Email tidak terdaftar.";
+            else if (err.code === 'auth/wrong-password') teks += "Kata sandi salah.";
+            else if (err.code === 'auth/too-many-requests') teks += "Terlalu banyak percobaan — coba lagi nanti.";
+            else teks += err.message;
+            pesan.textContent = teks;
+            pesan.classList.remove('hidden');
+        }
+    };
+
+    // 🚪 Fungsi Keluar / Logout
+    window.keluarAdmin = async function() {
+        if (confirm("Yakin ingin keluar dari panel admin?")) {
+            await signOut(auth);
+        }
+    };
+</script>
+
+<!-- Fungsi Lain — Bukan Module -->
 <script>
-// ⚙️ KONFIGURASI ADMIN — UBAH SANDI DI SINI!
-const ADMIN_CONFIG = {
-    username: "admin",        // 👤 Ubah nama pengguna
-    password: "melsya123"     // 🔒 Ubah kata sandi — INI SANDI LOGIN ANDA!
-};
+    // 📍 SIMPAN & MUAT LOKASI BENKEL
+    function simpanLokasi() {
+        const lat = document.getElementById('bengkelLat').value.trim();
+        const lng = document.getElementById('bengkelLng').value.trim();
+        const alamat = document.getElementById('bengkelAlamat').value.trim();
 
-// 🔐 CEK LOGIN
-function cekLogin(){
-    const user=document.getElementById('username').value.trim();
-    const pass=document.getElementById('password').value.trim();
-    
-    if(user===ADMIN_CONFIG.username && pass===ADMIN_CONFIG.password){
-        document.getElementById('halamanLogin').style.display='none';
-        document.getElementById('halamanAdmin').style.display='block';
-        muatLokasi();
-    }else{
-        document.getElementById('peringatanLogin').style.display='block';
+        if (!lat || !lng) {
+            alert("⚠️ Isi Latitude & Longitude!");
+            return;
+        }
+
+        localStorage.setItem('bengkelLat', lat);
+        localStorage.setItem('bengkelLng', lng);
+        localStorage.setItem('bengkelAlamat', alamat);
+
+        const pesan = document.getElementById('pesanLokasi');
+        pesan.classList.remove('hidden');
+        setTimeout(() => pesan.classList.add('hidden'), 4000);
     }
-}
 
-// 📍 SIMPAN & MUAT LOKASI BENKEL
-function simpanLokasi(){
-    const lat=document.getElementById('latBengkel').value.trim();
-    const lng=document.getElementById('lngBengkel').value.trim();
-    
-    if(!lat||!lng) return alert("⚠️ Isi kedua koordinat!");
-    
-    localStorage.setItem('bengkelLat',lat);
-    localStorage.setItem('bengkelLng',lng);
-    document.getElementById('suksesLokasi').style.display='block';
-    setTimeout(()=>document.getElementById('suksesLokasi').style.display='none',3000);
-}
+    function muatDataLokasi() {
+        const lat = localStorage.getItem('bengkelLat') || '-0.643261';
+        const lng = localStorage.getItem('bengkelLng') || '100.755266';
+        const alamat = localStorage.getItem('bengkelAlamat') || 'Dusun Karang Anyar, Desa Santur, Kec. Barangin, Kota Sawahlunto';
+        
+        document.getElementById('bengkelLat').value = lat;
+        document.getElementById('bengkelLng').value = lng;
+        document.getElementById('bengkelAlamat').value = alamat;
+    }
 
-function muatLokasi(){
-    const lat=localStorage.getItem('bengkelLat')||"-0.643261";
-    const lng=localStorage.getItem('bengkelLng')||"100.755266";
-    document.getElementById('latBengkel').value=lat;
-    document.getElementById('lngBengkel').value=lng;
-}
+    // 📋 DAFTAR PESANAN — SIMPANAN LOKAL (bisa dipindah ke Firestore nanti)
+    function muatPesanan() {
+        const pesanan = JSON.parse(localStorage.getItem('daftarPesanan') || '[]');
+        const tbody = document.getElementById('isiTabelPesanan');
+        const kosong = document.getElementById('daftarPesananKosong');
+        const tabel = document.getElementById('tabelPesanan');
 
-// 🖨️ CETAK NOTA
-function cetakNota(){
-    const nama=document.getElementById('notaNama').value.trim()||"Pelanggan";
-    const detail=document.getElementById('notaDetail').value.trim()||"";
-    const transport=document.getElementById('notaTransport').value.trim()||"Rp 0";
-    const total=document.getElementById('notaTotal').value.trim()||"Rp 0";
-    const tanggal=new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
-    
-    const nota=`
-=====================================
-       MELSYA TEKNIK CENTER
-   Servis & Perbaikan Terpercaya
-     Sawahlunto — Sumatera Barat
--------------------------------------
-📍 Dusun Karang Anyar, Desa Santur
-   Kec. Barangin, Kota Sawahlunto
-📱 WhatsApp: 0853-5643-4003
--------------------------------------
-            N O T A
-Tanggal: ${tanggal}
--------------------------------------
-Nama: ${nama}
+        if (pesanan.length === 0) {
+            kosong.classList.remove('hidden');
+            tabel.classList.add('hidden');
+            return;
+        }
 
-${detail}
--------------------------------------
-Biaya Transport: ${transport}
--------------------------------------
-TOTAL BAYAR: ${total}
--------------------------------------
-✅ Terima kasih atas kepercayaan Anda!
-  * Garansi servis sesuai kesepakatan *
-=====================================
-    `;
-    
-    const jendelaCetak=window.open('','_blank');
-    jendelaCetak.document.write(`<pre style="font-family:monospace;font-size:14px;line-height:1.8;padding:30px;white-space:pre-wrap;">${nota}</pre>`);
-    jendelaCetak.document.close();
+        kosong.classList.add('hidden');
+        tabel.classList.remove('hidden');
+        tbody.innerHTML = '';
+
+        pesanan.forEach((p, i) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${i+1}</td>
+                <td>${p.nama}</td>
+                <td>${p.tanggal}</td>
+                <td>Rp ${p.total?.toLocaleString('id-ID') || 0}</td>
+                <td class="aksi-btns no-print">
+                    <button class="btn-edit" onclick="editNota(${i})">✏️ Edit</button>
+                    <button class="btn-hapus" onclick="hapusPesanan(${i})">🗑️ Hapus</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // 📄 EDIT NOTA
+    function editNota(index) {
+        const pesanan = JSON.parse(localStorage.getItem('daftarPesanan') || '[]');
+        const p = pesanan[index];
+        if (!p) return;
+
+        document.getElementById('notaNama').value = p.nama || '';
+        document.getElementById('notaTanggal').value = p.tanggal || '';
+        document.getElementById('notaDetail').value = p.detail || '';
+        document.getElementById('notaTotal').value = p.total || 0;
+        document.getElementById('previewNoNota').textContent = `NOTA-${String(index+1).padStart(4,'0')}`;
+        updatePreviewNota();
+    }
+
+    // 💾 SIMPAN NOTA
+    function simpanNota() {
+        const nama = document.getElementById('notaNama').value.trim();
+        const tanggal = document.getElementById('notaTanggal').value;
+        const detail = document.getElementById('notaDetail').value.trim();
+        const total = parseInt(document.getElementById('notaTotal').value) || 0;
+
+        if (!nama || !tanggal || !detail) {
+            alert("⚠️ Lengkapi semua data nota!");
+            return;
+        }
+
+        const pesanan = JSON.parse(localStorage.getItem('daftarPesanan') || '[]');
+        pesanan.push({ nama, tanggal, detail, total, dibuat: new Date().toISOString() });
+        localStorage.setItem('daftarPesanan', JSON.stringify(pesanan));
+
+        alert("✅ Nota berhasil disimpan!");
+        muatPesanan();
+        updatePreviewNota();
+    }
+
+    // 🖨️ CETAK NOTA
+    function cetakNota() {
+        updatePreviewNota();
+        window.print();
+    }
+
+    // 🔄 UPDATE PREVIEW NOTA OTOMATIS
+    function updatePreviewNota() {
+        document.getElementById('previewNama').textContent = document.getElementById('notaNama').value || '---';
+        document.getElementById('previewTanggal').textContent = document.getElementById('notaTanggal').value || '---';
+        document.getElementById('previewDetail').textContent = document.getElementById('notaDetail').value || '---';
+        document.getElementById('previewTotal').textContent = (parseInt(document.getElementById('notaTotal').value) || 0).toLocaleString('id-ID');
+    }
+
+    // 🗑️ HAPUS PESANAN
+    function hapusPesanan(index) {
+        if (!confirm("Yakin ingin menghapus pesanan ini?")) return;
+        const pesanan = JSON.parse(localStorage.getItem('daftarPesanan') || '[]');
+        pesanan.splice(index, 1);
+        localStorage.setItem('daftarPesanan', JSON.stringify(pesanan));
+        muatPesanan();
+    }
+
+    // Auto-update preview saat input berubah
+    document.addEventListener('DOMContentLoaded', () => {
+        ['notaNama','notaTanggal','notaDetail','notaTotal'].forEach(id => {
+            document.getElementById(id)?.addEventListener('input', updatePreviewNota);
+        });
+    });
+</script>
+
+</body>
+</html>

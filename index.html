@@ -12,9 +12,13 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     
+    <!-- Firebase -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js"></script>
+    
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-        :root{--biru:#2563eb;--hijau:#16a34a;--merah:#dc2626;--kuning:#f59e0b;--abu-sedang:#e5e7eb;--gelap:#1f2937;}
+        :root{--biru:#2563eb;--hijau:#16a34a;--merah:#dc2626;--kuning:#f59e0b;--abu:#f3f4f6;--gelap:#1f2937;}
         body{background:#f9fafb;color:#333;line-height:1.6;padding-bottom:40px;}
         header{background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;padding:20px 15px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.15);}
         header h1{font-size:1.3rem;margin-bottom:5px;}
@@ -26,36 +30,39 @@
         .card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.06);padding:22px;margin-bottom:20px;}
         h2{color:#1f2937;font-size:1.25rem;margin-bottom:18px;padding-bottom:8px;border-bottom:2px solid #e5e7eb;}
         label{display:block;margin:14px 0 6px;font-weight:500;color:#374151;}
-        input,select,textarea{width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:1rem;transition:.2s;}
+        input,select,textarea{width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-size:1rem;transition:all 0.2s;}
         input:focus,select:focus,textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15);}
-        input[readonly]{background:#f9fafb;cursor:not-allowed;}
+        input[required]:focus:invalid{border-color:#f59e0b;}
         .btn{padding:14px 18px;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:.2s;}
         .btn-utama{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;width:100%;margin-top:10px;}
         .btn-utama:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,99,235,.3);}
         .btn-hijau{background:#16a34a;color:#fff;}
         .btn-hijau:hover{background:#159846;}
+        .btn-merah{background:#ef4444;color:#fff;}
         .btn-kuning{background:#f59e0b;color:#fff;}
         .btn-kuning:hover{background:#d97706;}
         .btn-block{width:100%;margin:8px 0;}
         .btn-hapus{background:#fef2f2;color:#dc2626;border:none;padding:6px 10px;border-radius:6px;font-size:.85rem;cursor:pointer;}
         .kotak-item{border:1px solid #e5e7eb;border-radius:10px;padding:15px;margin:12px 0;background:#fafafa;}
         .kotak-item h4{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-        .upload-foto{border:2px dashed #ccc;border-radius:8px;padding:15px;text-align:center;margin:10px 0;cursor:pointer;transition:.2s;}
+        .upload-foto{border:2px dashed #ccc;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:.2s;}
         .upload-foto:hover{border-color:#2563eb;background:#eff6ff;}
-        .preview-foto{max-width:100%;max-height:200px;margin-top:10px;border-radius:8px;display:none;}
+        .preview-foto{max-width:150px;margin-top:10px;border-radius:8px;display:none;}
         #peta{height:300px;width:100%;border-radius:12px;margin:12px 0;display:none;}
         .peta-kontrol{display:flex;gap:10px;margin:10px 0;}
         .peta-kontrol button{flex:1;padding:10px;border-radius:8px;border:2px solid #ddd;background:#fff;cursor:pointer;}
         .peta-kontrol button.aktif{background:#2563eb;color:#fff;border-color:#2563eb;}
         .info-box{background:#eff6ff;border-left:4px solid #2563eb;padding:12px;border-radius:8px;margin:12px 0;}
-        .sukses-box{background:#f0fdf4;border-left:4px solid #16a34a;color:#166534;padding:12px;border-radius:8px;margin:12px 0;}
-        .peringatan-box{background:#fef3c7;border-left:4px solid #f59e0b;color:#92400e;padding:12px;border-radius:8px;margin:12px 0;}
+        .sukses-box{background:#f0fdf4;border-left:4px solid #16a34a;color:#166534;}
+        .peringatan-box{background:#fef3c7;border-left:4px solid #f59e0b;color:#92400e;}
+        .error-box{background:#fef2f2;border-left:4px solid #ef4444;color:#991b1b;}
         .hidden{display:none!important;}
         .loading{text-align:center;padding:20px;display:none;}
         .lokasi-bengkel{background:#f0f9ff;padding:15px;border-radius:10px;margin:15px 0;text-align:center;}
         .lokasi-bengkel a{color:#2563eb;font-weight:600;text-decoration:none;display:inline-block;margin-top:8px;}
         .lokasi-bengkel a:hover{text-decoration:underline;}
         footer{text-align:center;padding:25px 15px;color:#6b7280;font-size:.9rem;margin-top:40px;}
+        .wajib{color:red;}
         @media(max-width:480px){nav a{padding:10px 8px;font-size:.85rem;}.card{padding:16px;}}
     </style>
 </head>
@@ -111,25 +118,25 @@
     <section id="pesan" class="card">
         <h2>📋 Form Pemesanan Servis</h2>
         
-        <label>1. Nama Lengkap <span style="color:red">*</span></label>
-        <input type="text" id="nama" placeholder="Masukkan nama Anda" autofocus>
+        <label>1. Nama Lengkap <span class="wajib">*</span></label>
+        <input type="text" id="nama" placeholder="Masukkan nama Anda" required onkeydown="if(event.key==='Enter')document.getElementById('jenisLayanan').focus()">
 
-        <label>2. Jenis Layanan</label>
-        <select id="jenisLayanan" onchange="ubahFormItem()">
+        <label>2. Jenis Layanan <span class="wajib">*</span></label>
+        <select id="jenisLayanan" required onchange="ubahFormItem();this.blur();document.getElementById('caraLayanan').focus()">
             <option value="">-- Pilih Jenis Layanan --</option>
             <option value="elektronik">📺 Elektronik (TV, Kulkas, AC, dll)</option>
             <option value="komputer">💻 Komputer / Laptop / HP</option>
             <option value="listrik">⚡ Listrik & Jaringan</option>
         </select>
 
-        <label>3. Cara Pelayanan</label>
-        <select id="caraLayanan">
+        <label>3. Cara Pelayanan <span class="wajib">*</span></label>
+        <select id="caraLayanan" required onchange="this.blur();document.getElementById('btnDeteksiLokasi').focus()">
             <option value="bawa">📦 Bawa Langsung ke Bengkel</option>
             <option value="antar">🚚 Antar-Jemput (ada biaya transportasi)</option>
             <option value="kunjungan">🏠 Kunjungan ke Rumah</option>
         </select>
 
-        <label>4. Lokasi Anda <span style="color:red">*</span></label>
+        <label>4. Lokasi Anda <span class="wajib">*</span></label>
         <button type="button" class="btn btn-utama btn-block" id="btnDeteksiLokasi" onclick="deteksiLokasiAkurat()">📍 DETEKSI LOKASI OTOMATIS</button>
         <input type="text" id="alamat" placeholder="Koordinat lokasi akan muncul di sini" readonly style="margin-top:8px;background:#f9fafb;">
         <div id="infoAkurasi" style="margin-top:5px;font-size:.9rem;display:none;"></div>
@@ -142,7 +149,7 @@
         </div>
         <div id="peta"></div>
 
-        <label>5. Daftar Perangkat yang Diperbaiki</label>
+        <label>5. Daftar Perangkat yang Diperbaiki <span class="wajib">*</span></label>
         <button type="button" class="btn btn-kuning" style="width:100%;margin-bottom:15px;" onclick="tambahItem()">➕ TAMBAH PERANGKAT</button>
         <div id="daftarItem"></div>
 
@@ -162,7 +169,7 @@
                 <p style="font-size:1.2rem;"><strong>💰 TOTAL PERKIRAAN: </strong><span id="totalBiaya" style="color:#16a34a;font-size:1.4rem;">Rp 0</span></p>
             </div>
             
-            <button type="button" class="btn btn-hijau" id="btnKirimWA" onclick="kirimKeWA()" style="width:100%;margin-top:15px;display:block;">📲 KIRIM PESANAN KE WHATSAPP</button>
+            <button type="button" class="btn btn-hijau" id="btnWA" onclick="kirimKeWA()" style="width:100%;margin-top:15px;display:block;">📲 KIRIM PESANAN KE WHATSAPP</button>
         </div>
     </section>
 </div>
@@ -176,7 +183,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-// ⚙️ KONFIGURASI UTAMA
+// ⚙️ KONFIGURASI UTAMA — UBAH DATA DI SINI
 const BENGKEL = {
     lat: -0.643261,
     lng: 100.755266,
@@ -217,26 +224,29 @@ const PILIHAN_ITEM = {
     ]
 };
 
-// 🧠 DATA ANALISA KERUSAKAN OTOMATIS
+// 🧠 DATA ANALISA KERUSAKAN OTOMATIS — DIPERBAIKI & DILENGKAPI
 const DATA_ANALISA = {
     elektronik: [
-        {kata:['tidak dingin','panas','mencair','hangat','tidak dingin sama sekali'], kerusakan:'Masalah Sistem Pendinginan — Kemungkinan kebocoran freon atau kompresor bermasalah', estimasiJasa:150000, sukuCadang:'Freon, Kapasitor, atau Kompresor'},
-        {kata:['tidak menyala','mati','tidak hidup','mati total','tidak ada daya'], kerusakan:'Masalah Sumber Daya / Listrik — Kemungkinan kerusakan pada modul daya atau kabel', estimasiJasa:120000, sukuCadang:'Modul Daya, Sekring, atau Kabel'},
-        {kata:['berbunyi','bunyi kasar','berdengung','getar','suara bising'], kerusakan:'Komponen Mekanis / Kipas Bermasalah — Perlu pengecekan kipas atau dudukan', estimasiJasa:95000, sukuCadang:'Kipas, Bantalan, atau Pemasangan'},
-        {kata:['gambar','layar','garis','buram','gelap','tidak ada gambar'], kerusakan:'Masalah Bagian Tampilan — Kemungkinan kerusakan layar atau modul pengaturan gambar', estimasiJasa:180000, sukuCadang:'Layar, Lampu Backlight, atau Modul Video'},
-        {kata:['remote','tombol','tidak merespon','sinyal','tidak bisa dikontrol'], kerusakan:'Masalah Kontrol / Sensor', estimasiJasa:85000, sukuCadang:'Sensor, Remote, atau Tombol Panel'}
+        {kata:['tidak dingin','panas','mencair','hangat','tidak ding','es cair','kompresor'], kerusakan:'Masalah Sistem Pendinginan — Kemungkinan kebocoran freon, kompresor lemah, atau termostat rusak', estimasiJasa:150000, sukuCadang:'Freon, Kapasitor, Kompresor, atau Termostat'},
+        {kata:['tidak menyala','mati','tidak hidup','mati total','tidak ada listrik','tidak nyala','lampu mati'], kerusakan:'Masalah Sumber Daya / Listrik — Kemungkinan kerusakan pada modul daya, kabel putus, atau sekring putus', estimasiJasa:120000, sukuCadang:'Modul Daya, Sekring, Kabel, atau Saklar'},
+        {kata:['berbunyi','bunyi kasar','berdengung','getar','bunyi keras','gemuruh'], kerusakan:'Komponen Mekanis / Kipas Bermasalah — Kipas kotor, bantalan aus, atau dudukan longgar', estimasiJasa:95000, sukuCadang:'Kipas, Bantalan, atau Pemasangan'},
+        {kata:['gambar','layar','garis','buram','gelap','tidak ada gambar','putus-putus','berbayang'], kerusakan:'Masalah Bagian Tampilan — Layar rusak, kabel fleksibel putus, atau modul pengaturan gambar bermasalah', estimasiJasa:180000, sukuCadang:'Layar, Lampu Backlight, Kabel Fleksibel, atau Modul Video'},
+        {kata:['remote','tombol','tidak merespon','sinyal','tidak bisa dikontrol','tombol mati'], kerusakan:'Masalah Kontrol / Sensor — Sensor rusak, remote rusak, atau penerima sinyal bermasalah', estimasiJasa:85000, sukuCadang:'Sensor, Remote, atau Papan Kontrol'},
+        {kata:['bocor air','air menetes','banjir','keluar air'], kerusakan:'Saluran Air Tersumbat / Baki Penampung — Saluran pembuangan tersumbat atau baki penuh', estimasiJasa:75000, sukuCadang:'Saluran Pembuangan, Baki Air'}
     ],
     komputer: [
-        {kata:['lambat','lemot','berat','sangat lambat','buka lama'], kerusakan:'Perlu Optimasi Sistem — Penumpukan file sampah, virus, atau kapasitas penyimpanan penuh', estimasiJasa:80000, sukuCadang:'Tidak perlu — Software only'},
-        {kata:['tidak menyala','mati','hidup mati','beep','tidak ada tampilan'], kerusakan:'Masalah Perangkat Keras — Power supply, RAM, atau Motherboard bermasalah', estimasiJasa:130000, sukuCadang:'Power Supply, RAM, atau Komponen Board'},
-        {kata:['layar','gelap','blank','garis','berkedip','layar hitam'], kerusakan:'Kerusakan Layar / Kabel Fleksibel', estimasiJasa:160000, sukuCadang:'Layar LCD / Kabel Fleksibel'},
-        {kata:['hang','macet','freeze','restart sendiri','tiba-tiba mati'], kerusakan:'Sistem Bermasalah / Overheat — Kemungkinan suhu berlebih atau sistem korup', estimasiJasa:100000, sukuCadang:'Pasta pendingin, Perbaikan sistem'},
-        {kata:['virus','malware','banyak iklan','buka sendiri','lemot karena virus'], kerusakan:'Infeksi Virus / Malware', estimasiJasa:75000, sukuCadang:'Tidak perlu — Software only'}
+        {kata:['lambat','lemot','berat','lambat sekali','macet','berat sekali'], kerusakan:'Perlu Optimasi Sistem — Penumpukan file sampah, virus, penyimpanan penuh, atau RAM kurang', estimasiJasa:80000, sukuCadang:'Tidak perlu — Software only, bisa upgrade RAM/SSD opsional'},
+        {kata:['tidak menyala','mati','hidup mati','beep','tidak ada tampilan','lampu indikator mati'], kerusakan:'Masalah Perangkat Keras — Power supply rusak, RAM bermasalah, Motherboard, atau tombol power rusak', estimasiJasa:130000, sukuCadang:'Power Supply, RAM, Motherboard, atau Baterai CMOS'},
+        {kata:['layar','gelap','blank','garis','berkedip','tidak tampil','putus'], kerusakan:'Kerusakan Layar / Kabel Fleksibel — Layar rusak, kabel fleksibel putus, atau inverter bermasalah', estimasiJasa:160000, sukuCadang:'Layar LCD, Kabel Fleksibel, atau Inverter Layar'},
+        {kata:['hang','freeze','restart sendiri','tiba-tiba mati','blue screen'], kerusakan:'Sistem Bermasalah / Overheat — Suhu berlebih, sistem korup, atau virus berat', estimasiJasa:100000, sukuCadang:'Pasta pendingin, Pembersihan, Perbaikan Sistem'},
+        {kata:['virus','malware','banyak iklan','buka sendiri','pop-up'], kerusakan:'Infeksi Virus / Malware — Perlu pembersihan virus & instalasi ulang sistem', estimasiJasa:75000, sukuCadang:'Tidak perlu — Software only'},
+        {kata:['baterai','cas tidak masuk','cepat habis','tidak bisa dicas','baterai rusak'], kerusakan:'Baterai / Sistem Pengisian — Baterai sudah lemah, konektor cas rusak, atau adaptor bermasalah', estimasiJasa:95000, sukuCadang:'Baterai, Konektor Charger, atau Adaptor'}
     ],
     listrik: [
-        {kata:['listrik mati','tidak ada listrik','bolak-balik','sering mati'], kerusakan:'Gangguan Jalur Listrik — Perlu pengecekan kabel, sekring, atau MCB', estimasiJasa:90000, sukuCadang:'Kabel, Sekring, atau MCB'},
-        {kata:['terlalu beban','mcb turun','jatuh','mcb sering turun'], kerusakan:'Beban Berlebih / Korsleting — Perlu pengecekan beban dan kabel', estimasiJasa:110000, sukuCadang:'Kabel, MCB, atau Perangkat Proteksi'},
-        {kata:['jaringan','lambat internet','putus-nyambung','sinyal lemah','tidak ada koneksi'], kerusakan:'Masalah Jaringan / Kabel — Pengecekan kabel, konektor, atau perangkat jaringan', estimasiJasa:85000, sukuCadang:'Kabel LAN, Konektor, atau Switch'}
+        {kata:['listrik mati','tidak ada listrik','bolak-balik','mati hidup','padam'], kerusakan:'Gangguan Jalur Listrik — Kabel putus, sekring putus, MCB turun, atau korsleting', estimasiJasa:90000, sukuCadang:'Kabel, Sekring, MCB, atau Saklar'},
+        {kata:['terlalu beban','mcb turun','jatuh','sering turun','lepas'], kerusakan:'Beban Berlebih / Korsleting — Total daya melebihi kapasitas, ada korsleting di instalasi', estimasiJasa:110000, sukuCadang:'MCB, Kabel, atau Perangkat Proteksi'},
+        {kata:['jaringan','lambat internet','putus-nyambung','sinyal lemah','tidak ada koneksi'], kerusakan:'Masalah Jaringan / Kabel — Kabel rusak, konektor longgar, atau perangkat jaringan bermasalah', estimasiJasa:85000, sukuCadang:'Kabel LAN, Konektor, Switch, atau Router'},
+        {kata:['terkena air','basah','lembab','bau terbakar','terbakar'], kerusakan:'Korsleting / Kerusakan Akibat Air — Instalasi terkena air atau panas berlebih', estimasiJasa:120000, sukuCadang:'Kabel, Komponen Terbakar, Perlu pemeriksaan menyeluruh'}
     ]
 };
 
@@ -247,8 +257,8 @@ let latPelanggan, lngPelanggan, jarak, daftarItem=[], infoBiaya, totalAkhir, JEN
 // 💰 FORMAT RUPIAH
 function rp(nilai){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(nilai);}
 
-// 📜 SCROLL KE BAGIAN
-function scrollKe(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
+// 📜 SCROLL HALAMAN
+function scrollKe(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});}
 
 // ⚠️ TAMPILKAN PERINGATAN
 function tampilPeringatan(teks){
@@ -266,23 +276,9 @@ function ubahFormItem(){
     daftarItem=[];
 }
 
-// 📸 PREVIEW FOTO UPLOAD
-function pratinFoto(input, idItem){
-    const file=input.files[0];
-    if(file){
-        const reader=new FileReader();
-        reader.onload=function(e){
-            const preview=document.getElementById(`preview-${idItem}`);
-            preview.src=e.target.result;
-            preview.style.display='block';
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-// ➕ TAMBAH PERANGKAT
+// ➕ TAMBAH PERANGKAT — DENGAN UPLOAD FOTO
 function tambahItem(){
-    if(!JENIS){alert("⚠️ Pilih dulu Jenis Layanan di atas!");return;}
+    if(!JENIS){alert("⚠️ Pilih dulu Jenis Layanan di atas!");document.getElementById('jenisLayanan').focus();return;}
     nomorItem++;
     const idx=nomorItem;
     const PILIHAN=PILIHAN_ITEM[JENIS];
@@ -290,26 +286,45 @@ function tambahItem(){
     const html=`
     <div class="kotak-item" id="item-${idx}">
         <h4>Perangkat #${idx} <button type="button" class="btn-hapus" onclick="hapusItem(${idx})">✕ Hapus</button></h4>
-        <label>Jenis Perangkat <span style="color:red">*</span></label>
-        <select class="jenis-opt" required>
+        <label>Jenis Perangkat <span class="wajib">*</span></label>
+        <select class="jenis-opt" required onchange="this.nextElementSibling?.focus()">
             <option value="">-- Pilih --</option>
             ${PILIHAN.map(p=>`<option value="${p.nilai}">${p.label}</option>`).join('')}
         </select>
         <label>Merek / Tipe</label>
-        <input type="text" class="merek-val" placeholder="Contoh: Samsung RT32K5030WW">
-        <label>📸 Foto Perangkat (Opsional)</label>
+        <input type="text" class="merek-val" placeholder="Contoh: Samsung RT32K5030WW" onkeydown="if(event.key==='Enter')this.nextElementSibling?.focus()">
+        <label>📝 Keluhan / Kerusakan <span class="wajib">*</span></label>
+        <textarea class="keluhan-item" rows="3" placeholder="Jelaskan kerusakan yang terjadi..." required onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();this.blur();this.nextElementSibling?.focus()}"></textarea>
+        <label>📷 Foto Perangkat / Kerusakan (Opsional)</label>
         <div class="upload-foto" onclick="document.getElementById('foto-${idx}').click()">
-            <input type="file" id="foto-${idx}" accept="image/*" style="display:none;" onchange="pratinFoto(this,${idx})">
-            📷 Klik untuk upload foto kerusakan
+            <input type="file" id="foto-${idx}" accept="image/*" style="display:none;" onchange="pratinjauFoto(${idx},this)">
+            📸 Klik untuk pilih foto
         </div>
         <img id="preview-${idx}" class="preview-foto" alt="Preview Foto">
-        <label>📝 Keluhan / Kerusakan <span style="color:red">*</span></label>
-        <textarea class="keluhan-item" rows="3" placeholder="Jelaskan kerusakan yang terjadi... Contoh: Kulkas tidak dingin, es mencair, terdengar berdengung..." required></textarea>
     </div>`;
     document.getElementById('daftarItem').insertAdjacentHTML('beforeend',html);
+    
+    // Auto-scroll ke item baru
+    setTimeout(()=>{
+        document.getElementById(`item-${idx}`)?.scrollIntoView({behavior:'smooth',block:'center'});
+        document.querySelector(`#item-${idx} .jenis-opt`)?.focus();
+    },100);
 }
 
 function hapusItem(i){document.getElementById(`item-${i}`)?.remove();}
+
+// 📸 PRATINJAU FOTO
+function pratinjauFoto(idx,input){
+    if(input.files&&input.files[0]){
+        const reader=new FileReader();
+        reader.onload=function(e){
+            const preview=document.getElementById(`preview-${idx}`);
+            preview.src=e.target.result;
+            preview.style.display='block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
 // 🗺️ HITUNG JARAK RUTE JALAN — OSRM (CEPAT)
 async function hitungJarak(lat2,lng2){
@@ -377,8 +392,8 @@ async function deteksiLokasiAkurat(){
         document.getElementById('lokasiTerkunci').style.display='block';
         btn.disabled=false; btn.textContent="✅ LOKASI TERDETEKSI"; btn.classList.add('sukses');
     }, err=>{
-        let pesan=err.code===1?"❌ Izin lokasi ditolak! Aktifkan izin lokasi.":
-                  err.code===2?"❌ Lokasi tidak ditemukan! Aktifkan GPS.":"⏳ Waktu habis! Coba lagi.";
+        let pesan=err.code===1?"❌ Izin lokasi ditolak! Aktifkan izin lokasi di pengaturan browser.":
+                  err.code===2?"❌ Lokasi tidak ditemukan! Aktifkan GPS & pastikan sinyal bagus.":"⏳ Waktu habis! Coba lagi di tempat terbuka.";
         tampilPeringatan(pesan);
         btn.disabled=false; btn.textContent="📍 DETEKSI LOKASI";
     },{enableHighAccuracy:true,timeout:15000,maximumAge:0});
@@ -423,7 +438,7 @@ function hitungBiayaTransport(){
     return {jarak,biaya:TARIF.antarDasar+biayaJarak,teks:`Biaya dasar + jarak pulang-pergi (${jarakPP} km)`};
 }
 
-// 🔍 ANALISA KERUSAKAN OTOMATIS — DIPERBAIKI!
+// 🔍 ANALISA KERUSAKAN OTOMATIS — DIPERBAIKI AGAR BERFUNGSI
 async function mulaiAnalisa(){
     const nama=document.getElementById('nama').value.trim();
     const alamat=document.getElementById('alamat').value.trim();
@@ -431,16 +446,15 @@ async function mulaiAnalisa(){
 
     // ✅ VALIDASI LENGKAP
     if(!nama){alert("⚠️ Isi Nama Lengkap dulu!");document.getElementById('nama').focus();return;}
-    if(!latPelanggan||!lngPelanggan||alamat===""){alert("⚠️ WAJIB KLIK 'DETEKSI LOKASI' DULU!");return;}
-    if(daftarEl.length===0){alert("⚠️ Tambahkan minimal 1 perangkat!");return;}
+    if(!latPelanggan||!lngPelanggan||alamat===""){alert("⚠️ WAJIB KLIK TOMBOL 'DETEKSI LOKASI' DULU!");document.getElementById('btnDeteksiLokasi').scrollIntoView({behavior:'smooth'});return;}
+    if(daftarEl.length===0){alert("⚠️ Tambahkan minimal 1 perangkat!");document.getElementById('btnDeteksiLokasi').scrollIntoView({behavior:'smooth'});return;}
     
-    // ✅ Validasi SEMUA perangkat
-    for(let i=0;i<daftarEl.length;i++){
-        const el=daftarEl[i];
+    // Cek semua perangkat wajib diisi
+    for(const el of daftarEl){
         const jenis=el.querySelector('.jenis-opt').value;
         const keluhan=el.querySelector('.keluhan-item').value.trim();
-        if(!jenis){alert(`⚠️ Pilih jenis perangkat untuk Perangkat #${i+1}!`);return;}
-        if(!keluhan){alert(`⚠️ Isi keluhan/kerusakan untuk Perangkat #${i+1}!`);el.querySelector('.keluhan-item').focus();return;}
+        if(!jenis){alert("⚠️ Pilih jenis barang untuk SEMUA perangkat!");el.querySelector('.jenis-opt').focus();return;}
+        if(!keluhan){alert("⚠️ Isi keluhan/kerusakan untuk SEMUA perangkat!");el.querySelector('.keluhan-item').focus();return;}
     }
 
     document.getElementById('btnAnalisa').disabled=true;
@@ -449,37 +463,36 @@ async function mulaiAnalisa(){
 
     setTimeout(()=>{
         document.getElementById('loading').style.display='none';
-        
-        // ✅ Pastikan jenis layanan ada
-        if(!JENIS){alert("⚠️ Pilih Jenis Layanan terlebih dahulu!");document.getElementById('jenisLayanan').focus();return;}
-        
         const dataDasar=DATA_ANALISA[JENIS];
-        if(!dataDasar){alert("⚠️ Jenis layanan tidak valid!");return;}
-
+        if(!dataDasar){alert("⚠️ Jenis layanan tidak dikenali!");document.getElementById('jenisLayanan').focus();return;}
+        
         let nomor=1,htmlHasil="",totalJasa=0;
         daftarItem=[];
 
         daftarEl.forEach(el=>{
             const jenis=el.querySelector('.jenis-opt').value||"Umum";
             const merek=el.querySelector('.merek-val').value.trim()||"-";
-            const keluhan=el.querySelector('.keluhan-item').value.trim() || "Belum ada keterangan";
+            const keluhan=el.querySelector('.keluhan-item').value.trim() || "Belum ada keterangan khusus";
 
-            // ✅ ANALISA KERUSAKAN — DIPERBAIKI LOGIKANYA
+            // ✅ ANALISA KERUSAKAN — DIPERBAIKI ALGORITMANYA
             let terbaik=null,skorTerbaik=0;
             dataDasar.forEach(d=>{
                 let skor=0;
                 d.kata.forEach(k=>{
-                    if(keluhan.toLowerCase().includes(k.toLowerCase())) skor+=k.length;
+                    if(keluhan.toLowerCase().includes(k.toLowerCase())){
+                        skor+=k.length*2; // Bobot lebih besar untuk kecocokan kata
+                    }
                 });
                 if(skor>skorTerbaik){skorTerbaik=skor;terbaik=d;}
             });
-
-            // ✅ Jika tidak cocok, gunakan default
+            
+            // Fallback jika tidak ada kecocokan
             if(!terbaik||skorTerbaik<3){
+                const biayaDasar=JENIS==='elektronik'?120000:JENIS==='komputer'?110000:150000;
                 terbaik={
-                    kerusakan:"Perlu dicek langsung oleh teknisi",
-                    estimasiJasa:JENIS==='elektronik'?120000:JENIS==='komputer'?110000:150000,
-                    sukuCadang:"Belum diketahui — akan diperiksa teknisi"
+                    kerusakan:"Perlu dicek langsung oleh teknisi — keluhan belum sesuai pola umum",
+                    estimasiJasa:biayaDasar,
+                    sukuCadang:"Belum diketahui — akan diperiksa di bengkel"
                 };
             }
 
@@ -522,19 +535,20 @@ async function mulaiAnalisa(){
         document.getElementById('biayaTransport').textContent=`${rp(infoBiaya.biaya)} (${infoBiaya.teks})`;
         document.getElementById('isiHasil').innerHTML=htmlHasil;
         document.getElementById('totalBiaya').textContent=rp(totalAkhir);
-        
-        // ✅ TAMPILKAN HASIL & TOMBOL WA
         document.getElementById('hasil').classList.remove('hidden');
-        document.getElementById('btnKirimWA').style.display='block';
-        document.getElementById('hasil').scrollIntoView({behavior:'smooth'});
+        document.getElementById('hasil').scrollIntoView({behavior:'smooth',block:'start'});
         document.getElementById('btnAnalisa').disabled=false;
+        
+        // Pastikan tombol WA tampil
+        document.getElementById('btnWA').style.display='block';
     },1500);
 }
 
-// 📲 KIRIM KE WHATSAPP — DIPERBAIKI!
+// 📲 KIRIM KE WHATSAPP — DIPASTIKAN BERFUNGSI
 function kirimKeWA(){
-    if(!window.DATA_NOTA || daftarItem.length===0){
-        alert("⚠️ Klik tombol 'LIHAT PERKIRAAN BIAYA' terlebih dahulu!");
+    if(!window.DATA_NOTA){
+        alert("⚠️ Klik tombol 'LIHAT PERKIRAAN BIAYA & ANALISA KERUSAKAN' terlebih dahulu!");
+        document.getElementById('btnAnalisa').scrollIntoView({behavior:'smooth'});
         return;
     }
     
@@ -573,15 +587,13 @@ Terima kasih — kami akan segera merespons!`);
 
     const urlWA=`https://wa.me/${BENGKEL.wa}?text=${pesan}`;
     window.open(urlWA,'_blank','noopener');
-    alert("✅ Pesanan berhasil disiapkan!\nWhatsApp akan terbuka — silakan tekan tombol KIRIM.\nTerima kasih!");
+    alert("✅ Pesanan berhasil disiapkan!\nWhatsApp akan terbuka — silakan tekan KIRIM.\nTerima kasih!");
 }
 
-// 🚀 INISIALISASI — KURSOR FOKUS OTOMATIS KE NAMA
+// 🚀 INISIALISASI SAAT HALAMAN DIMUAT
 document.addEventListener('DOMContentLoaded', () => {
-    ubahFormItem();
-    // ✅ Kursor otomatis ke kolom nama saat halaman dibuka
-    const namaInput=document.getElementById('nama');
-    if(namaInput) namaInput.focus();
+    // Fokus otomatis ke nama saat halaman dibuka
+    setTimeout(()=>document.getElementById('nama')?.focus(),500);
 });
 </script>
 
